@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+
+@theme {
+  /* This creates custom classes like: bg-brand-primary, text-brand-primary */
+  --color-brand-primary: #00466a;
+  --color-brand-secondary: #005b8a;
+
+  /* Example: Custom font */
+  --font-heading: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
