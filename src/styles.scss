@@ -1,10 +1,24 @@
 @import 'tailwindcss';
 
 @theme {
-  /* This creates custom classes like: bg-brand-primary, text-brand-primary */
-  --color-brand-primary: #00466a;
-  --color-brand-secondary: #005b8a;
+  /* Colors from your design template */
+  --color-brand-primary: #000000; /* Main black UI */
+  --color-brand-secondary: #f0f0f0; /* Light grey backgrounds */
+  --color-brand-accent: #00466a; /* Your email accent color for links */
 
-  /* Example: Custom font */
-  --font-heading: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Modern font stack for an e-commerce feel */
+  --font-heading: 'Integral CF', 'Helvetica', sans-serif;
+  --font-body: 'Satoshi', 'Helvetica', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-brand-secondary);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
 }
