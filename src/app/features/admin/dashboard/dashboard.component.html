@@ -1,0 +1,20 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  @if (admin.stats(); as data) {
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-500 uppercase mb-1">Total Revenue</p>
+      <h3 class="text-2xl font-black">${{ data.totalSales }}</h3>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-500 uppercase mb-1">Active Users</p>
+      <h3 class="text-2xl font-black">{{ data.totalUsers }}</h3>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-500 uppercase mb-1">Total Orders</p>
+      <h3 class="text-2xl font-black">{{ data.totalOrders }}</h3>
+    </div>
+  } @else {
+    <p>Connecting to backend...</p>
+  }
+</div>
