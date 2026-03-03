@@ -26,6 +26,9 @@ export class Cart implements OnInit {
   }
 
   loadCart() {
+    // if no session skip call to prevent error not found
+    if (!localStorage.getItem('guest_session_id')) return;
+
     this.isLoading.set(true);
     this.cartService.getCart().subscribe({
       next: () => this.isLoading.set(false),
