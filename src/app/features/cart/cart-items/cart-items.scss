@@ -1,19 +1,27 @@
-// Variables
+// ──────────────────────────────────────────────
+// Design Tokens
+// ──────────────────────────────────────────────
 $bg-color: #ffffff;
 $card-bg: #ffffff;
-$text-main: #000000;
-$text-muted: #666666;
-$primary: #000000;
+$text-main: #111111;
+$text-muted: #777777;
+$primary: #111111;
 $primary-hover: #333333;
-$danger: #ff3333;
-$danger-hover: #cc0000;
-$border-color: #e5e5e5;
-$light-gray: #f0f0f0;
+$danger: #e53e3e;
+$danger-hover: #c53030;
+$border-color: #ebebeb;
+$light-gray: #f4f4f4;
+$qty-bg: #f7f7f7;
+$qty-active-border: #111111;
 $radius: 16px;
-$shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-$shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
-$transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+$input-radius: 8px;
+$shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+$shadow-hover: 0 8px 28px rgba(0, 0, 0, 0.1);
+$transition: 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
 
+// ──────────────────────────────────────────────
+// Cart Items Wrapper
+// ──────────────────────────────────────────────
 .cart-items {
     flex: 1;
     display: flex;
@@ -22,66 +30,86 @@ $transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     border-radius: $radius;
     box-shadow: $shadow;
     border: 1px solid $border-color;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
+// ──────────────────────────────────────────────
+// Empty State
+// ──────────────────────────────────────────────
 .empty-cart {
     text-align: center;
-    padding: 60px 20px;
-    background: $card-bg;
-    border-radius: $radius;
-    box-shadow: $shadow;
-    border: 1px solid $border-color;
+    padding: 64px 20px;
+    color: $text-muted;
 
     .empty-icon {
-        font-size: 4rem;
-        margin-bottom: 20px;
         display: inline-block;
+        margin-bottom: 20px;
+        opacity: 0.4;
     }
 
     h2 {
-        font-size: 1.8rem;
-        margin-bottom: 10px;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: $text-main;
+        margin: 0 0 8px;
     }
 
     p {
+        font-size: 0.9rem;
         color: $text-muted;
+        margin: 0;
     }
 }
 
+// ──────────────────────────────────────────────
+// Single Cart Item Row
+// ──────────────────────────────────────────────
 .cart-item {
     display: flex;
     align-items: center;
-    padding: 24px 0;
-    transition: $transition;
+    padding: 22px 0;
     gap: 20px;
-    position: relative;
-    overflow: hidden;
+    transition: $transition;
 
+    // ── Product Image ──
     .item-image {
-        width: 90px;
-        height: 90px;
+        width: 88px;
+        height: 88px;
         object-fit: cover;
         border-radius: 12px;
         background: $light-gray;
+        flex-shrink: 0;
+        transition: transform $transition, box-shadow $transition;
+
+        &:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
     }
 
+    // ── Product Details ──
     .item-details {
         flex: 1;
+        min-width: 0; // allow text truncation
 
         .item-name {
-            font-size: 0.95rem;
-            font-weight: 800;
-            margin: 0 0 4px 0;
+            font-size: 0.93rem;
+            font-weight: 700;
+            color: $text-main;
+            margin: 0 0 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .item-unit-price {
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             color: $text-muted;
             margin: 0;
         }
     }
 
+    // ── Quantity Controls ──
     .item-actions {
         display: flex;
         align-items: center;
@@ -90,96 +118,148 @@ $transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     .quantity-control {
         display: flex;
         align-items: center;
-        background: $light-gray;
-        border-radius: 30px;
-        padding: 5px;
+        gap: 4px;
+        background: $qty-bg;
+        border: 1.5px solid $border-color;
+        border-radius: 12px;
+        padding: 4px 6px;
+        transition: border-color $transition, box-shadow $transition;
 
+        &:focus-within {
+            border-color: $qty-active-border;
+            box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
+        }
+
+        // ─ +/- Buttons ─
         .btn-qty {
             background: none;
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             color: $text-main;
-            border-radius: 50%;
-            transition: $transition;
+            border-radius: 8px;
+            transition: background $transition, color $transition;
+            flex-shrink: 0;
 
             &:disabled {
-                color: #ccc;
+                color: #c8c8c8;
                 cursor: not-allowed;
             }
 
             &:not(:disabled):hover {
-                background: #e5e5e5;
+                background: darken($qty-bg, 6%);
+                color: $primary;
+            }
+
+            &:not(:disabled):active {
+                background: darken($qty-bg, 12%);
+                transform: scale(0.92);
             }
         }
 
-        .quantity {
-            width: 30px;
+        // ─ Quantity Input ─
+        .qty-input {
+            width: 44px;
+            height: 30px;
             text-align: center;
+            font-size: 0.9rem;
             font-weight: 600;
-            font-size: 0.95rem;
+            color: $text-main;
+            background: #ffffff;
+            border: 1.5px solid $border-color;
+            border-radius: $input-radius;
+            outline: none;
+            transition: border-color $transition, box-shadow $transition;
+            padding: 0 2px;
+
+            // Remove browser spinner arrows
+            -moz-appearance: textfield;
+
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            &:focus {
+                border-color: $qty-active-border;
+                box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.1);
+            }
         }
     }
 
+    // ── Item Total Price ──
     .item-total {
-        min-width: 100px;
+        min-width: 90px;
         text-align: right;
 
         .price {
             font-size: 1rem;
             font-weight: 800;
             color: $text-main;
+            letter-spacing: -0.01em;
         }
     }
 
+    // ── Delete Button ──
     .btn-delete {
         background: none;
         border: none;
-        color: $danger;
+        color: $text-muted;
         cursor: pointer;
         padding: 8px;
         border-radius: 50%;
-        transition: $transition;
+        transition: color $transition, background $transition, transform $transition;
+        flex-shrink: 0;
 
         &:hover {
-            color: $danger-hover;
-            background: #fee2e2;
+            color: $danger;
+            background: #fff1f1;
+            transform: scale(1.1);
+        }
+
+        &:active {
+            transform: scale(0.94);
         }
     }
 
-    @media (max-width: 600px) {
+    // ── Responsive ──
+    @media (max-width: 620px) {
         flex-wrap: wrap;
         position: relative;
-        padding-bottom: 70px;
+        padding-bottom: 68px;
 
         .item-details {
-            min-width: 50%;
+            min-width: calc(100% - 110px);
         }
 
         .item-actions {
             position: absolute;
-            bottom: 20px;
-            left: 130px;
+            bottom: 18px;
+            left: 108px;
         }
 
         .btn-delete {
             position: absolute;
-            top: 20px;
-            right: 0px;
+            top: 18px;
+            right: 0;
         }
 
         .item-total {
             position: absolute;
-            bottom: 25px;
-            right: 0px;
+            bottom: 22px;
+            right: 0;
         }
     }
 }
 
+// ──────────────────────────────────────────────
+// Separator
+// ──────────────────────────────────────────────
 .item-separator {
     border: 0;
     border-top: 1px solid $border-color;

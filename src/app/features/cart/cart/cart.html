@@ -10,7 +10,7 @@
 
     <div class="cart-content">
         <app-cart-items [items]="cart().items" (incrementItem)="increment($event.id, $event.quantity)"
-            (decrementItem)="decrement($event.id, $event.quantity)" (deleteItem)="deleteItem($event)"></app-cart-items>
+            (decrementItem)="decrement($event.id, $event.quantity)" (setQuantity)="setQuantity($event.id, $event.quantity)" (deleteItem)="deleteItem($event)"></app-cart-items>
 
         <div class="cart-summary" *ngIf="cart().items.length > 0">
             <h2>Order Summary</h2>

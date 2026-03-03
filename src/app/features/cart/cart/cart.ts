@@ -32,27 +32,35 @@ export class Cart implements OnInit {
       error: (err) => {
         console.error('Failed to load cart', err);
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
   increment(itemId: string, currentQuantity: number) {
     this.cartService.updateQuantity(itemId, currentQuantity + 1).subscribe({
-      error: (err) => console.error('Failed to update quantity', err)
+      error: (err) => console.error('Failed to update quantity', err),
     });
   }
 
   decrement(itemId: string, currentQuantity: number) {
     if (currentQuantity > 1) {
       this.cartService.updateQuantity(itemId, currentQuantity - 1).subscribe({
-        error: (err) => console.error('Failed to update quantity', err)
+        error: (err) => console.error('Failed to update quantity', err),
       });
+    }
+  }
+
+  setQuantity(itemId: string, quantity: number) {
+    if (quantity > 0) {
+      this.cartService
+        .updateQuantity(itemId, quantity)
+        .subscribe({ error: (err) => console.error('Failed to update quantity', err) });
     }
   }
 
   deleteItem(productId: string) {
     this.cartService.removeFromCart(productId).subscribe({
-      error: (err) => console.error('Failed to remove item', err)
+      error: (err) => console.error('Failed to remove item', err),
     });
   }
 
@@ -70,13 +78,13 @@ export class Cart implements OnInit {
       },
       error: (err) => {
         this.couponError.set(err.error?.message || 'Invalid coupon code.');
-      }
+      },
     });
   }
 
   clearCoupon() {
     this.cartService.removeCoupon().subscribe({
-      error: (err) => console.error('Failed to remove coupon', err)
+      error: (err) => console.error('Failed to remove coupon', err),
     });
   }
 }
