@@ -1,19 +1,101 @@
-<div class="flex h-screen bg-gray-50">
-  <aside class="w-64 bg-black text-white p-6 flex flex-col gap-8">
-    <h1 class="text-xl font-black tracking-tighter italic">EXPRESSO.</h1>
-    <nav class="flex flex-col gap-4">
-      <a routerLink="dashboard" class="hover:text-gray-400">📊 Dashboard</a>
-      <a routerLink="orders" class="hover:text-gray-400">📦 Orders</a>
+<div class="flex h-screen bg-gray-100">
+  <aside class="w-64 bg-black text-white flex flex-col">
+    <div class="px-6 py-5 border-b border-white/10">
+      <h1 class="text-xl font-black tracking-tighter italic">EXPRESSO.</h1>
+      <p class="text-xs text-gray-400 mt-0.5">Admin Panel</p>
+    </div>
+
+    <nav class="flex-1 px-4 py-6 flex flex-col gap-1">
+      <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-2">Main</p>
+
+      <a
+        routerLink="dashboard"
+        routerLinkActive="bg-white/10 text-white"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+      >
+        <span>📊</span> Dashboard
+      </a>
+
+      <a
+        routerLink="orders"
+        routerLinkActive="bg-white/10 text-white"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+      >
+        <span>📦</span> Orders
+      </a>
+
+      <a
+        routerLink="products"
+        routerLinkActive="bg-white/10 text-white"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+      >
+        <span>🛍️</span> Products
+      </a>
+
+      <a
+        routerLink="users"
+        routerLinkActive="bg-white/10 text-white"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+      >
+        <span>👥</span> Users
+      </a>
+
+      <a
+        routerLink="sellers"
+        routerLinkActive="bg-white/10 text-white"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+      >
+        <span>🏪</span> Sellers
+      </a>
+
+      <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mt-4 mb-2">
+        Config
+      </p>
+
+      <a
+        routerLink="settings"
+        routerLinkActive="bg-white/10 text-white"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+      >
+        <span>⚙️</span> Settings
+      </a>
     </nav>
+
+    <div class="px-4 py-4 border-t border-white/10">
+      <div class="flex items-center gap-3 px-3 py-2.5 rounded-lg">
+        <div
+          class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold"
+        >
+          A
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold truncate">Admin</p>
+          <p class="text-xs text-gray-400 truncate">admin&#64;expresso.com</p>
+        </div>
+      </div>
+    </div>
   </aside>
 
-  <div class="flex-1 flex flex-col">
-    <header class="h-16 bg-white border-b px-8 flex items-center justify-between">
-      <h2 class="font-bold uppercase tracking-tight">Admin Dashboard</h2>
-      <button class="text-sm font-medium">Logout</button>
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <header class="h-16 bg-white border-b px-8 flex items-center justify-between shrink-0">
+      <div>
+        <h2 class="font-bold uppercase tracking-tight text-sm">Admin Panel</h2>
+        <p class="text-xs text-gray-400">Manage your store</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="relative text-gray-500 hover:text-black transition-colors">
+          🔔
+          <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+        <button
+          class="text-sm font-semibold px-4 py-1.5 rounded-lg bg-black text-white hover:bg-gray-800 transition-colors"
+        >
+          Logout
+        </button>
+      </div>
     </header>
 
-    <main class="p-8 overflow-auto">
+    <main class="flex-1 p-8 overflow-auto">
       <router-outlet></router-outlet>
     </main>
   </div>

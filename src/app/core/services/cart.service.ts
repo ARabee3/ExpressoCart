@@ -39,7 +39,11 @@ export class CartService {
           price: 180,
           stock: 30,
           images: [
+<<<<<<< HEAD
             'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?w=300&h=300&fit=crop',
+=======
+            'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=300&h=300&fit=crop',
+>>>>>>> main
           ],
           description: 'Red checkered shirt',
         } as Product,
@@ -116,25 +120,7 @@ export class CartService {
   }
 
   addToCart(productId: string, quantity: number) {
-    /*
-const sessionId = localStorage.getItem('guest_session_id');
-
-  const body: any = { productId, quantity };
-
-  // Send sessionId in body IF we already have one
-  if (sessionId) body.sessionId = sessionId;
-
-  return this.http.post<CartResponse>(`${BASE_URL}/cart`, body).pipe(
-    tap(res => {
-      if (res.sessionId) {
-        localStorage.setItem('guest_session_id', res.sessionId);
-      }
-      this.cart.set(res.data);
-    }),
-    map(res => res.data)
-  );
- */
-
+    // Find existing or mock add (mostly skipped for mock since UI drives items)
     this.recalcCart();
     return of({ status: 'success', data: { ...this.mockCartData } } as CartResponse).pipe(
       delay(300),

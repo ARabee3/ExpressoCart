@@ -7,7 +7,6 @@ import { Spinner } from '../../../shared/components/spinner/spinner';
 
 @Component({
   selector: 'app-cart',
-  standalone: true,
   imports: [CommonModule, FormsModule, CartItems, Spinner],
   templateUrl: './cart.html',
   styleUrl: './cart.scss',
