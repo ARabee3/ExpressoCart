@@ -1,0 +1,20 @@
+<div class="flex h-screen bg-gray-50">
+  <aside class="w-64 bg-black text-white p-6 flex flex-col gap-8">
+    <h1 class="text-xl font-black tracking-tighter italic">EXPRESSO.</h1>
+    <nav class="flex flex-col gap-4">
+      <a routerLink="dashboard" class="hover:text-gray-400">📊 Dashboard</a>
+      <a routerLink="orders" class="hover:text-gray-400">📦 Orders</a>
+    </nav>
+  </aside>
+
+  <div class="flex-1 flex flex-col">
+    <header class="h-16 bg-white border-b px-8 flex items-center justify-between">
+      <h2 class="font-bold uppercase tracking-tight">Admin Dashboard</h2>
+      <button class="text-sm font-medium">Logout</button>
+    </header>
+
+    <main class="p-8 overflow-auto">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
