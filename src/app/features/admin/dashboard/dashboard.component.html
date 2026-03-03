@@ -1,20 +1,47 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-  @if (admin.stats(); as data) {
-    <div class="bg-white p-6 rounded-2xl border shadow-sm">
-      <p class="text-xs font-bold text-gray-500 uppercase mb-1">Total Revenue</p>
-      <h3 class="text-2xl font-black">${{ data.totalSales }}</h3>
-    </div>
-
-    <div class="bg-white p-6 rounded-2xl border shadow-sm">
-      <p class="text-xs font-bold text-gray-500 uppercase mb-1">Active Users</p>
-      <h3 class="text-2xl font-black">{{ data.totalUsers }}</h3>
-    </div>
-
-    <div class="bg-white p-6 rounded-2xl border shadow-sm">
-      <p class="text-xs font-bold text-gray-500 uppercase mb-1">Total Orders</p>
-      <h3 class="text-2xl font-black">{{ data.totalOrders }}</h3>
-    </div>
-  } @else {
-    <p>Connecting to backend...</p>
-  }
+<div class="mb-8">
+  <h1 class="text-2xl font-black tracking-tight">Dashboard</h1>
+  <p class="text-sm text-gray-500 mt-1">Welcome back. Here's what's happening today.</p>
 </div>
+
+@if (admin.stats(); as data) {
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Revenue</p>
+      <h3 class="text-3xl font-black">${{ data.totalSales }}</h3>
+      <p class="text-xs text-green-600 font-semibold mt-2">All time</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Users</p>
+      <h3 class="text-3xl font-black">{{ data.totalUsers }}</h3>
+      <p class="text-xs text-blue-600 font-semibold mt-2">Registered</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Orders</p>
+      <h3 class="text-3xl font-black">{{ data.totalOrders }}</h3>
+      <p class="text-xs text-gray-500 font-semibold mt-2">All statuses</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Paid Orders</p>
+      <h3 class="text-3xl font-black">{{ data.paidOrders }}</h3>
+      <p class="text-xs text-green-600 font-semibold mt-2">Completed</p>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border shadow-sm p-6">
+    <h2 class="font-bold text-sm uppercase tracking-tight mb-4">Recent Orders</h2>
+    <p class="text-sm text-gray-400">Recent orders table coming soon...</p>
+  </div>
+} @else {
+  <!-- Loading skeleton -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    @for (_ of [1, 2, 3, 4]; track $index) {
+      <div class="bg-white p-6 rounded-2xl border shadow-sm animate-pulse">
+        <div class="h-3 bg-gray-200 rounded w-24 mb-4"></div>
+        <div class="h-8 bg-gray-200 rounded w-16"></div>
+      </div>
+    }
+  </div>
+}
