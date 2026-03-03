@@ -1,0 +1,25 @@
+.nav-link {
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-brand-accent);
+    transition: width 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+}
+
+.nav-link-active {
+  color: var(--color-brand-accent) !important;
+  font-weight: 600;
+
+  &::after {
+    width: 100% !important;
+  }
+}

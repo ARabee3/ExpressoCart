@@ -1,0 +1,58 @@
+<div
+  class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full"
+>
+  <!-- Image -->
+  <div class="relative overflow-hidden aspect-square bg-brand-secondary">
+    <img
+      [src]="primaryImage()"
+      [alt]="product().name"
+      (error)="onImageError($event)"
+      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      loading="lazy"
+    />
+
+    @if (isOutOfStock()) {
+      <div
+        class="absolute top-3 left-3 px-2.5 py-1 bg-red-500 text-white text-xs font-semibold rounded-full"
+      >
+        Out of Stock
+      </div>
+    }
+
+    <!-- Quick Add Overlay -->
+    @if (!isOutOfStock()) {
+      <div
+        class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100"
+      >
+        <button
+          (click)="onAddToCart()"
+          class="px-6 py-2.5 bg-brand-accent text-white text-sm font-medium rounded-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:bg-brand-accent/90 shadow-lg"
+        >
+          Add to Cart
+        </button>
+      </div>
+    }
+  </div>
+
+  <!-- Info -->
+  <div class="p-4 flex flex-col flex-1">
+    <h3 class="text-sm font-semibold text-brand-primary line-clamp-2 mb-2 leading-snug">
+      {{ product().name }}
+    </h3>
+
+    @if (product().description) {
+      <p class="text-xs text-brand-primary/50 line-clamp-1 mb-3">
+        {{ product().description }}
+      </p>
+    }
+
+    <div class="mt-auto flex items-center justify-between">
+      <span class="text-lg font-bold text-brand-accent">
+        {{ product().price | currency: 'USD' }}
+      </span>
+      @if (product().stock > 0 && product().stock <= 5) {
+        <span class="text-[10px] text-orange-500 font-medium">Only {{ product().stock }} left</span>
+      }
+    </div>
+  </div>
+</div>

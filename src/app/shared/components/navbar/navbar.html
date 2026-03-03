@@ -1,0 +1,197 @@
+<!-- Top Navbar -->
+<nav class="sticky top-0 z-50 bg-brand-secondary/95 backdrop-blur-sm border-b border-black/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-18">
+      <!-- Left: Brand -->
+      <a routerLink="/" class="flex items-center gap-2 shrink-0">
+        <!-- Brand Icon -->
+        <svg class="w-7 h-7 text-brand-accent" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+          />
+        </svg>
+        <span class="text-xl font-bold tracking-tight text-brand-accent font-heading"
+          >EXPRESSO</span
+        >
+      </a>
+
+      <!-- Center: Desktop Nav Links -->
+      <div class="hidden md:flex items-center gap-8">
+        @for (link of navLinks; track link.route) {
+          <a
+            [routerLink]="link.route"
+            routerLinkActive="nav-link-active"
+            [routerLinkActiveOptions]="{ exact: link.route === '/' }"
+            class="nav-link text-sm font-medium text-brand-primary/70 hover:text-brand-primary transition-colors relative py-1"
+          >
+            {{ link.label }}
+          </a>
+        }
+      </div>
+
+      <!-- Right: Icons -->
+      <div class="flex items-center gap-4">
+        <!-- Search -->
+        <button
+          class="p-2 text-brand-accent hover:text-brand-primary transition-colors"
+          aria-label="Search"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <!-- Wishlist -->
+        <a
+          routerLink="/wishlist"
+          class="relative p-2 text-brand-accent hover:text-brand-primary transition-colors hidden sm:inline-flex"
+          aria-label="Wishlist"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+
+        <!-- Cart -->
+        <a
+          routerLink="/cart"
+          class="relative p-2 text-brand-accent hover:text-brand-primary transition-colors"
+          aria-label="Cart"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path d="M3 6h18" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M16 10a4 4 0 0 1-8 0" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          @if (cartItemCount() > 0) {
+            <span
+              class="absolute -top-0.5 -right-0.5 bg-brand-accent text-white text-[10px] font-bold rounded-full w-4.5 h-4.5 flex items-center justify-center leading-none"
+            >
+              {{ cartItemCount() }}
+            </span>
+          }
+        </a>
+
+        <!-- User / Login -->
+        @if (isLoggedIn()) {
+          <a
+            routerLink="/profile"
+            class="p-2 text-brand-accent hover:text-brand-primary transition-colors"
+            aria-label="Profile"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        } @else {
+          <a
+            routerLink="/auth/login"
+            class="p-2 text-brand-accent hover:text-brand-primary transition-colors"
+            aria-label="Login"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        }
+
+        <!-- Mobile Menu Toggle -->
+        <button
+          class="md:hidden p-2 text-brand-accent hover:text-brand-primary transition-colors"
+          aria-label="Toggle menu"
+          (click)="toggleMobileMenu()"
+        >
+          @if (mobileMenuOpen()) {
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          } @else {
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Dropdown -->
+  @if (mobileMenuOpen()) {
+    <div class="md:hidden border-t border-black/5 bg-brand-secondary">
+      <div class="px-4 py-3 space-y-1">
+        @for (link of navLinks; track link.route) {
+          <a
+            [routerLink]="link.route"
+            routerLinkActive="text-brand-accent font-semibold"
+            [routerLinkActiveOptions]="{ exact: link.route === '/' }"
+            (click)="toggleMobileMenu()"
+            class="block px-3 py-2.5 text-sm font-medium text-brand-primary/70 hover:text-brand-primary hover:bg-black/5 rounded-lg transition-colors"
+          >
+            {{ link.label }}
+          </a>
+        }
+      </div>
+    </div>
+  }
+</nav>
