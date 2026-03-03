@@ -39,11 +39,7 @@ export class CartService {
           price: 180,
           stock: 30,
           images: [
-<<<<<<< HEAD
-            'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?w=300&h=300&fit=crop',
-=======
             'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=300&h=300&fit=crop',
->>>>>>> main
           ],
           description: 'Red checkered shirt',
         } as Product,
