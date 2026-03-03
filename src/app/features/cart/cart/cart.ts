@@ -7,7 +7,6 @@ import { Spinner } from '../../../shared/components/spinner/spinner';
 
 @Component({
   selector: 'app-cart',
-  standalone: true,
   imports: [CommonModule, FormsModule, CartItems, Spinner],
   templateUrl: './cart.html',
   styleUrl: './cart.scss',
@@ -20,6 +19,7 @@ export class Cart implements OnInit {
   couponCode = signal('');
   couponError = signal('');
   isLoading = signal(false);
+  isClearingCart = signal(false);
 
   ngOnInit() {
     this.loadCart();
@@ -61,6 +61,17 @@ export class Cart implements OnInit {
   deleteItem(productId: string) {
     this.cartService.removeFromCart(productId).subscribe({
       error: (err) => console.error('Failed to remove item', err),
+    });
+  }
+
+  clearCart() {
+    this.isClearingCart.set(true);
+    this.cartService.clearCart().subscribe({
+      next: () => this.isClearingCart.set(false),
+      error: (err) => {
+        console.error('Failed to clear cart', err);
+        this.isClearingCart.set(false);
+      },
     });
   }
 
