@@ -10,7 +10,9 @@
           [class.z-10]="$index === currentSlide()"
           [class.z-0]="$index !== currentSlide()"
         >
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
+          <div
+            class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full px-12 sm:px-16 md:px-20"
+          >
             <!-- Text Content -->
             <div class="space-y-6 md:space-y-8">
               <h1
@@ -49,7 +51,7 @@
       <!-- Navigation Arrows -->
       <button
         (click)="prevSlide()"
-        class="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-brand-accent hover:bg-white transition-colors shadow-md"
+        class="absolute left-0 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-brand-accent hover:bg-white transition-colors shadow-md"
         aria-label="Previous slide"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -58,7 +60,7 @@
       </button>
       <button
         (click)="nextSlide()"
-        class="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-brand-accent hover:bg-white transition-colors shadow-md"
+        class="absolute right-0 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-brand-accent hover:bg-white transition-colors shadow-md"
         aria-label="Next slide"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
