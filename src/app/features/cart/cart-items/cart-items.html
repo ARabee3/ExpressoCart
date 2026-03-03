@@ -1,0 +1,54 @@
+<div class="cart-items">
+    @if (items.length === 0) {
+    <div class="empty-cart">
+        <svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #999; margin-bottom: 20px;">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <h2>Your cart is empty</h2>
+        <p>Looks like you haven't added anything yet.</p>
+    </div>
+    }
+    @for (item of items; track item._id; let last = $last) {
+    <div class="cart-item">
+        <img [src]="item.productId?.images?.[0] || 'https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=300&h=300&fit=crop'"
+            [alt]="item.productId?.name" class="item-image" />
+        <div class="item-details">
+            <h3 class="item-name">{{item.productId?.name}}</h3>
+            <p class="item-unit-price">${{item.productId?.price?.toFixed(2)}} each</p>
+        </div>
+
+        <div class="item-actions">
+            <div class="quantity-control">
+                <button class="btn-qty" (click)="onDecrement(item._id, item.quantity)" [disabled]="item.quantity <= 1">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14" />
+                    </svg>
+                </button>
+                <span class="quantity">{{item.quantity}}</span>
+                <button class="btn-qty" (click)="onIncrement(item._id, item.quantity)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14m-7-7h14" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="item-total">
+            <span class="price">${{((item.productId?.price || 0) * item.quantity).toFixed(2)}}</span>
+        </div>
+
+        <button class="btn-delete" (click)="onDelete(item.productId?._id || '')" title="Remove item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6" />
+            </svg>
+        </button>
+    </div>
+    @if (!last) {
+    <hr class="item-separator" />
+    }
+    }
+</div>

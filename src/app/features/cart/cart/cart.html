@@ -1,0 +1,57 @@
+<div class="cart-container">
+    @if (isLoading()) {
+    <app-spinner></app-spinner>
+    }
+    @else {
+    <div class="cart-header">
+        <h1>YOUR CART</h1>
+        <p class="items-count">{{cart().items.length}} Items</p>
+    </div>
+
+    <div class="cart-content">
+        <app-cart-items [items]="cart().items" (incrementItem)="increment($event.id, $event.quantity)"
+            (decrementItem)="decrement($event.id, $event.quantity)" (deleteItem)="deleteItem($event)"></app-cart-items>
+
+        <div class="cart-summary" *ngIf="cart().items.length > 0">
+            <h2>Order Summary</h2>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>${{(cart().totalPrice || 0).toFixed(2)}}</span>
+            </div>
+
+            <div class="coupon-section">
+                <label for="coupon">Have a coupon?</label>
+                <div class="coupon-input-group">
+                    <input type="text" id="coupon" [ngModel]="couponCode()" (ngModelChange)="couponCode.set($event)"
+                        placeholder="Enter code (e.g. SAVE10)" class="coupon-input" />
+                    <button class="btn-apply" (click)="applyCoupon()">Apply</button>
+                </div>
+                @if (couponError()) {
+                <p class="coupon-feedback error">{{couponError()}}</p>
+                }
+                @if (cart().appliedCoupon) {
+                <div class="coupon-applied">
+                    <span class="coupon-badge">Discount Applied!</span>
+                    <button class="btn-remove-coupon" (click)="clearCoupon()">✕</button>
+                </div>
+                }
+            </div>
+
+            <div class="summary-row discount" *ngIf="cart().discountAmount > 0">
+                <span>Discount</span>
+                <span>-${{(cart().discountAmount || 0).toFixed(2)}}</span>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-row total">
+                <span>Total</span>
+                <span>${{(cart().finalPrice || 0).toFixed(2)}}</span>
+            </div>
+
+            <button class="btn-checkout">Proceed to Checkout</button>
+        </div>
+    </div>
+    }
+</div>
