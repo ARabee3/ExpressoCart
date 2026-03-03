@@ -1,0 +1,135 @@
+<footer class="bg-brand-primary text-white">
+  <!-- Main Footer -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <!-- Brand Column -->
+      <div class="sm:col-span-2 lg:col-span-1">
+        <a routerLink="/" class="inline-flex items-center gap-2 mb-4">
+          <svg class="w-7 h-7 text-brand-accent" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+            />
+          </svg>
+          <span class="text-xl font-bold tracking-tight font-heading">EXPRESSO</span>
+        </a>
+        <p class="text-white/60 text-sm leading-relaxed max-w-xs">
+          Discover exclusive deals on quality furniture and home essentials. Crafted for comfort,
+          designed for life.
+        </p>
+        <!-- Social Icons -->
+        <div class="flex items-center gap-3 mt-5">
+          <a
+            href="#"
+            aria-label="Facebook"
+            class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-accent transition-colors"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            </svg>
+          </a>
+          <a
+            href="#"
+            aria-label="Twitter"
+            class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-accent transition-colors"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"
+              />
+            </svg>
+          </a>
+          <a
+            href="#"
+            aria-label="Instagram"
+            class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-accent transition-colors"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <circle cx="12" cy="12" r="5" />
+              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="text-sm font-semibold uppercase tracking-wider mb-4 text-white/90">
+          Quick Links
+        </h4>
+        <ul class="space-y-2.5">
+          @for (link of quickLinks; track link.route) {
+            <li>
+              <a
+                [routerLink]="link.route"
+                class="text-sm text-white/60 hover:text-white transition-colors"
+              >
+                {{ link.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <!-- Customer Support -->
+      <div>
+        <h4 class="text-sm font-semibold uppercase tracking-wider mb-4 text-white/90">Support</h4>
+        <ul class="space-y-2.5">
+          @for (link of supportLinks; track link.route) {
+            <li>
+              <a
+                [routerLink]="link.route"
+                class="text-sm text-white/60 hover:text-white transition-colors"
+              >
+                {{ link.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <!-- Newsletter / Contact -->
+      <div>
+        <h4 class="text-sm font-semibold uppercase tracking-wider mb-4 text-white/90">
+          Stay in Touch
+        </h4>
+        <p class="text-sm text-white/60 mb-4">Subscribe to get special offers and updates.</p>
+        <form class="flex gap-2" (submit)="$event.preventDefault()">
+          <input
+            type="email"
+            placeholder="Your email"
+            class="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-brand-accent transition-colors"
+          />
+          <button
+            type="submit"
+            class="px-4 py-2 bg-brand-accent text-white text-sm font-medium rounded-lg hover:bg-brand-accent/80 transition-colors shrink-0"
+          >
+            Join
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-white/10">
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3"
+    >
+      <p class="text-xs text-white/50">
+        &copy; {{ currentYear }} ExpressoCart. All rights reserved.
+      </p>
+      <div class="flex items-center gap-4">
+        <span class="text-xs text-white/40">Visa</span>
+        <span class="text-xs text-white/40">Mastercard</span>
+        <span class="text-xs text-white/40">PayPal</span>
+      </div>
+    </div>
+  </div>
+</footer>

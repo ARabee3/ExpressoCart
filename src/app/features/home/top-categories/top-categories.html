@@ -1,0 +1,39 @@
+<section class="py-16 md:py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center mb-10 md:mb-14">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-primary mb-3">
+        Top Categories
+      </h2>
+      <p class="text-brand-primary/50 text-sm md:text-base max-w-md mx-auto">
+        Browse our most popular furniture categories and find what fits your space.
+      </p>
+    </div>
+
+    <!-- Categories Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+      @for (category of categories(); track category.slug) {
+        <a
+          [routerLink]="'/categories/' + category.slug"
+          class="group relative rounded-2xl overflow-hidden aspect-[3/4] cursor-pointer"
+        >
+          <!-- Image -->
+          <img
+            [src]="category.image"
+            [alt]="category.name"
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+          <!-- Overlay -->
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity"
+          ></div>
+          <!-- Content -->
+          <div class="absolute bottom-0 left-0 right-0 p-4">
+            <h3 class="text-white font-semibold text-sm md:text-base">{{ category.name }}</h3>
+            <p class="text-white/70 text-xs mt-0.5">{{ category.itemCount }} items</p>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
