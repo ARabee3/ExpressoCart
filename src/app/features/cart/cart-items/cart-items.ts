@@ -1,20 +1,21 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { CartItem } from '../../../core/models/cart.model';
 
 @Component({
   selector: 'app-cart-items',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [CurrencyPipe, RouterLink],
   templateUrl: './cart-items.html',
   styleUrl: './cart-items.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartItems {
-  @Input() items: CartItem[] = [];
+  readonly items = input<CartItem[]>([]);
 
-  @Output() incrementItem = new EventEmitter<{ id: string, quantity: number }>();
-  @Output() decrementItem = new EventEmitter<{ id: string, quantity: number }>();
-  @Output() deleteItem = new EventEmitter<string>();
+  readonly incrementItem = output<{ id: string; quantity: number }>();
+  readonly decrementItem = output<{ id: string; quantity: number }>();
+  readonly deleteItem = output<string>();
 
   onIncrement(id: string, quantity: number) {
     this.incrementItem.emit({ id, quantity });

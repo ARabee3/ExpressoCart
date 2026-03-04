@@ -1,96 +1,131 @@
-<div class="cart-items">
-  @if (items.length === 0) {
-    <div class="empty-cart">
+@if (items().length === 0) {
+  <!-- Empty State -->
+  <div class="flex flex-col items-center justify-center py-20 text-center">
+    <div class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
       <svg
-        class="empty-icon"
-        width="64"
-        height="64"
-        viewBox="0 0 24 24"
+        class="size-10 text-gray-400"
         fill="none"
+        viewBox="0 0 24 24"
         stroke="currentColor"
         stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        style="color: #999; margin-bottom: 20px"
       >
-        <circle cx="9" cy="21" r="1"></circle>
-        <circle cx="20" cy="21" r="1"></circle>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+        />
       </svg>
-      <h2>Your cart is empty</h2>
-      <p>Looks like you haven't added anything yet.</p>
     </div>
-  }
-  @for (item of items; track item._id; let last = $last) {
-    <div class="cart-item">
-      <img
-        [src]="
-          item.productId.images[0] ||
-          'https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=300&h=300&fit=crop'
-        "
-        [alt]="item.productId.name"
-        class="item-image"
-      />
-      <div class="item-details">
-        <h3 class="item-name">{{ item.productId.name }}</h3>
-        <p class="item-unit-price">${{ item.productId.price.toFixed(2) }} each</p>
-      </div>
+    <h2 class="text-xl font-bold text-brand-primary mb-2">Your cart is empty</h2>
+    <p class="text-sm text-brand-primary/50 mb-8 max-w-xs">
+      Looks like you haven't added anything yet. Start shopping!
+    </p>
+    <a
+      routerLink="/products"
+      class="inline-flex items-center gap-2 rounded-xl bg-brand-primary px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-brand-primary/90 transition-colors"
+    >
+      Browse Products
+    </a>
+  </div>
+} @else {
+  <div class="divide-y divide-gray-100">
+    @for (item of items(); track item._id) {
+      <div class="flex items-center gap-4 py-5 group">
+        <!-- Product Image -->
+        <a
+          [routerLink]="['/products', item.productId._id]"
+          class="shrink-0 w-20 h-20 rounded-xl overflow-hidden bg-brand-secondary block"
+        >
+          <img
+            [src]="
+              item.productId.images[0] ||
+              'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop'
+            "
+            [alt]="item.productId.name"
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </a>
 
-      <div class="item-actions">
-        <div class="quantity-control">
+        <!-- Product Details -->
+        <div class="flex-1 min-w-0">
+          <a
+            [routerLink]="['/products', item.productId._id]"
+            class="hover:underline focus:outline-none"
+          >
+            <h3 class="text-sm font-semibold text-brand-primary line-clamp-2 leading-snug">
+              {{ item.productId.name }}
+            </h3>
+          </a>
+          <p class="text-xs text-brand-primary/50 mt-1">
+            {{ item.productId.price | currency }} each
+          </p>
+        </div>
+
+        <!-- Quantity Controls -->
+        <div
+          class="flex items-center border border-gray-200 rounded-full bg-gray-50 overflow-hidden h-9 shrink-0"
+        >
           <button
-            class="btn-qty"
             (click)="onDecrement(item._id, item.quantity)"
             [disabled]="item.quantity <= 1"
+            class="w-9 h-full flex items-center justify-center text-brand-primary/60 hover:bg-gray-100 hover:text-brand-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            aria-label="Decrease quantity"
           >
             <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
               fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2.5"
               stroke="currentColor"
-              stroke-width="2"
+              class="size-3.5"
             >
-              <path d="M5 12h14" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
             </svg>
           </button>
-          <span class="quantity">{{ item.quantity }}</span>
-          <button class="btn-qty" (click)="onIncrement(item._id, item.quantity)">
+          <span class="w-9 text-center text-sm font-semibold text-brand-primary select-none">
+            {{ item.quantity }}
+          </span>
+          <button
+            (click)="onIncrement(item._id, item.quantity)"
+            class="w-9 h-full flex items-center justify-center text-brand-primary/60 hover:bg-gray-100 hover:text-brand-primary transition-colors"
+            aria-label="Increase quantity"
+          >
             <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
               fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2.5"
               stroke="currentColor"
-              stroke-width="2"
+              class="size-3.5"
             >
-              <path d="M12 5v14m-7-7h14" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </button>
         </div>
-      </div>
 
-      <div class="item-total">
-        <span class="price">${{ ((item.productId.price || 0) * item.quantity).toFixed(2) }}</span>
-      </div>
+        <!-- Item Total -->
+        <span class="text-sm font-bold text-brand-primary w-16 text-right shrink-0">
+          {{ item.productId.price * item.quantity | currency }}
+        </span>
 
-      <button class="btn-delete" (click)="onDelete(item.productId._id || '')" title="Remove item">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
+        <!-- Delete Button -->
+        <button
+          (click)="onDelete(item.productId._id || '')"
+          class="shrink-0 p-1.5 rounded-full text-gray-300 hover:bg-red-50 hover:text-red-500 transition-colors"
+          aria-label="Remove item"
         >
-          <path
-            d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"
-          />
-        </svg>
-      </button>
-    </div>
-    @if (!last) {
-      <hr class="item-separator" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="size-4"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
     }
-  }
-</div>
+  </div>
+}
