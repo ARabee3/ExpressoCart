@@ -82,7 +82,7 @@ export class ProductDetails implements OnInit {
     const p = this.product();
     if (p && !this.isOutOfStock()) {
       this.cartService.addToCart(p, this.quantity()).subscribe(() => {
-        this.toastService.show(`${this.quantity()} × ${p.name} added to cart`);
+        this.toastService.success(`${this.quantity()} × ${p.name} added to cart`);
       });
     }
   }
@@ -91,7 +91,7 @@ export class ProductDetails implements OnInit {
     const p = this.product();
     if (p) {
       const added = this.wishlistService.toggle(p);
-      this.toastService.show(
+      this.toastService.success(
         added ? `${p.name} added to wishlist` : `${p.name} removed from wishlist`,
       );
     }

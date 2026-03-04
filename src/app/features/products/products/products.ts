@@ -100,13 +100,13 @@ export class Products implements OnInit {
 
   handleAddToCart(product: Product) {
     this.cartService.addToCart(product, 1).subscribe(() => {
-      this.toastService.show(`${product.name} added to cart`);
+      this.toastService.success(`${product.name} added to cart`);
     });
   }
 
   handleAddToWishlist(product: Product) {
     const added = this.wishlistService.toggle(product);
-    this.toastService.show(
+    this.toastService.success(
       added ? `${product.name} added to wishlist` : `${product.name} removed from wishlist`,
     );
   }
