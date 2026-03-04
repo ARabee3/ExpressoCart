@@ -8,7 +8,7 @@ import { ApiService } from './api.service';
 export class CartService {
 
   //using in integration with backend
- //  private api = inject(ApiService);
+  //  private api = inject(ApiService);
 
   // Expose reactive cart state
   cart = signal<CartData>({
@@ -146,7 +146,8 @@ export class CartService {
   updateQuantity(itemId: string, quantity: number) {
     const item = this.mockCartData.items.find((i) => i._id === itemId);
     if (item) {
-      item.quantity = quantity;
+      // Clamp quantity between 1 and available stock
+      item.quantity = Math.max(1, Math.min(quantity, item.productId.stock));
     }
     this.recalcCart();
     return of({ status: 'success', data: { ...this.mockCartData } } as CartResponse).pipe(
@@ -204,7 +205,7 @@ export class CartService {
   }
 
   //integration with backend
-    //  get cart 
+  //  get cart 
   // getCart(): Observable<CartResponse> {
   //   return this.api.get<CartResponse>('cart').pipe(
   //     tap((res) => this.cart.set(res.data)),
