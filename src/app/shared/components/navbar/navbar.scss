@@ -23,3 +23,35 @@
     width: 100% !important;
   }
 }
+
+/* Search bar expand animation */
+.search-expand-enter {
+  animation: searchSlideDown 0.25s ease-out both;
+}
+
+@keyframes searchSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Search results fade-in */
+.search-results-enter {
+  animation: searchResultsFade 0.2s ease-out both;
+}
+
+@keyframes searchResultsFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
