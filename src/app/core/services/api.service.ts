@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 
@@ -8,8 +8,13 @@ export class ApiService {
   private http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl;
 
-  get<T>(endpoint: string): Observable<T> {
-    return this.http.get<T>(`${this.baseUrl}/${endpoint}`);
+  get<T>(
+    endpoint: string,
+    params?:
+      | HttpParams
+      | { [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean> },
+  ): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params });
   }
 
   post<T>(endpoint: string, body: any): Observable<T> {

@@ -11,6 +11,27 @@ export const routes: Routes = [
         loadComponent: () => import('./features/home/home/home').then((m) => m.Home),
       },
       {
+        path: 'products',
+        loadComponent: () =>
+          import('./features/products/products/products').then((m) => m.Products),
+      },
+      {
+        path: 'products/:id',
+        loadComponent: () =>
+          import('./features/products/product-details/product-details').then(
+            (m) => m.ProductDetails,
+          ),
+      },
+      {
+        path: 'wishlist',
+        loadComponent: () =>
+          import('./features/wishlist/wishlist/wishlist').then((m) => m.Wishlist),
+      },
+      {
+        path: 'categories',
+        loadComponent: () => import('./features/categories/categories').then((m) => m.Categories),
+      },
+      {
         path: 'cart',
         loadComponent: () => import('./features/cart/cart/cart').then((m) => m.Cart),
       },

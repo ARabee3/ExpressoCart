@@ -1,0 +1,189 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+  <!-- Header -->
+  <div class="mb-10 text-center md:text-left">
+    <h1 class="text-3xl md:text-4xl font-bold text-brand-primary mb-4 font-heading">
+      All Products
+    </h1>
+    <p class="text-brand-primary/60 text-sm md:text-base max-w-2xl">
+      Browse our extensive collection of high-quality furniture and home decor pieces designed to
+      elevate your living space.
+    </p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="flex justify-center items-center py-20">
+      <app-spinner />
+    </div>
+  } @else {
+    <!-- Filters & Sorting Layout -->
+    <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
+      <!-- Sidebar Filters -->
+      <aside class="w-full md:w-64 shrink-0">
+        <div class="sticky top-24 space-y-8">
+          <!-- Categories -->
+          <div>
+            <h3 class="text-lg font-bold text-brand-primary mb-4">Categories</h3>
+            <ul class="space-y-2">
+              @for (cat of categories(); track cat) {
+                <li>
+                  <button
+                    (click)="setCategory(cat)"
+                    class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors duration-200"
+                    [class]="
+                      currentCategory() === cat
+                        ? 'bg-brand-accent text-white font-medium shadow-sm'
+                        : 'text-brand-primary/70 hover:bg-black/5 hover:text-brand-primary'
+                    "
+                  >
+                    {{ cat }}
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="flex-1">
+        <!-- Toolbar -->
+        <div
+          class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 bg-white p-4 rounded-2xl shadow-sm border border-black/5"
+        >
+          <p class="text-sm font-medium text-brand-primary/70">
+            Showing <span class="text-brand-primary">{{ filteredProducts().length }}</span> of
+            <span class="text-brand-primary">{{ allProducts().length }}</span> products
+          </p>
+
+          <div class="flex items-center gap-3">
+            <!-- Custom Sort Dropdown -->
+            <div class="relative">
+              <!-- Trigger -->
+              <button
+                type="button"
+                (click)="toggleSort()"
+                class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white pl-3 pr-3 py-2.5 text-sm font-semibold text-brand-primary shadow-sm transition-all hover:border-brand-accent hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
+                [class.border-brand-accent]="isSortOpen()"
+              >
+                <!-- Sort icon -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  class="size-4 text-brand-accent shrink-0"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                  />
+                </svg>
+                <span>{{ currentSortLabel() }}</span>
+                <!-- Chevron -->
+                <svg
+                  class="size-4 text-brand-primary/40 transition-transform duration-200"
+                  [class.rotate-180]="isSortOpen()"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2.5"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              @if (isSortOpen()) {
+                <!-- Backdrop -->
+                <div class="fixed inset-0 z-40" (click)="closeSortDropdown()"></div>
+
+                <div
+                  class="absolute right-0 top-full mt-2 z-50 w-52 rounded-xl border border-gray-100 bg-white p-1.5 shadow-xl ring-1 ring-black/5"
+                >
+                  @for (opt of sortOptions; track opt.value) {
+                    <button
+                      type="button"
+                      (click)="setSortOption(opt.value)"
+                      class="flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors"
+                      [class]="
+                        sortOption() === opt.value
+                          ? 'bg-brand-accent text-white'
+                          : 'text-brand-primary/70 hover:bg-gray-50 hover:text-brand-primary'
+                      "
+                    >
+                      <span>{{ opt.label }}</span>
+                      @if (sortOption() === opt.value) {
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          class="size-4 shrink-0"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      }
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        @if (filteredProducts().length > 0) {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            @for (product of filteredProducts(); track product._id) {
+              <app-product-card
+                [product]="product"
+                [isInWishlist]="wishlistIds().has(product._id)"
+                (addToCart)="handleAddToCart($event)"
+                (addToWishlist)="handleAddToWishlist($event)"
+              />
+            }
+          </div>
+        } @else {
+          <!-- Empty State -->
+          <div
+            class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-black/10"
+          >
+            <svg
+              class="w-16 h-16 text-brand-primary/20 mb-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M20 12H4M8 16l-4-4 4-4"
+              />
+            </svg>
+            <h3 class="text-lg font-bold text-brand-primary mb-2">No products found</h3>
+            <p class="text-sm text-brand-primary/50 text-center max-w-sm">
+              We couldn't find any products in the selected category. Try selecting another category
+              or clear your filters.
+            </p>
+            <button
+              (click)="setCategory('All')"
+              class="mt-6 px-6 py-2.5 bg-brand-primary text-white text-sm font-medium rounded-xl hover:bg-brand-primary/90 transition-colors"
+            >
+              View All Products
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
