@@ -22,12 +22,12 @@ export class Wishlist {
 
   removeFromWishlist(product: Product) {
     this.wishlistService.remove(product._id);
-    this.toastService.show(`${product.name} removed from wishlist`);
+    this.toastService.success(`${product.name} removed from wishlist`);
   }
 
   addToCart(product: Product) {
     this.cartService.addToCart(product, 1).subscribe(() => {
-      this.toastService.show(`${product.name} added to cart`);
+      this.toastService.success(`${product.name} added to cart`);
     });
   }
 
@@ -38,6 +38,6 @@ export class Wishlist {
   clearAll() {
     const items = this.wishlistService.wishlistItems();
     items.forEach((p) => this.wishlistService.remove(p._id));
-    this.toastService.show('Wishlist cleared');
+    this.toastService.success('Wishlist cleared');
   }
 }
