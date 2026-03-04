@@ -35,6 +35,20 @@ export const routes: Routes = [
         path: 'cart',
         loadComponent: () => import('./features/cart/cart/cart').then((m) => m.Cart),
       },
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./features/auth/pages/login/login')
+            .then((m) => m.Login),
+      },
+
+      {
+        path: 'register',
+        loadComponent: () =>
+          import('./features/auth/pages/register/register')
+            .then((m) => m.Register),
+      },
+
     ],
   },
   {

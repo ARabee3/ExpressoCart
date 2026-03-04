@@ -4,13 +4,12 @@ import { catchError, throwError } from 'rxjs';
 import { ToastService } from '../services/toast.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const toastService = inject(ToastService);
+  const toast = inject(ToastService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let errorMessage = 'An unknown error occurred!';
+      let errorMessage = 'An unknown error occurred.';
 
-      // Check if the error comes from your Node.js AppError structure
       if (error.error && error.error.error) {
         errorMessage = error.error.error;
       } else if (error.error && error.error.message) {
@@ -18,7 +17,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       console.error('GLOBAL ERROR CAUGHT:', errorMessage);
-      toastService.show(errorMessage, 'error');
+      toast.error(errorMessage);
 
       return throwError(() => error);
     }),
