@@ -115,8 +115,22 @@ export class CartService {
     );
   }
 
-  addToCart(productId: string, quantity: number) {
-    // Find existing or mock add (mostly skipped for mock since UI drives items)
+  addToCart(product: Product, quantity: number = 1) {
+    const existingItem = this.mockCartData.items.find(
+      (i) => i.productId._id === product._id && !i.isDeleted,
+    );
+
+    if (existingItem) {
+      existingItem.quantity += quantity;
+    } else {
+      this.mockCartData.items.push({
+        _id: `item_${Date.now()}`,
+        productId: product,
+        quantity: quantity,
+        isDeleted: false,
+      });
+    }
+
     this.recalcCart();
     return of({ status: 'success', data: { ...this.mockCartData } } as CartResponse).pipe(
       delay(300),
