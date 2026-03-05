@@ -31,7 +31,6 @@ export class Cart implements OnInit {
   readonly isLoading = signal(false);
   readonly couponCode = signal('');
   readonly couponError = signal('');
-  maxStockItemId = signal<string | null>(null);
 
   readonly hasItems = computed(() => this.cart().items.length > 0);
   readonly itemCount = computed(() => this.cart().items.reduce((sum, i) => sum + i.quantity, 0));
@@ -64,13 +63,12 @@ export class Cart implements OnInit {
     const item = this.cart().items.find((i) => i._id === itemId);
      if (!item) return;
 
-  if (currentQuantity >= item.productId.stock) {
-    this.maxStockItemId.set(itemId);
-    setTimeout(() => this.maxStockItemId.set(null), 2000); 
-    return;
+  if (currentQuantity < item.productId.stock) {
+    this.updateLocalQuantity(itemId, currentQuantity + 1);
   }
-
-  this.updateLocalQuantity(itemId, currentQuantity + 1);
+  else{
+    this.toastService.error('Max stock reached!'); // not be reached but for safety
+  }
     
   }
 

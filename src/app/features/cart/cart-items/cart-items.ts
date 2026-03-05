@@ -16,7 +16,6 @@ export class CartItems {
   readonly incrementItem = output<{ id: string; quantity: number }>();
   readonly decrementItem = output<{ id: string; quantity: number }>();
   readonly deleteItem = output<string>();
-  readonly maxStockItemId = input<string | null>(null);
 
   onIncrement(id: string, quantity: number) {
     this.incrementItem.emit({ id, quantity });
