@@ -10,3 +10,5 @@ export interface Coupon {
   usedCount?: number;
   isActive?: boolean;
 }
+
+export type CreateCouponDTO = Omit<Coupon, '_id'>;

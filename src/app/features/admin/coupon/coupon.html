@@ -1,0 +1,239 @@
+<!-- Page Header -->
+<div class="mb-8 flex items-center justify-between">
+  <div>
+    <h1 class="text-2xl font-black tracking-tight">Coupons</h1>
+    <p class="text-sm text-gray-500 mt-1">Manage discount codes and promotions.</p>
+  </div>
+  <button
+    (click)="openCreate()"
+    class="px-4 py-2 bg-black text-white text-sm font-semibold rounded-xl hover:bg-gray-800 transition-colors"
+  >
+    + New Coupon
+  </button>
+</div>
+
+<!-- Coupons Table -->
+@if (admin.coupons(); as coupons) {
+  @if (coupons.length > 0) {
+    <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 border-b">
+          <tr>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Code
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Type
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Discount
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Expires
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Usage
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Status
+            </th>
+            <th class="px-6 py-3"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          @for (coupon of coupons; track coupon._id) {
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 font-mono font-bold text-sm">{{ coupon.code }}</td>
+              <td class="px-6 py-4">
+                <span
+                  class="px-2 py-1 rounded-lg text-xs font-semibold"
+                  [class]="
+                    coupon.discountType === 'percentage'
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'bg-purple-100 text-purple-700'
+                  "
+                >
+                  {{ coupon.discountType }}
+                </span>
+              </td>
+              <td class="px-6 py-4 font-semibold">
+                {{
+                  coupon.discountType === 'percentage'
+                    ? coupon.discount + '%'
+                    : '$' + coupon.discount
+                }}
+              </td>
+              <td class="px-6 py-4 text-gray-500">{{ coupon.expireDate | date: 'mediumDate' }}</td>
+              <td class="px-6 py-4 text-gray-500">
+                {{ coupon.usedCount ?? 0 }} / {{ coupon.usageLimit }}
+              </td>
+              <td class="px-6 py-4">
+                <span
+                  class="px-2 py-1 rounded-lg text-xs font-semibold"
+                  [class]="
+                    coupon.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                  "
+                >
+                  {{ coupon.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2 justify-end">
+                  <button
+                    (click)="openEdit(coupon)"
+                    class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    (click)="delete(coupon._id)"
+                    class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="bg-white rounded-2xl border shadow-sm p-12 text-center">
+      <p class="text-gray-400 text-sm">No coupons yet. Create your first one.</p>
+    </div>
+  }
+} @else {
+  <!-- Loading skeleton -->
+  <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+    <div class="h-10 bg-gray-50 border-b"></div>
+    @for (_ of [1, 2, 3, 4, 5]; track $index) {
+      <div class="flex gap-4 px-6 py-4 border-b animate-pulse">
+        <div class="h-4 bg-gray-200 rounded w-28"></div>
+        <div class="h-4 bg-gray-200 rounded w-20"></div>
+        <div class="h-4 bg-gray-200 rounded w-12"></div>
+        <div class="h-4 bg-gray-200 rounded w-24"></div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Slide-in Form Panel -->
+@if (showForm()) {
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/30 z-40" (click)="closeForm()"></div>
+
+  <!-- Panel -->
+  <div class="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-50 flex flex-col">
+    <div class="px-6 py-5 border-b flex items-center justify-between">
+      <h2 class="font-black text-lg">
+        {{ editingCoupon() ? 'Edit Coupon' : 'New Coupon' }}
+      </h2>
+      <button (click)="closeForm()" class="text-gray-400 hover:text-black text-xl font-bold">
+        ✕
+      </button>
+    </div>
+
+    <form (ngSubmit)="submit()" class="flex-1 overflow-auto px-6 py-6 flex flex-col gap-5">
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Code</label>
+        <input
+          [(ngModel)]="form.code"
+          name="code"
+          required
+          placeholder="e.g. SUMMER20"
+          class="w-full px-4 py-2.5 border rounded-xl text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-black"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider"
+          >Discount Type</label
+        >
+        <select
+          [(ngModel)]="form.discountType"
+          name="discountType"
+          class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
+        >
+          <option value="percentage">Percentage (%)</option>
+          <option value="fixed">Fixed ($)</option>
+        </select>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider"
+          >Discount Value</label
+        >
+        <input
+          [(ngModel)]="form.discount"
+          name="discount"
+          type="number"
+          min="0"
+          required
+          class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Expiry Date</label>
+        <input
+          [(ngModel)]="form.expireDate"
+          name="expireDate"
+          type="date"
+          required
+          class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Usage Limit</label>
+        <input
+          [(ngModel)]="form.usageLimit"
+          name="usageLimit"
+          type="number"
+          min="1"
+          required
+          class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
+        />
+      </div>
+
+      <div class="flex items-center justify-between px-4 py-3 border rounded-xl">
+        <span class="text-sm font-semibold">Active</span>
+        <input
+          [(ngModel)]="form.isActive"
+          name="isActive"
+          type="checkbox"
+          class="w-4 h-4 accent-black"
+        />
+      </div>
+
+      <div class="mt-auto pt-4 flex gap-3">
+        <button
+          type="button"
+          (click)="closeForm()"
+          class="flex-1 py-2.5 border rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="flex-1 py-2.5 bg-black text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors"
+        >
+          {{ editingCoupon() ? 'Save Changes' : 'Create Coupon' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}
