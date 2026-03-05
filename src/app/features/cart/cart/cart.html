@@ -16,7 +16,7 @@
   </div>
   } @else if (!hasItems()) {
   <div class="bg-white rounded-2xl shadow-sm border border-black/5 p-8">
-    <app-cart-items [items]="cart().items" [maxStockItemId]="maxStockItemId()" (incrementItem)="increment($event.id, $event.quantity)"
+    <app-cart-items [items]="cart().items" (incrementItem)="increment($event.id, $event.quantity)"
       (decrementItem)="decrement($event.id, $event.quantity)" (deleteItem)="deleteItem($event)" />
   </div>
   } @else {
