@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Observable, of, delay, map, catchError, forkJoin } from 'rxjs';
 import { Product } from '../models/cart.model';
 import { ApiService } from './api.service';
@@ -15,6 +15,9 @@ interface ProductsApiResponse {
 export class ProductService {
   private api = inject(ApiService);
   private readonly baseUrl = environment.apiUrl;
+
+  /** Cache of all loaded products (API + mock) for single-product fallback */
+  private readonly cachedProducts = signal<Product[]>([]);
 
   /** Normalize API product — category may be populated object { _id, name, slug } */
   private normalizeProduct(p: Product): Product {
@@ -145,7 +148,13 @@ export class ProductService {
         catchError(() => of([])),
       ),
       mockProducts: of(this.MOCK_PRODUCTS),
-    }).pipe(map(({ apiProducts, mockProducts }) => [...apiProducts, ...mockProducts]));
+    }).pipe(
+      map(({ apiProducts, mockProducts }) => {
+        const all = [...apiProducts, ...mockProducts];
+        this.cachedProducts.set(all);
+        return all;
+      }),
+    );
   }
 
   getProductById(id: string): Observable<Product | undefined> {
@@ -154,8 +163,12 @@ export class ProductService {
       return of(product).pipe(delay(300));
     }
     return this.api.get<{ data: Product }>(`products/${id}`).pipe(
-      map((res) => res.data),
-      catchError(() => of(undefined)),
+      map((res) => this.normalizeProduct(res.data)),
+      catchError(() => {
+        // Fall back to cached product list (populated when products page was visited)
+        const cached = this.cachedProducts().find((p) => p._id === id);
+        return of(cached);
+      }),
     );
   }
 
