@@ -99,7 +99,7 @@ export class Products implements OnInit {
   }
 
   handleAddToCart(product: Product) {
-    this.cartService.addToCart(product, 1).subscribe(() => {
+    this.cartService.addToCart(product._id, 1).subscribe(() => {
       this.toastService.success(`${product.name} added to cart`);
     });
   }

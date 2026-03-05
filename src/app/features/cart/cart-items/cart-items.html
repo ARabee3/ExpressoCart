@@ -2,28 +2,17 @@
 <!-- Empty State -->
 <div class="flex flex-col items-center justify-center py-20 text-center">
   <div class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-      <svg
-        class="size-10 text-gray-400"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="1.5"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-        />
+    <svg class="size-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
     </svg>
   </div>
   <h2 class="text-xl font-bold text-brand-primary mb-2">Your cart is empty</h2>
   <p class="text-sm text-brand-primary/50 mb-8 max-w-xs">
     Looks like you haven't added anything yet. Start shopping!
   </p>
-    <a
-      routerLink="/products"
-      class="inline-flex items-center gap-2 rounded-xl bg-brand-primary px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-brand-primary/90 transition-colors"
-    >
+  <a routerLink="/products"
+    class="inline-flex items-center gap-2 rounded-xl bg-brand-primary px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-brand-primary/90 transition-colors">
     Browse Products
   </a>
 </div>
@@ -32,26 +21,18 @@
   @for (item of items(); track item._id) {
   <div class="flex items-center gap-4 py-5 group">
     <!-- Product Image -->
-        <a
-          [routerLink]="['/products', item.productId._id]"
-          class="shrink-0 w-20 h-20 rounded-xl overflow-hidden bg-brand-secondary block"
-        >
-          <img
-            [src]="
+    <a [routerLink]="['/products', item.productId._id]"
+      class="shrink-0 w-20 h-20 rounded-xl overflow-hidden bg-brand-secondary block">
+      <img [src]="
               item.productId.images[0] ||
               'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop'
-            "
-            [alt]="item.productId.name"
-            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+            " [alt]="item.productId.name"
+        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
     </a>
 
     <!-- Product Details -->
     <div class="flex-1 min-w-0">
-          <a
-            [routerLink]="['/products', item.productId._id]"
-            class="hover:underline focus:outline-none"
-          >
+      <a [routerLink]="['/products', item.productId._id]" class="hover:underline focus:outline-none">
         <h3 class="text-sm font-semibold text-brand-primary line-clamp-2 leading-snug">
           {{ item.productId.name }}
         </h3>
@@ -62,23 +43,12 @@
     </div>
 
     <!-- Quantity Controls -->
-        <div
-          class="flex items-center border border-gray-200 rounded-full bg-gray-50 overflow-hidden h-9 shrink-0"
-        >
-          <button
-            (click)="onDecrement(item._id, item.quantity)"
-            [disabled]="item.quantity <= 1"
+    <div class="flex items-center border border-gray-200 rounded-full bg-gray-50 overflow-hidden h-9 shrink-0">
+      <button (click)="onDecrement(item._id, item.quantity)" [disabled]="item.quantity <= 1"
         class="w-9 h-full flex items-center justify-center text-brand-primary/60 hover:bg-gray-100 hover:text-brand-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            aria-label="Decrease quantity"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="2.5"
-              stroke="currentColor"
-              class="size-3.5"
-            >
+        aria-label="Decrease quantity">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"
+          class="size-3.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
         </svg>
       </button>
@@ -94,6 +64,11 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
       </button>
+      @if (maxStockItemId() === item._id) {
+      <span class="text-xs text-orange-500 font-medium ml-2 animate-pulse">
+        Max stock reached!
+      </span>
+      }
     </div>
 
     <!-- Item Total -->
@@ -102,19 +77,11 @@
     </span>
 
     <!-- Delete Button -->
-        <button
-          (click)="onDelete(item.productId._id || '')"
+    <button (click)="onDelete(item.productId._id)"
       class="shrink-0 p-1.5 rounded-full text-gray-300 hover:bg-red-50 hover:text-red-500 transition-colors"
-          aria-label="Remove item"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="currentColor"
-            class="size-4"
-          >
+      aria-label="Remove item">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        class="size-4">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
       </svg>
     </button>
