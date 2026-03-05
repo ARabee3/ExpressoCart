@@ -81,7 +81,7 @@ export class ProductDetails implements OnInit {
   addToCart() {
     const p = this.product();
     if (p && !this.isOutOfStock()) {
-      this.cartService.addToCart(p, this.quantity()).subscribe(() => {
+      this.cartService.addToCart(p._id, this.quantity()).subscribe(() => {
         this.toastService.success(`${this.quantity()} × ${p.name} added to cart`);
       });
     }
