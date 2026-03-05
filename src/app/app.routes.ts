@@ -37,18 +37,15 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-        loadComponent: () =>
-          import('./features/auth/pages/login/login')
-            .then((m) => m.Login),
+        loadComponent: () => import('./features/auth/pages/login/login').then((m) => m.Login),
       },
 
       {
         path: 'register',
         loadComponent: () =>
-          import('./features/auth/pages/register/register')
-            .then((m) => m.Register),
+          import('./features/auth/pages/register/register').then((m) => m.Register),
       },
-       {
+      {
         path: 'checkout',
         loadComponent: () =>
           import('./features/cart/checkout/checkout')
@@ -68,6 +65,10 @@ export const routes: Routes = [
           import('./features/admin/dashboard/dashboard.component').then(
             (com) => com.DashboardComponent,
           ),
+      },
+      {
+        path: 'coupon',
+        loadComponent: () => import('./features/admin/coupon/coupon').then((com) => com.Coupon),
       },
     ],
   },
