@@ -14,6 +14,7 @@ import { CartItems } from '../cart-items/cart-items';
 import { Spinner } from '../../../shared/components/spinner/spinner';
 import { from, throwError } from 'rxjs';
 import { concatMap, catchError, toArray } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -24,7 +25,8 @@ import { concatMap, catchError, toArray } from 'rxjs/operators';
 export class Cart implements OnInit {
 
   //integration with backend
-   cartService = inject(CartService);
+  private router = inject(Router);
+  private cartService = inject(CartService);
   private toastService = inject(ToastService);
 
   readonly cart = this.cartService.cart;
@@ -113,7 +115,7 @@ export class Cart implements OnInit {
   checkout() {
     if (this.pendingUpdates.size === 0) {
       this.toastService.success('Proceeding to checkout...');
-      // Logic for checkout 
+      this.router.navigate(['/checkout']);
       return;
     }
 

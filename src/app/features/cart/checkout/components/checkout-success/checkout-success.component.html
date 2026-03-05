@@ -1,0 +1,23 @@
+<div class="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.06)] p-12 text-center">
+    <div
+        class="w-20 h-20 rounded-full bg-green-50 border-[3px] border-green-200 flex items-center justify-center mx-auto mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+                d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                clip-rule="evenodd" />
+        </svg>
+    </div>
+    <h2 class="font-black text-[1.5rem] text-[#1a1a2e] mb-2">Order Placed!</h2>
+    <p class="text-[#1a1a2e]/90 text-[0.9rem] leading-relaxed">Thank you for your purchase.<br />You'll receive a
+        confirmation email shortly.</p>
+    <span
+        class="inline-block bg-gray-100 rounded-lg px-3.5 py-1.5 text-[0.8rem] font-bold tracking-[0.05em] text-[#1a1a2e] mt-4">
+        ORDER #{{ orderId }}
+    </span>
+    <div class="mt-8">
+        <a routerLink="/products"
+            class="inline-flex items-center justify-center gap-2 py-3.5 px-8 bg-brand-primary text-white rounded-[14px] text-[0.9rem] font-bold shadow-[0_4px_16px_rgba(26,26,46,0.25)] hover:-translate-y-0.5 hover:opacity-90 transition-all duration-200">
+            Continue Shopping
+        </a>
+    </div>
+</div>

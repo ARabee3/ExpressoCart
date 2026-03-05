@@ -48,6 +48,12 @@ export const routes: Routes = [
           import('./features/auth/pages/register/register')
             .then((m) => m.Register),
       },
+       {
+        path: 'checkout',
+        loadComponent: () =>
+          import('./features/cart/checkout/checkout')
+            .then((m) => m.Checkout),
+      },
 
     ],
   },
