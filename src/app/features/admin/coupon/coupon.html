@@ -146,16 +146,26 @@
       </button>
     </div>
 
-    <form (ngSubmit)="submit()" class="flex-1 overflow-auto px-6 py-6 flex flex-col gap-5">
+    <form
+      #couponForm="ngForm"
+      (ngSubmit)="couponForm.valid && submit()"
+      class="flex-1 overflow-auto px-6 py-6 flex flex-col gap-5"
+    >
       <div class="flex flex-col gap-1.5">
         <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Code</label>
         <input
           [(ngModel)]="form.code"
           name="code"
+          #code="ngModel"
           required
+          minlength="2"
           placeholder="e.g. SUMMER20"
           class="w-full px-4 py-2.5 border rounded-xl text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-black"
+          [class.border-red-400]="code.invalid && code.touched"
         />
+        @if (code.invalid && code.touched) {
+          <p class="text-xs text-red-500">Code is required (min 2 characters).</p>
+        }
       </div>
 
       <div class="flex flex-col gap-1.5">
@@ -179,11 +189,23 @@
         <input
           [(ngModel)]="form.discount"
           name="discount"
+          #discount="ngModel"
           type="number"
           min="0"
+          [max]="form.discountType === 'percentage' ? 100 : null"
           required
           class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          [class.border-red-400]="discount.invalid && discount.touched"
         />
+        @if (discount.invalid && discount.touched) {
+          @if (discount.errors?.['required']) {
+            <p class="text-xs text-red-500">Discount value is required.</p>
+          } @else if (discount.errors?.['min']) {
+            <p class="text-xs text-red-500">Discount cannot be negative.</p>
+          } @else if (discount.errors?.['max']) {
+            <p class="text-xs text-red-500">Percentage discount cannot exceed 100.</p>
+          }
+        }
       </div>
 
       <div class="flex flex-col gap-1.5">
@@ -191,10 +213,20 @@
         <input
           [(ngModel)]="form.expireDate"
           name="expireDate"
+          #expireDate="ngModel"
           type="date"
+          [min]="today"
           required
           class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          [class.border-red-400]="expireDate.invalid && expireDate.touched"
         />
+        @if (expireDate.invalid && expireDate.touched) {
+          @if (expireDate.errors?.['required']) {
+            <p class="text-xs text-red-500">Expiry date is required.</p>
+          } @else if (expireDate.errors?.['min']) {
+            <p class="text-xs text-red-500">Expiry date must be in the future.</p>
+          }
+        }
       </div>
 
       <div class="flex flex-col gap-1.5">
@@ -202,11 +234,20 @@
         <input
           [(ngModel)]="form.usageLimit"
           name="usageLimit"
+          #usageLimit="ngModel"
           type="number"
           min="1"
           required
           class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          [class.border-red-400]="usageLimit.invalid && usageLimit.touched"
         />
+        @if (usageLimit.invalid && usageLimit.touched) {
+          @if (usageLimit.errors?.['required']) {
+            <p class="text-xs text-red-500">Usage limit is required.</p>
+          } @else if (usageLimit.errors?.['min']) {
+            <p class="text-xs text-red-500">Usage limit must be at least 1.</p>
+          }
+        }
       </div>
 
       <div class="flex items-center justify-between px-4 py-3 border rounded-xl">
@@ -229,7 +270,8 @@
         </button>
         <button
           type="submit"
-          class="flex-1 py-2.5 bg-black text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors"
+          [disabled]="couponForm.invalid"
+          class="flex-1 py-2.5 bg-black text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {{ editingCoupon() ? 'Save Changes' : 'Create Coupon' }}
         </button>

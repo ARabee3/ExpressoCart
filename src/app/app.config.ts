@@ -9,12 +9,13 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { sessionInterceptor } from './core/interceptors/session/session-interceptor';
+import { devAuthInterceptor } from './core/interceptors/dev-auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([errorInterceptor, sessionInterceptor])),
+    provideHttpClient(withInterceptors([errorInterceptor, sessionInterceptor, devAuthInterceptor])),
   ],
 };

@@ -21,6 +21,9 @@ export class Coupon implements OnInit {
   showForm = signal(false);
   editingCoupon = signal<CouponModel | null>(null);
 
+  // today in YYYY-MM-DD for the date input min attribute
+  readonly today = new Date().toISOString().split('T')[0];
+
   // Form model
   form: CreateCouponDTO = this.emptyForm();
 
@@ -42,7 +45,7 @@ export class Coupon implements OnInit {
       discount: coupon.discount,
       expireDate: coupon.expireDate,
       usageLimit: coupon.usageLimit,
-      usedCount: coupon.usedCount,
+
       isActive: coupon.isActive,
     };
     this.showForm.set(true);
@@ -73,7 +76,6 @@ export class Coupon implements OnInit {
       discount: 0,
       expireDate: new Date(),
       usageLimit: 1,
-      usedCount: 0,
       isActive: true,
     };
   }
