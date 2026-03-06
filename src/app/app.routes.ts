@@ -75,14 +75,20 @@ export const routes: Routes = [
           import('./features/auth/pages/register/register').then((m) => m.Register),
       },
       {
+        path: 'checkout',
+        loadComponent: () =>
+          import('./features/cart/checkout/checkout')
+            .then((m) => m.Checkout),
+      },
+      {
         path: 'profile',
         loadComponent: () => import('./features/profile/profile').then((m) => m.Profile),
       },
-      {
-        path: '**',
-        loadComponent: () =>
-          import('./shared/components/notfound/notfound').then((com) => com.Notfound),
-      },
     ],
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./shared/components/notfound/notfound').then((com) => com.Notfound),
   },
 ];
