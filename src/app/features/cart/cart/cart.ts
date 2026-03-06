@@ -15,6 +15,7 @@ import { Spinner } from '../../../shared/components/spinner/spinner';
 import { from, throwError } from 'rxjs';
 import { concatMap, catchError, toArray } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { AuthState } from '../../../core/services/auth-state';
 
 @Component({
   selector: 'app-cart',
@@ -28,6 +29,7 @@ export class Cart implements OnInit {
   private router = inject(Router);
   private cartService = inject(CartService);
   private toastService = inject(ToastService);
+  private authState = inject(AuthState);
 
   readonly cart = this.cartService.cart;
   readonly isLoading = signal(false);
@@ -36,7 +38,7 @@ export class Cart implements OnInit {
 
   readonly hasItems = computed(() => this.cart().items.length > 0);
   readonly itemCount = computed(() => this.cart().items.reduce((sum, i) => sum + i.quantity, 0));
- 
+
 
 
   isClearingCart = signal(false);
@@ -63,15 +65,15 @@ export class Cart implements OnInit {
 
   increment(itemId: string, currentQuantity: number) {
     const item = this.cart().items.find((i) => i._id === itemId);
-     if (!item) return;
+    if (!item) return;
 
-  if (currentQuantity < item.productId.stock) {
-    this.updateLocalQuantity(itemId, currentQuantity + 1);
-  }
+    if (currentQuantity < item.productId.stock) {
+      this.updateLocalQuantity(itemId, currentQuantity + 1);
+    }
   else{
-    this.toastService.error('Max stock reached!'); // not be reached but for safety
-  }
-    
+      this.toastService.error('Max stock reached!'); // not be reached but for safety
+    }
+
   }
 
   decrement(itemId: string, currentQuantity: number) {
@@ -113,6 +115,11 @@ export class Cart implements OnInit {
   }
 
   checkout() {
+    // if (!this.authState.isLoggedIn()) {
+    //   this.toastService.error('Please login to proceed to checkout.');
+    //   this.router.navigate(['/login']);
+    //   return;
+    // }
     if (this.pendingUpdates.size === 0) {
       this.toastService.success('Proceeding to checkout...');
       this.router.navigate(['/checkout']);
@@ -134,6 +141,7 @@ export class Cart implements OnInit {
         this.pendingUpdates.clear();
         this.isCheckingOut.set(false);
         this.toastService.success('Cart synced successfully. Proceeding to checkout...');
+        this.router.navigate(['/checkout']);
       },
       error: (err) => {
         console.error('Checkout stock validation error', err);
@@ -148,22 +156,22 @@ export class Cart implements OnInit {
   }
 
   deleteItem(productId: string) {
-     const snapshot = this.cartService.cart();
+    const snapshot = this.cartService.cart();
 
-  this.cartService.cart.update(cart => ({
-    ...cart,
-    items: cart.items.filter(i => i.productId._id !== productId)
-  }));
+    this.cartService.cart.update(cart => ({
+      ...cart,
+      items: cart.items.filter(i => i.productId._id !== productId)
+    }));
 
-  const item = snapshot.items.find(i => i.productId._id === productId);
-  if (item) this.pendingUpdates.delete(item._id);
+    const item = snapshot.items.find(i => i.productId._id === productId);
+    if (item) this.pendingUpdates.delete(item._id);
 
-  this.cartService.removeFromCart(productId).subscribe({
-    error: (err) => {
-      this.cartService.cart.set(snapshot); 
-      console.error('Failed to remove item', err);
-    }
-  });
+    this.cartService.removeFromCart(productId).subscribe({
+      error: (err) => {
+        this.cartService.cart.set(snapshot);
+        console.error('Failed to remove item', err);
+      }
+    });
   }
 
   clearCart() {
