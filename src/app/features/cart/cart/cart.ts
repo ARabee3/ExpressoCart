@@ -50,8 +50,8 @@ export class Cart implements OnInit {
   }
 
   loadCart() {
-    // if no session skip call to prevent error not found
-    if (!localStorage.getItem('guest_session_id')) return;
+    // if no session or token skip call to prevent error not found
+    if (!localStorage.getItem('guest_session_id') && !this.authState.isLoggedIn()) return;
 
     this.isLoading.set(true);
     this.cartService.getCart().subscribe({
@@ -70,7 +70,7 @@ export class Cart implements OnInit {
     if (currentQuantity < item.productId.stock) {
       this.updateLocalQuantity(itemId, currentQuantity + 1);
     }
-  else{
+    else {
       this.toastService.error('Max stock reached!'); // not be reached but for safety
     }
 

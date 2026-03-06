@@ -2,6 +2,29 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: 'admin',
+    loadComponent: () =>
+      import('./features/admin/admin-layout/admin-layout').then((com) => com.AdminLayout),
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/admin/dashboard/dashboard.component').then(
+            (com) => com.DashboardComponent,
+          ),
+      },
+      {
+        path: 'coupon',
+        loadComponent: () => import('./features/admin/coupon/coupon').then((com) => com.Coupon),
+      },
+      {
+        path: '**',
+        loadComponent: () =>
+          import('./shared/components/notfound/notfound').then((com) => com.Notfound),
+      },
+    ],
+  },
+  {
     path: '',
     loadComponent: () =>
       import('./shared/components/public-layout/public-layout').then((m) => m.PublicLayout),
@@ -45,6 +68,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/auth/pages/register/register').then((m) => m.Register),
       },
+<<<<<<< HEAD
       {
         path: 'checkout',
         loadComponent: () =>
@@ -59,16 +83,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/admin/admin-layout/admin-layout').then((com) => com.AdminLayout),
     children: [
+=======
+>>>>>>> main
       {
-        path: 'dashboard',
+        path: '**',
         loadComponent: () =>
-          import('./features/admin/dashboard/dashboard.component').then(
-            (com) => com.DashboardComponent,
-          ),
-      },
-      {
-        path: 'coupon',
-        loadComponent: () => import('./features/admin/coupon/coupon').then((com) => com.Coupon),
+          import('./shared/components/notfound/notfound').then((com) => com.Notfound),
       },
     ],
   },
