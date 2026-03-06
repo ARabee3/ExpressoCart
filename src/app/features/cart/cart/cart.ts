@@ -69,7 +69,7 @@ export class Cart implements OnInit {
       this.updateLocalQuantity(itemId, currentQuantity + 1);
     }
     else {
-      this.toastService.error('Max stock reached!'); // not be reached but for safety
+      this.toastService.error('Max stock reached!'); /// not be reached but for safety
     }
 
   }
