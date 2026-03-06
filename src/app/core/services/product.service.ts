@@ -19,13 +19,19 @@ export class ProductService {
   /** Cache of all loaded products (API + mock) for single-product fallback */
   private readonly cachedProducts = signal<Product[]>([]);
 
-  /** Normalize API product — category may be populated object { _id, name, slug } */
+  /** Normalize API product — category and sellerId may be populated objects */
   private normalizeProduct(p: Product): Product {
     const normalized = { ...p };
 
     // Normalize category object to string
     if (normalized.category && typeof normalized.category === 'object') {
       normalized.category = (normalized.category as any).name ?? '';
+    }
+
+    // Normalize sellerId: if it came back as a plain ObjectId string, clear it
+    // so the card can show an appropriate fallback instead of a raw hex ID
+    if (typeof normalized.sellerId === 'string') {
+      normalized.sellerId = undefined;
     }
 
     // Fix relative image paths
@@ -47,7 +53,7 @@ export class ProductService {
       images: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop'],
       description: 'A stylish gradient t-shirt',
       category: 'Decor',
-      sellerId: { name: 'Dummy Data' },
+      sellerId: { name: 'Urban Threads' },
     },
     {
       _id: 'prod_2',
@@ -57,7 +63,7 @@ export class ProductService {
       images: ['https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=300&h=300&fit=crop'],
       description: 'Red checkered shirt',
       category: 'Decor',
-      sellerId: { name: 'Dummy Data' },
+      sellerId: { name: 'Urban Threads' },
     },
     {
       _id: 'prod_3',
@@ -67,7 +73,7 @@ export class ProductService {
       images: ['https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?w=300&h=300&fit=crop'],
       description: 'Blue skinny jeans',
       category: 'Decor',
-      sellerId: { name: 'Dummy Data' },
+      sellerId: { name: 'Urban Threads' },
     },
     {
       _id: 'prod_4',
@@ -77,7 +83,7 @@ export class ProductService {
       images: ['https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=300&fit=crop'],
       description: 'A modern accent chair for any room',
       category: 'Living Room',
-      sellerId: { name: 'Dummy Data' },
+      sellerId: { name: 'Casa Nova' },
     },
     {
       _id: 'prod_5',
@@ -87,7 +93,7 @@ export class ProductService {
       images: ['https://images.unsplash.com/photo-1533090481728-8b596af05686?w=300&h=300&fit=crop'],
       description: 'Minimalist wooden coffee table',
       category: 'Living Room',
-      sellerId: { name: 'Dummy Data' },
+      sellerId: { name: 'Casa Nova' },
     },
     {
       _id: 'prod_6',
@@ -97,7 +103,7 @@ export class ProductService {
       images: ['https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=300&h=300&fit=crop'],
       description: 'Hand-crafted ceramic vase',
       category: 'Decor',
-      sellerId: { name: 'Dummy Data' },
+      sellerId: { name: 'Artisan Home' },
     },
     {
       _id: 'prod_7',
@@ -107,7 +113,7 @@ export class ProductService {
       images: ['https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=300&h=300&fit=crop'],
       description: 'Comfortable 3-seater lounge sofa',
       category: 'Living Room',
-      sellerId: { name: 'Dummy Data' },
+      sellerId: { name: 'Casa Nova' },
     },
     {
       _id: 'prod_8',
@@ -117,7 +123,7 @@ export class ProductService {
       images: ['https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=300&h=300&fit=crop'],
       description: 'Spacious home office desk',
       category: 'Office',
-      sellerId: { name: 'Dummy Data' },
+      sellerId: { name: 'WorkSpace Co.' },
     },
     {
       _id: 'prod_9',
@@ -127,7 +133,7 @@ export class ProductService {
       images: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=300&h=300&fit=crop'],
       description: 'Durable outdoor patio seating',
       category: 'Outdoor',
-      sellerId: { name: 'Dummy Data' },
+      sellerId: { name: 'Garden & Co.' },
     },
     {
       _id: 'prod_10',
@@ -137,7 +143,7 @@ export class ProductService {
       images: ['https://images.unsplash.com/photo-1505693314120-0d443867891c?w=300&h=300&fit=crop'],
       description: 'Sturdy wooden bed frame',
       category: 'Bedroom',
-      sellerId: { name: 'Dummy Data' },
+      sellerId: { name: 'Sleep Well' },
     },
   ];
 
@@ -181,12 +187,13 @@ export class ProductService {
       mockProducts: of(
         this.MOCK_PRODUCTS.filter((p) => {
           const search = keyword.toLowerCase();
-          const sellerName = typeof p.sellerId === 'object' ? p.sellerId?.name : '';
+          const s = typeof p.sellerId === 'object' && p.sellerId ? p.sellerId : null;
+          const sellerDisplay = s?.name ?? '';
           return (
             p.name.toLowerCase().includes(search) ||
             p.description.toLowerCase().includes(search) ||
             (p.category && p.category.toLowerCase().includes(search)) ||
-            (sellerName && sellerName.toLowerCase().includes(search))
+            (sellerDisplay && sellerDisplay.toLowerCase().includes(search))
           );
         }),
       ),

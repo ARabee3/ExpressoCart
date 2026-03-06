@@ -1,2 +1,38 @@
 <app-hero-carousel />
-<app-top-categories />
+
+<app-explore-categories />
+
+<!-- Latest Added Section -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="flex justify-between items-end mb-8">
+    <h2 class="text-3xl font-serif text-black" style="font-family: 'Playfair Display', serif">
+      Latest Added
+    </h2>
+    <a
+      [routerLink]="['/products']"
+      class="text-sm font-semibold uppercase tracking-wider text-gray-500 hover:text-black hover:underline underline-offset-4 transition-all"
+      >View All</a
+    >
+  </div>
+
+  @if (loadingProducts()) {
+    <div class="flex justify-center py-20">
+      <app-spinner size="lg" color="primary"></app-spinner>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      @for (product of latestProducts(); track product._id) {
+        <app-product-card
+          [product]="product"
+          [isInWishlist]="wishlistIds().has(product._id)"
+          (addToCart)="onAddToCart($event)"
+          (addToWishlist)="onAddToWishlist($event)"
+        />
+      } @empty {
+        <p class="text-gray-500 col-span-full">No products found.</p>
+      }
+    </div>
+  }
+</section>
+
+<app-benefits />

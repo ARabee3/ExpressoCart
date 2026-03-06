@@ -82,7 +82,9 @@
             {{ p.name }}
           </h1>
 
-          <p class="text-sm text-gray-500 font-medium mb-4">by {{ sellerName() }}</p>
+          @if (sellerName()) {
+            <p class="text-sm text-gray-500 font-medium mb-4">by {{ sellerName() }}</p>
+          }
 
           <div class="flex items-center gap-4 mb-6">
             <p class="text-3xl font-bold text-gray-900">

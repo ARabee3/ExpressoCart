@@ -1,0 +1,157 @@
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+  <!-- Header -->
+  <div class="mb-10">
+    <h1 class="text-3xl md:text-4xl font-bold text-brand-primary font-heading">My Profile</h1>
+    <p class="text-brand-primary/50 text-sm mt-2">Manage your account information and orders.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left: User Info Card -->
+    <div class="lg:col-span-1">
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-black/5 p-6 flex flex-col items-center text-center"
+      >
+        <!-- Avatar -->
+        <div
+          class="w-20 h-20 rounded-full bg-brand-accent flex items-center justify-center text-white text-2xl font-bold mb-4 shadow-md"
+        >
+          {{ getInitials() }}
+        </div>
+
+        @if (user().name) {
+          <h2 class="text-lg font-bold text-brand-primary">{{ user().name }}</h2>
+        } @else {
+          <h2 class="text-lg font-bold text-brand-primary">Welcome!</h2>
+        }
+
+        @if (user().email) {
+          <p class="text-sm text-brand-primary/50 mt-1">{{ user().email }}</p>
+        }
+
+        @if (user().phone) {
+          <p class="text-sm text-brand-primary/50 mt-1">{{ user().phone }}</p>
+        }
+
+        <div class="mt-6 w-full space-y-2">
+          <a
+            routerLink="/products"
+            class="block w-full text-center px-4 py-2.5 text-sm font-medium bg-brand-secondary text-brand-primary rounded-xl hover:bg-brand-secondary/80 transition-colors"
+          >
+            Continue Shopping
+          </a>
+          <button
+            (click)="logout()"
+            class="block w-full text-center px-4 py-2.5 text-sm font-medium bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Orders -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Account Details -->
+      <div class="bg-white rounded-2xl shadow-sm border border-black/5 p-6">
+        <h3 class="text-base font-bold text-brand-primary mb-4 flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-5 text-brand-accent"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+            />
+          </svg>
+          Account Details
+        </h3>
+        <dl class="space-y-3 text-sm">
+          <div class="flex justify-between py-2 border-b border-black/5">
+            <dt class="text-brand-primary/50 font-medium">Name</dt>
+            <dd class="text-brand-primary font-medium">{{ user().name ?? '—' }}</dd>
+          </div>
+          <div class="flex justify-between py-2 border-b border-black/5">
+            <dt class="text-brand-primary/50 font-medium">Email</dt>
+            <dd class="text-brand-primary font-medium">{{ user().email ?? '—' }}</dd>
+          </div>
+          <div class="flex justify-between py-2">
+            <dt class="text-brand-primary/50 font-medium">Phone</dt>
+            <dd class="text-brand-primary font-medium">{{ user().phone ?? '—' }}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Order History -->
+      <div class="bg-white rounded-2xl shadow-sm border border-black/5 p-6">
+        <h3 class="text-base font-bold text-brand-primary mb-4 flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-5 text-brand-accent"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z"
+            />
+          </svg>
+          My Orders
+        </h3>
+
+        <!-- Placeholder state -->
+        <div class="flex flex-col items-center justify-center py-12 text-center">
+          <div
+            class="w-16 h-16 rounded-full bg-brand-secondary flex items-center justify-center mb-4"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-8 text-brand-primary/30"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z"
+              />
+            </svg>
+          </div>
+          <p class="text-sm font-medium text-brand-primary/50">No orders yet</p>
+          <p class="text-xs text-brand-primary/30 mt-1 max-w-xs">
+            Your order history will appear here once you place your first order.
+          </p>
+          <a
+            routerLink="/products"
+            class="mt-5 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-brand-accent text-white rounded-xl hover:bg-brand-accent/90 transition-colors shadow-sm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="size-4"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+              />
+            </svg>
+            Shop Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

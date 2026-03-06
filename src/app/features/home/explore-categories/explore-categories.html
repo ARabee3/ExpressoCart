@@ -1,0 +1,150 @@
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <!-- Section Title -->
+  <h2
+    class="text-center text-4xl md:text-5xl mb-12 text-brand-accent tracking-tight"
+    style="font-family: 'Playfair Display', serif"
+  >
+    Explore by Category
+  </h2>
+
+  <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
+    <!-- Left Sidebar — Scrollable Category List -->
+    <div class="md:w-65 shrink-0">
+      <!-- Search Input -->
+      <div class="relative mb-6">
+        <svg
+          class="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
+        <input
+          type="text"
+          placeholder="Search"
+          (input)="onSearchInput($event)"
+          class="w-full pl-10 pr-4 py-2.5 rounded-full bg-white border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent/40 transition-all"
+        />
+      </div>
+
+      <!-- Category links (scrollable) -->
+      <div class="category-sidebar relative pr-4">
+        <div class="flex flex-col">
+          @for (category of filteredCategories(); track category._id) {
+            <button
+              (click)="selectCategory(category)"
+              class="text-left py-3.5 text-[15px] font-medium transition-colors duration-200 border-b border-gray-100 capitalize"
+              [class]="
+                selectedCategory()?._id === category._id
+                  ? 'text-black font-semibold'
+                  : 'text-gray-500 hover:text-black'
+              "
+            >
+              {{ category.name }}
+            </button>
+          } @empty {
+            <div class="animate-pulse space-y-5 py-2">
+              <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- All Categories Button -->
+      <a
+        [routerLink]="['/products']"
+        class="mt-6 flex items-center justify-center gap-2 w-full py-3 px-6 bg-brand-primary hover:bg-brand-primary/90 text-white text-sm font-medium rounded-xl transition-colors duration-200"
+      >
+        All Categories
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="size-4"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+          />
+        </svg>
+      </a>
+    </div>
+
+    <!-- Right Side — Product Grid -->
+    <div class="flex-1 min-w-0">
+      @if (displayedProducts().length) {
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+          @for (product of displayedProducts(); track product._id) {
+            <a
+              [routerLink]="['/products', product._id]"
+              class="group relative aspect-4/5 overflow-hidden bg-gray-200 rounded-lg"
+            >
+              <img
+                [src]="product.images[0] || ''"
+                [alt]="product.name"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div
+                class="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent"
+              ></div>
+              <div class="absolute bottom-0 left-0 right-0 p-4">
+                <h3 class="text-white text-sm font-medium line-clamp-2 leading-snug">
+                  {{ product.name }}
+                </h3>
+                <p class="text-white/80 text-xs mt-1 font-semibold">${{ product.price }}</p>
+              </div>
+            </a>
+          }
+        </div>
+
+        <!-- View all link for selected category — always visible when a category is active -->
+        @if (selectedCategory()) {
+          <div class="mt-6 flex justify-end">
+            <a
+              [routerLink]="['/products']"
+              [queryParams]="{ category: selectedCategory()!.slug }"
+              class="inline-flex items-center gap-2 text-sm font-semibold text-brand-accent hover:underline underline-offset-4 transition-all capitalize"
+            >
+              View all in {{ selectedCategory()!.name }}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                />
+              </svg>
+            </a>
+          </div>
+        }
+      } @else {
+        <!-- Loading state: Skeleton cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+          @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+            <div class="aspect-4/5 bg-gray-200 rounded-lg animate-pulse"></div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>

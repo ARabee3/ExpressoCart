@@ -57,12 +57,12 @@ export class ProductDetails implements OnInit {
 
   protected readonly sellerName = computed(() => {
     const p = this.product();
-    if (!p) return 'Dummy Data';
+    if (!p) return null;
     const seller = p.sellerId;
     if (typeof seller === 'object' && seller !== null) {
-      return (seller as { name: string }).name || 'Dummy Data';
+      return (seller as { name?: string }).name?.trim() || null;
     }
-    return 'Dummy Data';
+    return null;
   });
 
   incrementQuantity() {
