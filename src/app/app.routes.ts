@@ -68,7 +68,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/auth/pages/register/register').then((m) => m.Register),
       },
-<<<<<<< HEAD
       {
         path: 'checkout',
         loadComponent: () =>
@@ -83,8 +82,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/admin/admin-layout/admin-layout').then((com) => com.AdminLayout),
     children: [
-=======
->>>>>>> main
       {
         path: '**',
         loadComponent: () =>

@@ -115,11 +115,11 @@ export class Cart implements OnInit {
   }
 
   checkout() {
-    // if (!this.authState.isLoggedIn()) {
-    //   this.toastService.error('Please login to proceed to checkout.');
-    //   this.router.navigate(['/login']);
-    //   return;
-    // }
+    if (!this.authState.isLoggedIn()) {
+      this.toastService.error('Please login to proceed to checkout.');
+      this.router.navigate(['/login']);
+      return;
+    }
     if (this.pendingUpdates.size === 0) {
       this.toastService.success('Proceeding to checkout...');
       this.router.navigate(['/checkout']);
