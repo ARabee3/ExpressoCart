@@ -7,7 +7,9 @@ export interface Product {
   stock: number;
   description: string;
   category?: string;
-  sellerId?: { name: string } | string;
+  sellerId?: { _id?: string; name?: string } | string;
+  ratingsAverage?: number;
+  ratingsQuantity?: number;
 }
 
 export interface CartItem {

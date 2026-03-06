@@ -19,7 +19,7 @@ export class Footer {
   ];
 
   protected readonly supportLinks = [
-    { label: 'Contact Us', route: '/contact' },
+    { label: 'Contact Us', route: '/contact-us' },
     { label: 'FAQs', route: '/faq' },
     { label: 'Shipping & Returns', route: '/shipping' },
     { label: 'Privacy Policy', route: '/privacy' },

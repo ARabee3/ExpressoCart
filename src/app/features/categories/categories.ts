@@ -36,7 +36,7 @@ export class Categories implements OnInit {
     });
   }
 
-  getImage(slug: string): string {
-    return this.categoryService.getImageForSlug(slug);
+  getCategoryBackground(category: { name: string; slug: string }): string {
+    return this.categoryService.getBackgroundForCategory(category.name, category.slug);
   }
 }

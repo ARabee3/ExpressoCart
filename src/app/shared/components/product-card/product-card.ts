@@ -25,10 +25,23 @@ export class ProductCard {
   protected readonly sellerName = computed(() => {
     const seller = this.product().sellerId;
     if (typeof seller === 'object' && seller !== null) {
-      return (seller as { name: string }).name || 'Dummy Data';
+      return (seller as { name?: string }).name?.trim() || null;
     }
-    return 'Dummy Data';
+    return null;
   });
+
+  protected readonly stars = computed(() => {
+    const avg = this.product().ratingsAverage ?? 0;
+    const full = Math.floor(avg);
+    const half = avg - full >= 0.4;
+    return Array.from({ length: 5 }, (_, i) => {
+      if (i < full) return 'full';
+      if (i === full && half) return 'half';
+      return 'empty';
+    });
+  });
+
+  protected readonly ratingValue = computed(() => this.product().ratingsAverage ?? 0);
 
   onAddToCart(event?: Event) {
     event?.preventDefault();

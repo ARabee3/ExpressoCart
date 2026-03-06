@@ -47,26 +47,36 @@ export const routes: Routes = [
       },
       {
         path: 'wishlist',
-        loadComponent: () =>
-          import('./features/wishlist/wishlist/wishlist').then((m) => m.Wishlist),
+        loadComponent: () => import('./features/wishlist/wishlist').then((m) => m.Wishlist),
       },
       {
         path: 'categories',
         loadComponent: () => import('./features/categories/categories').then((m) => m.Categories),
       },
       {
+        path: 'about',
+        loadComponent: () => import('./features/about/about').then((m) => m.About),
+      },
+      {
+        path: 'contact-us',
+        loadComponent: () => import('./features/contact-us/contact-us').then((m) => m.ContactUs),
+      },
+      {
         path: 'cart',
         loadComponent: () => import('./features/cart/cart/cart').then((m) => m.Cart),
       },
       {
-        path: 'login',
+        path: 'auth/login',
         loadComponent: () => import('./features/auth/pages/login/login').then((m) => m.Login),
       },
-
       {
-        path: 'register',
+        path: 'auth/register',
         loadComponent: () =>
           import('./features/auth/pages/register/register').then((m) => m.Register),
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile').then((m) => m.Profile),
       },
       {
         path: '**',
