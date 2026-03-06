@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { WishlistService } from '../../../core/services/wishlist.service';
-import { CartService } from '../../../core/services/cart.service';
-import { ToastService } from '../../../core/services/toast.service';
-import { Product } from '../../../core/models/cart.model';
-import { ProductCard } from '../../../shared/components/product-card/product-card';
+import { WishlistService } from '../../core/services/wishlist.service';
+import { CartService } from '../../core/services/cart.service';
+import { ToastService } from '../../core/services/toast.service';
+import { Product } from '../../core/models/cart.model';
+import { ProductCard } from '../../shared/components/product-card/product-card';
 
 @Component({
   selector: 'app-wishlist',

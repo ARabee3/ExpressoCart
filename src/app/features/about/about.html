@@ -1,0 +1,167 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+  <!-- Hero -->
+  <div class="text-center max-w-3xl mx-auto mb-20 animate-fade-in-up">
+    <h1
+      class="text-4xl md:text-5xl font-serif text-brand-primary mb-6"
+      style="font-family: 'Playfair Display', serif"
+    >
+      Our Story
+    </h1>
+    <p class="text-lg text-brand-primary/70 leading-relaxed font-body">
+      Welcome to ExpressoCart, your premier destination for exceptional products and seamless
+      shopping experiences. We believe that quality should never be compromised, and convenience is
+      key.
+    </p>
+  </div>
+
+  <!-- Story Image + Text -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">
+    <div class="rounded-3xl overflow-hidden aspect-4/3 shadow-xl">
+      <img
+        src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1600&auto=format&fit=crop"
+        alt="Our Workspace"
+        class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+      />
+    </div>
+    <div class="flex flex-col justify-center">
+      <h2
+        class="text-3xl lg:text-4xl font-serif text-brand-primary mb-6"
+        style="font-family: 'Playfair Display', serif"
+      >
+        Crafted with Passion
+      </h2>
+      <p class="text-brand-primary/70 mb-6 leading-relaxed font-body">
+        Founded with a simple mission: to curate the finest collections for your daily life. Every
+        item in our catalog is carefully selected to meet our rigorous standards for quality,
+        sustainability, and design.
+      </p>
+      <p class="text-brand-primary/70 mb-8 leading-relaxed font-body">
+        We partner directly with artisans and ethical manufacturers worldwide. This allows us to cut
+        out unnecessary middlemen and deliver premium goods directly to your doorstep.
+      </p>
+
+      <a
+        [routerLink]="['/products']"
+        class="inline-flex items-center gap-2 rounded-xl bg-brand-primary px-8 py-4 text-sm font-medium text-white shadow-sm hover:bg-brand-primary/90 transition-colors w-fit"
+      >
+        Shop Now
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-4 h-4"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Mission & Vision -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mb-24">
+    <div
+      class="bg-[#f2f9fa] rounded-3xl p-10 md:p-12 text-center md:text-left flex flex-col justify-center transition-all duration-300 hover:shadow-lg"
+    >
+      <div
+        class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm mx-auto md:mx-0"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-8 h-8 text-[#0a332c]"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+          />
+        </svg>
+      </div>
+      <h3 class="text-2xl font-bold text-brand-primary mb-4 font-heading">Our Mission</h3>
+      <p class="text-brand-primary/70 font-body leading-relaxed">
+        To provide unparalleled access to quality products while fostering a community built on
+        trust, transparency, and shared values.
+      </p>
+    </div>
+
+    <div
+      class="bg-[#fff2e0] rounded-3xl p-10 md:p-12 text-center md:text-left flex flex-col justify-center transition-all duration-300 hover:shadow-lg"
+    >
+      <div
+        class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm mx-auto md:mx-0"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-8 h-8 text-[#0a332c]"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+          />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+      </div>
+      <h3 class="text-2xl font-bold text-brand-primary mb-4 font-heading">Our Vision</h3>
+      <p class="text-brand-primary/70 font-body leading-relaxed">
+        To be the global benchmark for customer satisfaction and ethical e-commerce, making luxury
+        and convenience accessible to everyone.
+      </p>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="bg-brand-primary text-white rounded-3xl p-12 md:p-16 mb-8 overflow-hidden relative">
+    <!-- Decorative background elements -->
+    <div
+      class="absolute top-0 right-0 -m-16 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"
+    ></div>
+    <div
+      class="absolute bottom-0 left-0 -m-16 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"
+    ></div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center relative z-10">
+      <div class="flex flex-col items-center justify-center">
+        <h4 class="text-4xl lg:text-5xl font-bold mb-3">10k+</h4>
+        <p class="text-brand-secondary/70 text-sm md:text-base tracking-wider uppercase">
+          Happy Customers
+        </p>
+      </div>
+      <div class="flex flex-col items-center justify-center">
+        <h4 class="text-4xl lg:text-5xl font-bold mb-3">5+</h4>
+        <p class="text-brand-secondary/70 text-sm md:text-base tracking-wider uppercase">
+          Years of Service
+        </p>
+      </div>
+      <div class="flex flex-col items-center justify-center">
+        <h4 class="text-4xl lg:text-5xl font-bold mb-3">50+</h4>
+        <p class="text-brand-secondary/70 text-sm md:text-base tracking-wider uppercase">
+          Brand Partners
+        </p>
+      </div>
+      <div class="flex flex-col items-center justify-center">
+        <h4 class="text-4xl lg:text-5xl font-bold mb-3">24/7</h4>
+        <p class="text-brand-secondary/70 text-sm md:text-base tracking-wider uppercase">
+          Premium Support
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
