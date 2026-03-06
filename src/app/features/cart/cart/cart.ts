@@ -14,6 +14,7 @@ import { CartItems } from '../cart-items/cart-items';
 import { Spinner } from '../../../shared/components/spinner/spinner';
 import { from, throwError } from 'rxjs';
 import { concatMap, catchError, toArray } from 'rxjs/operators';
+import { AuthState } from '../../../core/services/auth-state';
 
 @Component({
   selector: 'app-cart',
@@ -24,8 +25,9 @@ import { concatMap, catchError, toArray } from 'rxjs/operators';
 export class Cart implements OnInit {
 
   //integration with backend
-   cartService = inject(CartService);
+  cartService = inject(CartService);
   private toastService = inject(ToastService);
+  private authState = inject(AuthState);
 
   readonly cart = this.cartService.cart;
   readonly isLoading = signal(false);
@@ -34,7 +36,7 @@ export class Cart implements OnInit {
 
   readonly hasItems = computed(() => this.cart().items.length > 0);
   readonly itemCount = computed(() => this.cart().items.reduce((sum, i) => sum + i.quantity, 0));
- 
+
 
 
   isClearingCart = signal(false);
@@ -46,8 +48,8 @@ export class Cart implements OnInit {
   }
 
   loadCart() {
-    // if no session skip call to prevent error not found
-    if (!localStorage.getItem('guest_session_id')) return;
+    // if no session or token skip call to prevent error not found
+    if (!localStorage.getItem('guest_session_id') && !this.authState.isLoggedIn()) return;
 
     this.isLoading.set(true);
     this.cartService.getCart().subscribe({
@@ -61,15 +63,15 @@ export class Cart implements OnInit {
 
   increment(itemId: string, currentQuantity: number) {
     const item = this.cart().items.find((i) => i._id === itemId);
-     if (!item) return;
+    if (!item) return;
 
-  if (currentQuantity < item.productId.stock) {
-    this.updateLocalQuantity(itemId, currentQuantity + 1);
-  }
-  else{
-    this.toastService.error('Max stock reached!'); // not be reached but for safety
-  }
-    
+    if (currentQuantity < item.productId.stock) {
+      this.updateLocalQuantity(itemId, currentQuantity + 1);
+    }
+    else {
+      this.toastService.error('Max stock reached!'); // not be reached but for safety
+    }
+
   }
 
   decrement(itemId: string, currentQuantity: number) {
@@ -146,22 +148,22 @@ export class Cart implements OnInit {
   }
 
   deleteItem(productId: string) {
-     const snapshot = this.cartService.cart();
+    const snapshot = this.cartService.cart();
 
-  this.cartService.cart.update(cart => ({
-    ...cart,
-    items: cart.items.filter(i => i.productId._id !== productId)
-  }));
+    this.cartService.cart.update(cart => ({
+      ...cart,
+      items: cart.items.filter(i => i.productId._id !== productId)
+    }));
 
-  const item = snapshot.items.find(i => i.productId._id === productId);
-  if (item) this.pendingUpdates.delete(item._id);
+    const item = snapshot.items.find(i => i.productId._id === productId);
+    if (item) this.pendingUpdates.delete(item._id);
 
-  this.cartService.removeFromCart(productId).subscribe({
-    error: (err) => {
-      this.cartService.cart.set(snapshot); 
-      console.error('Failed to remove item', err);
-    }
-  });
+    this.cartService.removeFromCart(productId).subscribe({
+      error: (err) => {
+        this.cartService.cart.set(snapshot);
+        console.error('Failed to remove item', err);
+      }
+    });
   }
 
   clearCart() {
