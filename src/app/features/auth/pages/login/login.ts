@@ -48,12 +48,13 @@ export class Login {
         localStorage.removeItem('guest_session_id');
 
         this.toast.success('Login successful');
-        this.router.navigate(['/']);
+        this.router.navigate(['']);
         this.loading.set(false);
       },
 
       error: () => {
         this.loading.set(false);
+        //console.log("I am still in Login Component, current URL is:", this.router.url);
       },
     });
   }

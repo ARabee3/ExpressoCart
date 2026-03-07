@@ -20,11 +20,11 @@ export class AuthApi {
     return this.api.post('verify-email', data);
   }
 
-  forgotPassword(email: string) {
+  forgetPassword(email: string): Observable<any> {
     return this.api.post('forgot-password', { email });
   }
 
-  resetPassword(data: any) {
+  resetPassword(data: any): Observable<any> {
     return this.api.patch('reset-password', data);
   }
 

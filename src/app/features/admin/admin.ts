@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { ApiService } from '../../core/services/api.service';
 import { AdminStats } from '../../core/models/admin-stats.model';
 import { Coupon, CreateCouponDTO } from '../../core/models/coupon.model';
+import { Category, CategoriesResponse } from '../../core/models/category.model';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -49,6 +50,41 @@ export class AdminService {
         this.coupons.update((currentCoupons) =>
           currentCoupons ? currentCoupons.filter((c) => c._id !== id) : [],
         );
+      },
+    });
+  }
+
+  // -- Categories
+  categories = signal<Category[] | null>(null);
+
+  loadCategories() {
+    this.api.get<CategoriesResponse>('categories').subscribe((response) => {
+      this.categories.set(response.data);
+    });
+  }
+
+  createCategory(body: { name: string }) {
+    this.api.post<{ status: string; data: Category }>('categories', body).subscribe({
+      next: (response) => {
+        const current = this.categories() || [];
+        this.categories.set([...current, response.data]);
+      },
+    });
+  }
+
+  updateCategory(id: string, body: { name: string }) {
+    this.api.put<{ status: string; data: Category }>(`categories/${id}`, body).subscribe({
+      next: (response) => {
+        const current = this.categories() || [];
+        this.categories.set(current.map((c) => (c._id === id ? response.data : c)));
+      },
+    });
+  }
+
+  deleteCategory(id: string) {
+    this.api.delete<{ status: string; message: string }>(`categories/${id}`).subscribe({
+      next: () => {
+        this.categories.update((cats) => (cats ? cats.filter((c) => c._id !== id) : []));
       },
     });
   }

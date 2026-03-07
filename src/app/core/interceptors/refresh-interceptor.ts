@@ -11,7 +11,14 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   return next(req).pipe(
     catchError((error) => {
-      if (error.status === 401 && !req.url.includes('refresh')) {
+      const isAuthPath = 
+        req.url.includes('login') || 
+        req.url.includes('forgot-password') || 
+        req.url.includes('reset-password') ||
+        req.url.includes('register') ||
+        req.url.includes('verify-email');
+
+      if (error.status === 401 && !req.url.includes('refresh') && !isAuthPath) {
         return authApi.refresh().pipe(
           switchMap((res: any) => {
             const newToken = res.data;
@@ -27,7 +34,7 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
           }),
           catchError((refreshErr) => {
             authState.clear();
-            router.navigate(['/login']);
+            router.navigate(['/auth/login']);
             return throwError(() => refreshErr);
           }),
         );
