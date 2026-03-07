@@ -20,6 +20,7 @@ export interface CartItem {
 }
 
 export interface CartData {
+  _id: string;
   items: CartItem[];
   totalPrice: number;
   discountAmount: number;

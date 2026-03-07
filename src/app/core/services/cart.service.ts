@@ -12,6 +12,7 @@ export class CartService {
 
   // Expose reactive cart state
   cart = signal<CartData>({
+    _id: '',
     items: [],
     totalPrice: 0,
     discountAmount: 0,

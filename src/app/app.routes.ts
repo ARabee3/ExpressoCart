@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { checkoutGuard } from './core/guards/checkout.guard';
+import { orderSuccessGuard } from './core/guards/order-success.guard';
 
 export const routes: Routes = [
   {
@@ -85,7 +87,17 @@ export const routes: Routes = [
       },
       {
         path: 'checkout',
-        loadComponent: () => import('./features/cart/checkout/checkout').then((m) => m.Checkout),
+        canActivate: [checkoutGuard],// apply guard here
+        loadComponent: () =>
+          import('./features/cart/checkout/checkout')
+            .then((m) => m.Checkout),
+      },
+      {
+        path: 'checkout/success',
+        canActivate: [orderSuccessGuard],
+        loadComponent: () =>
+          import('./features/cart/checkout/order-success/order-success')
+            .then((m) => m.OrderSuccess),
       },
       {
         path: 'profile',
