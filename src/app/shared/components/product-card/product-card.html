@@ -106,8 +106,10 @@
       </p>
     }
 
-    @if (sellerName()) {
-      <p class="text-xs text-brand-primary/70 font-medium mb-1">by {{ sellerName() }}</p>
+    @if (storeName() || sellerName()) {
+      <p class="text-xs text-brand-primary/70 font-medium mb-1">
+        🏪 {{ storeName() || sellerName() }}
+      </p>
     }
 
     @if (ratingValue() > 0) {
