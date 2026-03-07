@@ -36,7 +36,15 @@ export class AuthApi {
     return this.api.get('me');
   }
 
-  updateProfile(data: { name?: string; phone?: string }) {
+  updateProfile(data: { name?: string; phone?: string; storeName?: string }) {
     return this.api.patch('update-profile', data);
+  }
+
+  registerAsSeller(storeName: string) {
+    return this.api.post('seller/register-as-seller', { storeName });
+  }
+
+  resendVerification(email: string) {
+    return this.api.post('resend-verification', { email });
   }
 }

@@ -17,7 +17,18 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       console.error('GLOBAL ERROR CAUGHT:', errorMessage);
-      toast.error(errorMessage);
+
+      // Unverified account errors are handled at the component level — skip global toast
+      const lower = errorMessage.toLowerCase();
+      const isUnverifiedError =
+        lower.includes('verif') ||
+        lower.includes('activat') ||
+        lower.includes('not active') ||
+        lower.includes('confirm');
+
+      if (!isUnverifiedError) {
+        toast.error(errorMessage);
+      }
 
       return throwError(() => error);
     }),
