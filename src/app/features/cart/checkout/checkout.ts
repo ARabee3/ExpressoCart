@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../../core/services/cart.service';
+import { OrderService } from '../../../core/services/order.service';
 
 import { CheckoutStepperComponent } from './components/checkout-stepper/checkout-stepper.component';
 import { CheckoutShippingComponent } from './components/checkout-shipping/checkout-shipping.component';
@@ -24,17 +25,20 @@ import { CheckoutSuccessComponent } from './components/checkout-success/checkout
 })
 export class Checkout {
   private cartService = inject(CartService);
+  private orderService = inject(OrderService);
 
   currentStep = 1;
   orderPlaced = false;
   orderId = '';
   isPlacingOrder = signal(false);
 
-  resolvedAddress = '';
+  resolvedAddressObj: any = null;
+  resolvedAddressFormatted = '';
   selectedPayment = '';
 
-  onShippingNext(address: string) {
-    this.resolvedAddress = address;
+  onShippingNext(event: { address: any, formatted: string }) {
+    this.resolvedAddressObj = event.address;
+    this.resolvedAddressFormatted = event.formatted;
     this.currentStep = 2;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -51,22 +55,48 @@ export class Checkout {
   }
 
   placeOrder() {
+    const cartId = this.cartService.cart()._id;
+   // console.log("cartId"+cartId);
     this.isPlacingOrder.set(true);
 
-    // simulate API delay
-    setTimeout(() => {
-      this.isPlacingOrder.set(false);
-      this.orderPlaced = true;
-      this.orderId = `EXP-${Date.now().toString().slice(-8)}`;
+    const orderData = {
+      cartId: cartId,
+      shippingAddress: this.resolvedAddressObj,
+      paymentMethod: this.selectedPayment
+    };
 
-      // Clear cart after order
-      this.cartService.cart.set({
-        items: [],
-        totalPrice: 0,
-        discountAmount: 0,
-        finalPrice: 0,
-        appliedCoupon: null
-      });
-    }, 1800);
+    this.orderService.createOrder(orderData).subscribe({
+      next: (res) => {
+        //console.log("responseeeee"+res);
+        const orderId = res.data._id;
+        if (this.selectedPayment === 'Cash') {
+          this.orderService.payCash(orderId).subscribe({
+            next: () => this.handleSuccess(orderId),
+            error: () => this.handleError()
+          });
+        }
+      },
+      error: () => this.handleError()
+    });
+  }
+
+  private handleSuccess(orderId: string) {
+    this.isPlacingOrder.set(false);
+    this.orderPlaced = true;
+    this.orderId = orderId;
+
+    this.cartService.cart.set({
+      _id: '',
+      items: [],
+      totalPrice: 0,
+      discountAmount: 0,
+      finalPrice: 0,
+      appliedCoupon: null
+    });
+  }
+
+  private handleError() {
+    this.isPlacingOrder.set(false);
+    console.error('Failed to place order.');
   }
 }
