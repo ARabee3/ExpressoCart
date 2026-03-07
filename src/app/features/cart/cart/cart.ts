@@ -24,7 +24,6 @@ import { AuthState } from '../../../core/services/auth-state';
   styleUrl: './cart.scss',
 })
 export class Cart implements OnInit {
-
   //integration with backend
   private router = inject(Router);
   private cartService = inject(CartService);
@@ -38,8 +37,6 @@ export class Cart implements OnInit {
 
   readonly hasItems = computed(() => this.cart().items.length > 0);
   readonly itemCount = computed(() => this.cart().items.reduce((sum, i) => sum + i.quantity, 0));
-
-
 
   isClearingCart = signal(false);
   isCheckingOut = signal(false);
@@ -69,11 +66,9 @@ export class Cart implements OnInit {
 
     if (currentQuantity < item.productId.stock) {
       this.updateLocalQuantity(itemId, currentQuantity + 1);
-    }
-    else {
+    } else {
       this.toastService.error('Max stock reached!'); /// not be reached but for safety
     }
-
   }
 
   decrement(itemId: string, currentQuantity: number) {
@@ -102,7 +97,7 @@ export class Cart implements OnInit {
 
       const totalPrice = updatedItems.reduce(
         (sum, item) => sum + item.productId.price * item.quantity,
-        0
+        0,
       );
 
       return {
@@ -117,7 +112,7 @@ export class Cart implements OnInit {
   checkout() {
     if (!this.authState.isLoggedIn()) {
       this.toastService.error('Please login to proceed to checkout.');
-      this.router.navigate(['/login']);
+      this.router.navigate(['/auth/login']);
       return;
     }
     if (this.pendingUpdates.size === 0) {
@@ -129,48 +124,52 @@ export class Cart implements OnInit {
     this.isCheckingOut.set(true);
     const updateCalls = Array.from(this.pendingUpdates.entries());
 
-    from(updateCalls).pipe(
-      concatMap(([itemId, quantity]) =>
-        this.cartService.updateQuantity(itemId, quantity).pipe(
-          catchError(err => throwError(() => err))
-        )
-      ),
-      toArray()
-    ).subscribe({
-      next: () => {
-        this.pendingUpdates.clear();
-        this.isCheckingOut.set(false);
-        this.toastService.success('Cart synced successfully. Proceeding to checkout...');
-        this.router.navigate(['/checkout']);
-      },
-      error: (err) => {
-        console.error('Checkout stock validation error', err);
-        this.isCheckingOut.set(false);
-        if (err.error && err.error.data) {
-          this.cartService.cart.set(err.error.data);
+    from(updateCalls)
+      .pipe(
+        concatMap(([itemId, quantity]) =>
+          this.cartService
+            .updateQuantity(itemId, quantity)
+            .pipe(catchError((err) => throwError(() => err))),
+        ),
+        toArray(),
+      )
+      .subscribe({
+        next: () => {
           this.pendingUpdates.clear();
-        }
-        this.toastService.error(err.error?.message || 'Stock issue detected. Cart has been updated.');
-      }
-    });
+          this.isCheckingOut.set(false);
+          this.toastService.success('Cart synced successfully. Proceeding to checkout...');
+          this.router.navigate(['/checkout']);
+        },
+        error: (err) => {
+          console.error('Checkout stock validation error', err);
+          this.isCheckingOut.set(false);
+          if (err.error && err.error.data) {
+            this.cartService.cart.set(err.error.data);
+            this.pendingUpdates.clear();
+          }
+          this.toastService.error(
+            err.error?.message || 'Stock issue detected. Cart has been updated.',
+          );
+        },
+      });
   }
 
   deleteItem(productId: string) {
     const snapshot = this.cartService.cart();
 
-    this.cartService.cart.update(cart => ({
+    this.cartService.cart.update((cart) => ({
       ...cart,
-      items: cart.items.filter(i => i.productId._id !== productId)
+      items: cart.items.filter((i) => i.productId._id !== productId),
     }));
 
-    const item = snapshot.items.find(i => i.productId._id === productId);
+    const item = snapshot.items.find((i) => i.productId._id === productId);
     if (item) this.pendingUpdates.delete(item._id);
 
     this.cartService.removeFromCart(productId).subscribe({
       error: (err) => {
         this.cartService.cart.set(snapshot);
         console.error('Failed to remove item', err);
-      }
+      },
     });
   }
 
