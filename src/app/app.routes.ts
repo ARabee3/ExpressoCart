@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { checkoutGuard } from './core/guards/checkout.guard';
 import { orderSuccessGuard } from './core/guards/order-success.guard';
+import { sellerGuard } from './core/guards/seller-guard';
 
 export const routes: Routes = [
   {
@@ -83,25 +84,65 @@ export const routes: Routes = [
       },
       {
         path: 'auth/forgot-password',
-        loadComponent: () => import('./features/auth/pages/forget-password/forget-password').then((m) => m.ForgetPassword),
+        loadComponent: () =>
+          import('./features/auth/pages/forget-password/forget-password').then(
+            (m) => m.ForgetPassword,
+          ),
+      },
+      {
+        path: 'auth/verify-otp',
+        loadComponent: () =>
+          import('./features/auth/pages/verify-otp/verify-otp').then((m) => m.VerifyOtp),
       },
       {
         path: 'checkout',
-        canActivate: [checkoutGuard],// apply guard here
-        loadComponent: () =>
-          import('./features/cart/checkout/checkout')
-            .then((m) => m.Checkout),
+        canActivate: [checkoutGuard], // apply guard here
+        loadComponent: () => import('./features/cart/checkout/checkout').then((m) => m.Checkout),
       },
       {
         path: 'checkout/success',
         canActivate: [orderSuccessGuard],
         loadComponent: () =>
-          import('./features/cart/checkout/order-success/order-success')
-            .then((m) => m.OrderSuccess),
+          import('./features/cart/checkout/order-success/order-success').then(
+            (m) => m.OrderSuccess,
+          ),
       },
       {
         path: 'profile',
         loadComponent: () => import('./features/profile/profile').then((m) => m.Profile),
+      },
+    ],
+  },
+  {
+    path: 'seller',
+    loadComponent: () =>
+      import('./features/seller/seller-layout/seller-layout').then((m) => m.SellerLayout),
+    canActivate: [sellerGuard],
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/seller/dashboard/seller-dashboard').then((m) => m.SellerDashboard),
+      },
+      {
+        path: 'products',
+        loadComponent: () =>
+          import('./features/seller/products/seller-products').then((m) => m.SellerProducts),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/seller/seller-profile/seller-profile').then((m) => m.SellerProfile),
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: '**',
+        loadComponent: () =>
+          import('./shared/components/notfound/notfound').then((com) => com.Notfound),
       },
     ],
   },
