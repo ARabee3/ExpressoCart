@@ -1,0 +1,46 @@
+<div class="max-w-[1100px] mx-auto px-5 py-10">
+
+    <!-- Page Header -->
+    <div class="mb-8">
+        <h1 class="font-black text-[2rem] text-[#1a1a2e] uppercase tracking-tight">Checkout</h1>
+        <p class="text-[#1a1a2e]/50 text-[0.9rem] mt-1">Complete your order in a few easy steps</p>
+    </div>
+
+    <!-- stepper -->
+    <app-checkout-stepper [currentStep]="currentStep"></app-checkout-stepper>
+
+    <!-- layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-7 items-start">
+
+        <!-- left side-->
+        <div>
+            <!--address-->
+            @if (currentStep === 1) {
+            <app-checkout-shipping (nextStep)="onShippingNext($event)"></app-checkout-shipping>
+            }
+
+            <!-- step 2: payment-->
+            @if (currentStep === 2) {
+            <app-checkout-payment (nextStep)="onPaymentNext($event)" (backStep)="goStep(1)"></app-checkout-payment>
+            }
+
+            <!-- step 3 review order -->
+            @if (currentStep === 3 && !orderPlaced) {
+            <app-checkout-review [resolvedAddress]="resolvedAddress" [selectedPayment]="selectedPayment"
+                [isPlacingOrder]="isPlacingOrder()" (backStep)="goStep(2)" (placeOrder)="placeOrder()">
+            </app-checkout-review>
+            }
+
+            <!-- if success-->
+            @if (orderPlaced) {
+            <app-checkout-success [orderId]="orderId"></app-checkout-success>
+            }
+        </div>
+
+        <!-- right side bar -> order sumary-->
+        @if (!orderPlaced) {
+        <app-checkout-summary></app-checkout-summary>
+        }
+
+    </div>
+</div>

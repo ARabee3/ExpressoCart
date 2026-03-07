@@ -31,12 +31,24 @@ export class Login {
 
     this.loading.set(true);
 
-    this.authApi.login(this.loginForm.value).subscribe({
+    //save form data in loginData
+    const loginData: any = { ...this.loginForm.value };
+    // get guest session id from local storage
+    const sessionId = localStorage.getItem('guest_session_id');
+
+    if (sessionId) {
+      loginData.sessionId = sessionId;
+    }
+
+    this.authApi.login(loginData).subscribe({
       next: (res: any) => {
         this.authState.setToken(res.data);
 
+        // remove guest session id after successful login
+        localStorage.removeItem('guest_session_id');
+
         this.toast.success('Login successful');
-        this.router.navigate(['']);
+        this.router.navigate(['/']);
         this.loading.set(false);
       },
 

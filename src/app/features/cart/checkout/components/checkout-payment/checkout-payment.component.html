@@ -1,0 +1,78 @@
+<div class="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.06)] p-7">
+    <h2 class="flex items-center gap-2 font-bold text-[1.1rem] text-[#1a1a2e] mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#e8a838]" fill="currentColor" viewBox="0 0 20 20">
+            <path
+                d="M2.273 5.625A4.483 4.483 0 0 1 5.5 4.5h9a4.483 4.483 0 0 1 3.227 1.125A3 3 0 0 0 15 5H5a3 3 0 0 0-2.727 1.625Z" />
+            <path
+                d="M5.5 6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h9a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-9ZM3.5 9a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v.5H3.5V9Zm0 2h13V15a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-4Z" />
+        </svg>
+        Payment Method
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- card -->
+        <div (click)="selectedPayment = 'Card'"
+            [ngClass]="selectedPayment === 'Card' ? 'border-[#1a1a2e] bg-[#1a1a2e]/[0.03]' : 'border-gray-200 hover:border-[#c8d3e0]'"
+            class="flex items-center gap-3.5 border-2 rounded-[14px] p-5 cursor-pointer transition-all duration-200">
+            <div class="w-11 h-11 rounded-[10px] bg-blue-50 flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                        d="M2.273 5.625A4.483 4.483 0 0 1 5.5 4.5h9a4.483 4.483 0 0 1 3.227 1.125A3 3 0 0 0 15 5H5a3 3 0 0 0-2.727 1.625Z" />
+                    <path
+                        d="M5.5 6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h9a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-9ZM3.5 9a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v.5H3.5V9Zm0 2h13V15a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-4Z" />
+                </svg>
+            </div>
+            <div class="flex-1">
+                <div class="font-semibold text-[0.9rem] text-[#1a1a2e]">Credit / Debit Card</div>
+                <div class="text-[0.75rem] text-[#1a1a2e]/45 mt-0.5">Visa, Mastercard, etc.</div>
+            </div>
+            <div [ngClass]="selectedPayment === 'Card' ? 'border-[#1a1a2e] bg-[#1a1a2e]' : 'border-gray-300'"
+                class="w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-200">
+                <div [ngClass]="selectedPayment === 'Card' ? 'opacity-100' : 'opacity-0'"
+                    class="w-[7px] h-[7px] rounded-full bg-white transition-opacity duration-200"></div>
+            </div>
+        </div>
+
+        <!-- cash -->
+        <div (click)="selectedPayment = 'Cash'"
+            [ngClass]="selectedPayment === 'Cash' ? 'border-[#1a1a2e] bg-[#1a1a2e]/[0.03]' : 'border-gray-200 hover:border-[#c8d3e0]'"
+            class="flex items-center gap-3.5 border-2 rounded-[14px] p-5 cursor-pointer transition-all duration-200">
+            <div class="w-11 h-11 rounded-[10px] bg-green-50 flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M1 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4Zm12 4a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM4 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm13-1a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
+                        clip-rule="evenodd" />
+                    <path d="M3 13h14v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1Z" />
+                </svg>
+            </div>
+            <div class="flex-1">
+                <div class="font-semibold text-[0.9rem] text-[#1a1a2e]">Cash on Delivery</div>
+                <div class="text-[0.75rem] text-[#1a1a2e]/45 mt-0.5">Pay when you receive</div>
+            </div>
+            <div [ngClass]="selectedPayment === 'Cash' ? 'border-[#1a1a2e] bg-[#1a1a2e]' : 'border-gray-300'"
+                class="w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-200">
+                <div [ngClass]="selectedPayment === 'Cash' ? 'opacity-100' : 'opacity-0'"
+                    class="w-[7px] h-[7px] rounded-full bg-white transition-opacity duration-200"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- nav buttons -->
+    <div class="flex gap-3 mt-6">
+        <button (click)="back()"
+            class="px-6 py-3 border-[1.5px] border-gray-200 rounded-[14px] text-[0.875rem] font-semibold text-[#1a1a2e] hover:border-[#1a1a2e] transition-all duration-200">
+            ← Back
+        </button>
+        <button (click)="continue()"
+            class="flex-1 flex items-center justify-center gap-2 py-4 bg-brand-primary text-white rounded-[14px] text-[0.95rem] font-bold shadow-[0_4px_16px_rgba(26,26,46,0.25)] hover:-translate-y-0.5 hover:opacity-90 active:translate-y-0 transition-all duration-200">
+            Review Order
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
+                    clip-rule="evenodd" />
+            </svg>
+        </button>
+    </div>
+</div>

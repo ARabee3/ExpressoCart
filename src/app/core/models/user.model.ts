@@ -1,6 +1,7 @@
 export type AuthProvider = 'local' | 'google';
 export type UserRole = 'Admin' | 'Seller' | 'Customer';
 export interface UserAddress {
+  id: string;
   city: string;
   street: string;
   state?: string;

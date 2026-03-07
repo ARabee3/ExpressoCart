@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Subject } from 'rxjs';
@@ -8,6 +16,7 @@ import { CurrencyPipe } from '@angular/common';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { ProductService } from '../../../core/services/product.service';
+import { AuthState } from '../../../core/services/auth-state';
 import { Product } from '../../../core/models/cart.model';
 import { Spinner } from '../spinner/spinner';
 
@@ -22,9 +31,13 @@ export class Navbar {
   private readonly cartService = inject(CartService);
   private readonly wishlistService = inject(WishlistService);
   private readonly productService = inject(ProductService);
+  private readonly authState = inject(AuthState);
+  private readonly router = inject(Router);
+  private readonly elementRef = inject(ElementRef);
 
   protected readonly mobileMenuOpen = signal(false);
-  protected readonly isLoggedIn = signal(false);
+  protected readonly isLoggedIn = this.authState.isLoggedIn;
+  protected readonly userMenuOpen = signal(false);
 
   protected readonly isSearchOpen = signal(false);
   protected readonly searchQuery = signal('');
@@ -43,7 +56,7 @@ export class Navbar {
     { label: 'Products', route: '/products' },
     { label: 'Categories', route: '/categories' },
     { label: 'About', route: '/about' },
-    { label: 'Contact Us', route: '/contact' },
+    { label: 'Contact Us', route: '/contact-us' },
   ];
 
   constructor() {
@@ -70,6 +83,27 @@ export class Navbar {
 
   toggleMobileMenu() {
     this.mobileMenuOpen.update((v) => !v);
+  }
+
+  toggleUserMenu() {
+    this.userMenuOpen.update((v) => !v);
+  }
+
+  closeUserMenu() {
+    this.userMenuOpen.set(false);
+  }
+
+  logout() {
+    this.userMenuOpen.set(false);
+    this.authState.clear();
+    this.router.navigate(['/']);
+  }
+
+  @HostListener('document:click', ['$event.target'])
+  onDocumentClick(target: EventTarget | null) {
+    if (target && !this.elementRef.nativeElement.contains(target as Node)) {
+      this.userMenuOpen.set(false);
+    }
   }
 
   toggleSearch() {

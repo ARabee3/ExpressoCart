@@ -14,6 +14,7 @@ import { CartItems } from '../cart-items/cart-items';
 import { Spinner } from '../../../shared/components/spinner/spinner';
 import { from, throwError } from 'rxjs';
 import { concatMap, catchError, toArray } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { AuthState } from '../../../core/services/auth-state';
 
 @Component({
@@ -25,7 +26,8 @@ import { AuthState } from '../../../core/services/auth-state';
 export class Cart implements OnInit {
 
   //integration with backend
-  cartService = inject(CartService);
+  private router = inject(Router);
+  private cartService = inject(CartService);
   private toastService = inject(ToastService);
   private authState = inject(AuthState);
 
@@ -113,9 +115,14 @@ export class Cart implements OnInit {
   }
 
   checkout() {
+    if (!this.authState.isLoggedIn()) {
+      this.toastService.error('Please login to proceed to checkout.');
+      this.router.navigate(['/login']);
+      return;
+    }
     if (this.pendingUpdates.size === 0) {
       this.toastService.success('Proceeding to checkout...');
-      // Logic for checkout 
+      this.router.navigate(['/checkout']);
       return;
     }
 
@@ -134,6 +141,7 @@ export class Cart implements OnInit {
         this.pendingUpdates.clear();
         this.isCheckingOut.set(false);
         this.toastService.success('Cart synced successfully. Proceeding to checkout...');
+        this.router.navigate(['/checkout']);
       },
       error: (err) => {
         console.error('Checkout stock validation error', err);

@@ -16,7 +16,16 @@ const CATEGORY_IMAGES: Record<string, string> = {
   storage: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
 };
 
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80';
+const CATEGORY_GRADIENTS = [
+  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+  'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+  'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+  'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+  'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+  'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)',
+  'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
+];
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
@@ -27,6 +36,15 @@ export class CategoryService {
   }
 
   getImageForSlug(slug: string): string {
-    return CATEGORY_IMAGES[slug] ?? FALLBACK_IMAGE;
+    return CATEGORY_IMAGES[slug] ?? '';
+  }
+
+  getBackgroundForCategory(name: string, slug: string): string {
+    const imageUrl = CATEGORY_IMAGES[slug];
+    if (imageUrl) {
+      return `url("${imageUrl}")`;
+    }
+    const idx = (name.charCodeAt(0) || 0) % CATEGORY_GRADIENTS.length;
+    return CATEGORY_GRADIENTS[idx];
   }
 }
