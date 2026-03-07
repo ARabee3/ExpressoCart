@@ -48,7 +48,17 @@ export class Login {
         localStorage.removeItem('guest_session_id');
 
         this.toast.success('Login successful');
-        this.router.navigate(['']);
+
+        // Role-based redirect
+        const role = this.authState.role();
+        if (role === 'Admin') {
+          this.router.navigate(['/admin/dashboard']);
+        } else if (role === 'Seller') {
+          this.router.navigate(['/seller/dashboard']);
+        } else {
+          this.router.navigate(['/']);
+        }
+
         this.loading.set(false);
       },
 

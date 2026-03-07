@@ -4,18 +4,17 @@ import { AuthState } from '../services/auth-state';
 import { ToastService } from '../services/toast.service';
 
 export const authGuard: CanActivateFn = () => {
-
   const authState = inject(AuthState);
   const router = inject(Router);
   const toast = inject(ToastService);
-  
+
   if (authState.isLoggedIn()) {
     return true;
   }
 
   toast.warning('Please login first');
 
-  router.navigate(['/login']);
+  router.navigate(['/auth/login']);
 
   return false;
 };

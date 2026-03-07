@@ -1,0 +1,522 @@
+<!-- Page Header -->
+<div class="flex items-center justify-between mb-8">
+  <div>
+    <h1 class="text-2xl font-black tracking-tight">My Products</h1>
+    <p class="text-sm text-gray-500 mt-1">Manage your store's product catalogue.</p>
+  </div>
+  <button
+    (click)="openAddModal()"
+    class="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-xl hover:bg-brand-accent/90 transition-colors shadow-sm"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2.5"
+      stroke="currentColor"
+      class="size-4"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+    </svg>
+    Add Product
+  </button>
+</div>
+
+<!-- Products Content -->
+<div class="bg-white rounded-2xl border shadow-sm">
+  @if (loading()) {
+    <div class="p-6 space-y-4">
+      @for (_ of [1, 2, 3, 4]; track $index) {
+        <div class="h-16 bg-gray-100 rounded-xl animate-pulse"></div>
+      }
+    </div>
+  } @else if (products().length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+      <div
+        class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4 text-3xl"
+      >
+        📦
+      </div>
+      <p class="text-base font-semibold text-gray-600">No products yet</p>
+      <p class="text-sm text-gray-400 mt-1 max-w-xs">
+        Click "Add Product" to list your first item on the marketplace.
+      </p>
+    </div>
+  } @else {
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr
+            class="text-left text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100"
+          >
+            <th class="px-6 py-4">Product</th>
+            <th class="px-6 py-4">Price</th>
+            <th class="px-6 py-4">Stock</th>
+            <th class="px-6 py-4">Category</th>
+            <th class="px-6 py-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          @for (product of products(); track product._id) {
+            <tr class="hover:bg-gray-50/50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  @if (product.images?.[0]) {
+                    <img
+                      [src]="'http://localhost:3000/' + product.images[0]"
+                      [alt]="product.name"
+                      class="w-11 h-11 rounded-xl object-cover bg-gray-100 border shrink-0"
+                    />
+                  } @else {
+                    <div
+                      class="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-xl border shrink-0"
+                    >
+                      📦
+                    </div>
+                  }
+                  <div class="min-w-0">
+                    <p class="font-semibold text-gray-800 truncate max-w-50">{{ product.name }}</p>
+                    <p class="text-xs text-gray-400 truncate max-w-50">{{ product.description }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 font-bold text-gray-700">${{ product.price }}</td>
+              <td class="px-6 py-4">
+                <span
+                  class="px-2.5 py-1 rounded-full text-xs font-semibold"
+                  [class]="
+                    product.stock > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'
+                  "
+                >
+                  {{ product.stock > 0 ? product.stock + ' in stock' : 'Out of stock' }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-gray-500">{{ product.category?.name ?? '—' }}</td>
+              <td class="px-6 py-4 text-right">
+                @if (deleteConfirmId() === product._id) {
+                  <div class="flex items-center justify-end gap-2">
+                    <span class="text-xs text-gray-500 mr-1">Delete?</span>
+                    <button
+                      (click)="confirmDelete(product._id)"
+                      [disabled]="deleting()"
+                      class="px-3 py-1.5 text-xs font-semibold bg-red-500 text-white rounded-lg hover:bg-red-600 transition disabled:opacity-50"
+                    >
+                      {{ deleting() ? '…' : 'Yes' }}
+                    </button>
+                    <button
+                      (click)="cancelDelete()"
+                      class="px-3 py-1.5 text-xs font-semibold bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition"
+                    >
+                      No
+                    </button>
+                  </div>
+                } @else {
+                  <div class="flex items-center justify-end gap-2">
+                    <button
+                      (click)="openEditModal(product)"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-brand-accent bg-brand-accent/10 rounded-lg hover:bg-brand-accent/20 transition"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                        class="size-3.5"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z"
+                        />
+                      </svg>
+                      Edit
+                    </button>
+                    <button
+                      (click)="requestDelete(product._id)"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-500 bg-red-50 rounded-lg hover:bg-red-100 transition"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                        class="size-3.5"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="flex items-center justify-between px-6 py-4 border-t border-gray-100">
+        <p class="text-xs text-gray-500">
+          Page {{ currentPage() }} of {{ totalPages() }} · {{ totalProducts() }} products
+        </p>
+        <div class="flex gap-1">
+          @for (page of pages(); track page) {
+            <button
+              (click)="loadProducts(page)"
+              class="w-8 h-8 rounded-lg text-xs font-semibold transition"
+              [class]="
+                page === currentPage()
+                  ? 'bg-brand-accent text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              "
+            >
+              {{ page }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+  }
+</div>
+
+<!-- ===== ADD PRODUCT MODAL ===== -->
+@if (showAddModal()) {
+  <div class="fixed inset-0 z-50 flex items-end justify-center">
+    <div
+      class="absolute inset-0 bg-black/50 transition-opacity duration-300"
+      [class.opacity-0]="!addModalVisible()"
+      [class.opacity-100]="addModalVisible()"
+      (click)="closeAddModal()"
+    ></div>
+    <div
+      class="relative w-full max-w-2xl bg-white rounded-t-3xl shadow-2xl px-6 pt-6 pb-10 transition-transform duration-300 ease-out max-h-[90vh] overflow-y-auto"
+      [class.translate-y-full]="!addModalVisible()"
+      [class.translate-y-0]="addModalVisible()"
+    >
+      <div class="w-10 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
+      <h2 class="text-xl font-bold text-brand-primary mb-5">Add New Product</h2>
+
+      <form [formGroup]="addForm" (ngSubmit)="submitAdd()" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Name -->
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+              >Product Name <span class="text-red-500">*</span></label
+            >
+            <input
+              type="text"
+              formControlName="name"
+              placeholder="e.g. Wireless Headphones"
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+              [class.border-red-400]="
+                fieldError('add', 'name', 'required') || fieldError('add', 'name', 'minlength')
+              "
+            />
+            @if (fieldError('add', 'name', 'required')) {
+              <p class="text-xs text-red-500 mt-1">Name is required</p>
+            }
+            @if (fieldError('add', 'name', 'minlength')) {
+              <p class="text-xs text-red-500 mt-1">Min 2 characters</p>
+            }
+          </div>
+
+          <!-- Description -->
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+              >Description <span class="text-red-500">*</span></label
+            >
+            <textarea
+              formControlName="description"
+              rows="3"
+              placeholder="Describe your product..."
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition resize-none"
+              [class.border-red-400]="fieldError('add', 'description', 'required')"
+            ></textarea>
+            @if (fieldError('add', 'description', 'required')) {
+              <p class="text-xs text-red-500 mt-1">Description is required</p>
+            }
+            @if (fieldError('add', 'description', 'minlength')) {
+              <p class="text-xs text-red-500 mt-1">Min 10 characters</p>
+            }
+          </div>
+
+          <!-- Price -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+              >Price ($) <span class="text-red-500">*</span></label
+            >
+            <input
+              type="number"
+              formControlName="price"
+              placeholder="0.00"
+              min="0"
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+              [class.border-red-400]="fieldError('add', 'price', 'required')"
+            />
+            @if (fieldError('add', 'price', 'required')) {
+              <p class="text-xs text-red-500 mt-1">Price is required</p>
+            }
+          </div>
+
+          <!-- Stock -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Stock</label>
+            <input
+              type="number"
+              formControlName="stock"
+              placeholder="0"
+              min="0"
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+            />
+          </div>
+
+          <!-- Category -->
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+              >Category <span class="text-red-500">*</span></label
+            >
+            <select
+              formControlName="category"
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition bg-white"
+              [class.border-red-400]="fieldError('add', 'category', 'required')"
+            >
+              <option value="">Select a category</option>
+              @for (cat of categories(); track cat._id) {
+                <option [value]="cat._id">{{ cat.name }}</option>
+              }
+            </select>
+            @if (fieldError('add', 'category', 'required')) {
+              <p class="text-xs text-red-500 mt-1">Category is required</p>
+            }
+          </div>
+
+          <!-- Images -->
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+              >Images <span class="text-red-500">*</span>
+              <span class="text-gray-400 font-normal">(max 5)</span></label
+            >
+            <label
+              class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-brand-accent/50 hover:bg-gray-50 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-7 text-gray-400 mb-1"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+                />
+              </svg>
+              <span class="text-xs text-gray-500">Click to upload images</span>
+              <input
+                type="file"
+                class="hidden"
+                multiple
+                accept="image/*"
+                (change)="onAddImagesChange($event)"
+              />
+            </label>
+            @if (addImagePreviews().length > 0) {
+              <div class="flex gap-2 mt-3 flex-wrap">
+                @for (preview of addImagePreviews(); track $index) {
+                  <img [src]="preview" class="w-14 h-14 rounded-lg object-cover border" />
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button
+            type="button"
+            (click)="closeAddModal()"
+            class="flex-1 px-4 py-2.5 text-sm font-medium bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            [disabled]="addSubmitting()"
+            class="flex-1 px-4 py-2.5 text-sm font-semibold bg-brand-accent text-white rounded-xl hover:bg-brand-accent/90 transition disabled:opacity-60 flex items-center justify-center gap-2"
+          >
+            @if (addSubmitting()) {
+              <svg
+                class="animate-spin size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                ></path>
+              </svg>
+              Adding…
+            } @else {
+              Add Product
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- ===== EDIT PRODUCT MODAL ===== -->
+@if (showEditModal()) {
+  <div class="fixed inset-0 z-50 flex items-end justify-center">
+    <div
+      class="absolute inset-0 bg-black/50 transition-opacity duration-300"
+      [class.opacity-0]="!editModalVisible()"
+      [class.opacity-100]="editModalVisible()"
+      (click)="closeEditModal()"
+    ></div>
+    <div
+      class="relative w-full max-w-2xl bg-white rounded-t-3xl shadow-2xl px-6 pt-6 pb-10 transition-transform duration-300 ease-out max-h-[90vh] overflow-y-auto"
+      [class.translate-y-full]="!editModalVisible()"
+      [class.translate-y-0]="editModalVisible()"
+    >
+      <div class="w-10 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
+      <h2 class="text-xl font-bold text-brand-primary mb-5">Edit Product</h2>
+
+      <form [formGroup]="editForm" (ngSubmit)="submitEdit()" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+              >Product Name <span class="text-red-500">*</span></label
+            >
+            <input
+              type="text"
+              formControlName="name"
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+            />
+            @if (fieldError('edit', 'name', 'required')) {
+              <p class="text-xs text-red-500 mt-1">Name is required</p>
+            }
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+              >Description <span class="text-red-500">*</span></label
+            >
+            <textarea
+              formControlName="description"
+              rows="3"
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition resize-none"
+            ></textarea>
+            @if (fieldError('edit', 'description', 'required')) {
+              <p class="text-xs text-red-500 mt-1">Description is required</p>
+            }
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+              >Price ($) <span class="text-red-500">*</span></label
+            >
+            <input
+              type="number"
+              formControlName="price"
+              min="0"
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+            />
+            @if (fieldError('edit', 'price', 'required')) {
+              <p class="text-xs text-red-500 mt-1">Price is required</p>
+            }
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Stock</label>
+            <input
+              type="number"
+              formControlName="stock"
+              min="0"
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+            />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+              >Category <span class="text-red-500">*</span></label
+            >
+            <select
+              formControlName="category"
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition bg-white"
+            >
+              <option value="">Select a category</option>
+              @for (cat of categories(); track cat._id) {
+                <option [value]="cat._id">{{ cat.name }}</option>
+              }
+            </select>
+            @if (fieldError('edit', 'category', 'required')) {
+              <p class="text-xs text-red-500 mt-1">Category is required</p>
+            }
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button
+            type="button"
+            (click)="closeEditModal()"
+            class="flex-1 px-4 py-2.5 text-sm font-medium bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            [disabled]="editSubmitting()"
+            class="flex-1 px-4 py-2.5 text-sm font-semibold bg-brand-accent text-white rounded-xl hover:bg-brand-accent/90 transition disabled:opacity-60 flex items-center justify-center gap-2"
+          >
+            @if (editSubmitting()) {
+              <svg
+                class="animate-spin size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                ></path>
+              </svg>
+              Saving…
+            } @else {
+              Save Changes
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

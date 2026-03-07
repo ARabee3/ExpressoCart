@@ -8,16 +8,20 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { catchError, of } from 'rxjs';
 import { CartService } from '../../../core/services/cart.service';
 import { ProductService } from '../../../core/services/product.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
+import { ReviewService, Review } from '../../../core/services/review.service';
+import { AuthState } from '../../../core/services/auth-state';
 import { Product } from '../../../core/models/cart.model';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule],
   templateUrl: './product-details.html',
   styleUrl: './product-details.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,10 +32,28 @@ export class ProductDetails implements OnInit {
   private productService = inject(ProductService);
   private toastService = inject(ToastService);
   private wishlistService = inject(WishlistService);
+  private reviewService = inject(ReviewService);
+  private authState = inject(AuthState);
+  private fb = inject(FormBuilder);
 
   quantity = signal(1);
   isLoading = signal(true);
   product = signal<Product | null>(null);
+
+  // Reviews
+  reviews = signal<Review[]>([]);
+  loadingReviews = signal(false);
+  reviewsTotal = signal(0);
+  reviewPage = signal(1);
+  submittingReview = signal(false);
+  readonly hoverRating = signal(0);
+
+  protected readonly isLoggedIn = this.authState.isLoggedIn;
+
+  protected readonly reviewForm = this.fb.group({
+    rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
+    review: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]],
+  });
 
   ngOnInit() {
     const productId = this.route.snapshot.paramMap.get('id');
@@ -39,10 +61,74 @@ export class ProductDetails implements OnInit {
       this.productService.getProductById(productId).subscribe((p) => {
         this.product.set(p ?? null);
         this.isLoading.set(false);
+        if (p && !p._id.startsWith('prod_')) {
+          this.loadReviews(p._id, 1);
+        }
       });
     } else {
       this.isLoading.set(false);
     }
+  }
+
+  loadReviews(productId: string, page: number) {
+    this.loadingReviews.set(true);
+    this.reviewService
+      .getProductReviews(productId, page)
+      .pipe(catchError(() => of(null)))
+      .subscribe((res) => {
+        if (res) {
+          this.reviews.update((prev) => (page === 1 ? res.data : [...prev, ...res.data]));
+          this.reviewsTotal.set(res.total);
+          this.reviewPage.set(page);
+        }
+        this.loadingReviews.set(false);
+      });
+  }
+
+  loadMoreReviews() {
+    const p = this.product();
+    if (p) this.loadReviews(p._id, this.reviewPage() + 1);
+  }
+
+  protected readonly hasMoreReviews = computed(() => this.reviews().length < this.reviewsTotal());
+
+  setRating(value: number) {
+    this.reviewForm.patchValue({ rating: value });
+  }
+
+  submitReview() {
+    if (this.reviewForm.invalid) {
+      this.reviewForm.markAllAsTouched();
+      return;
+    }
+    const p = this.product();
+    if (!p) return;
+    this.submittingReview.set(true);
+    const { rating, review } = this.reviewForm.value;
+    this.reviewService
+      .createReview({ product: p._id, review: review!, rating: rating! })
+      .subscribe({
+        next: () => {
+          this.toastService.success('Review submitted!');
+          this.reviewForm.reset({ rating: 0, review: '' });
+          this.submittingReview.set(false);
+          this.loadReviews(p._id, 1);
+        },
+        error: (err) => {
+          const msg = err?.error?.error ?? 'Could not submit review.';
+          this.toastService.error(msg);
+          this.submittingReview.set(false);
+        },
+      });
+  }
+
+  getReviewerName(user: Review['user']): string {
+    if (typeof user === 'object' && user !== null) return user.name;
+    return 'Customer';
+  }
+
+  reviewStars(rating: number): boolean[] {
+    return Array.from({ length: 5 }, (_, i) => i + 1 <= rating);
   }
 
   protected readonly isOutOfStock = computed(() => {
@@ -61,6 +147,16 @@ export class ProductDetails implements OnInit {
     const seller = p.sellerId;
     if (typeof seller === 'object' && seller !== null) {
       return (seller as { name?: string }).name?.trim() || null;
+    }
+    return null;
+  });
+
+  protected readonly storeName = computed(() => {
+    const p = this.product();
+    if (!p) return null;
+    const seller = p.sellerId;
+    if (typeof seller === 'object' && seller !== null) {
+      return (seller as { storeName?: string }).storeName?.trim() || null;
     }
     return null;
   });
