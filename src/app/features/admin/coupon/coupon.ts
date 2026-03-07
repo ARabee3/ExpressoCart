@@ -20,6 +20,7 @@ export class Coupon implements OnInit {
   // UI state
   showForm = signal(false);
   editingCoupon = signal<CouponModel | null>(null);
+  deletingCoupon = signal<CouponModel | null>(null);
 
   // today in YYYY-MM-DD for the date input min attribute
   readonly today = new Date().toISOString().split('T')[0];
@@ -65,8 +66,16 @@ export class Coupon implements OnInit {
     this.closeForm();
   }
 
-  delete(id: string) {
-    this.admin.deleteCoupon(id);
+  confirmDelete(coupon: CouponModel) {
+    this.deletingCoupon.set(coupon);
+  }
+
+  deleteConfirmed() {
+    const coupon = this.deletingCoupon();
+    if (coupon) {
+      this.admin.deleteCoupon(coupon._id);
+      this.deletingCoupon.set(null);
+    }
   }
 
   private emptyForm(): CreateCouponDTO {

@@ -18,6 +18,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/coupon/coupon').then((com) => com.Coupon),
       },
       {
+        path: 'categories',
+        loadComponent: () =>
+          import('./features/admin/categories/admin-categories').then((com) => com.AdminCategories),
+      },
+      {
         path: '**',
         loadComponent: () =>
           import('./shared/components/notfound/notfound').then((com) => com.Notfound),
@@ -76,9 +81,7 @@ export const routes: Routes = [
       },
       {
         path: 'checkout',
-        loadComponent: () =>
-          import('./features/cart/checkout/checkout')
-            .then((m) => m.Checkout),
+        loadComponent: () => import('./features/cart/checkout/checkout').then((m) => m.Checkout),
       },
       {
         path: 'profile',
