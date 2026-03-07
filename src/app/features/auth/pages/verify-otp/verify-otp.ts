@@ -28,7 +28,7 @@ export class VerifyOtp {
 
       next: (res: any) => {
         this.toast.success('Email verified successfully');
-        this.router.navigate(['/login']);
+        this.router.navigate(['/auth/login']);
       },
       error: (err) => {
       this.toast.error(err.error?.message || 'Verification failed');
