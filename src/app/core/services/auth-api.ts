@@ -17,8 +17,8 @@ export class AuthApi {
   }
 
   verifyEmail(data: { otp: string }): Observable<any> {
-  return this.api.post('verify-email', data);
-}
+    return this.api.post('verify-email', data);
+  }
 
   forgotPassword(email: string) {
     return this.api.post('forgot-password', { email });
@@ -30,5 +30,13 @@ export class AuthApi {
 
   refresh() {
     return this.api.post('refresh', {});
+  }
+
+  getMe() {
+    return this.api.get('me');
+  }
+
+  updateProfile(data: { name?: string; phone?: string }) {
+    return this.api.patch('update-profile', data);
   }
 }
