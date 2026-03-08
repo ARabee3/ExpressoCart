@@ -4,46 +4,98 @@
 </div>
 
 @if (admin.stats(); as data) {
+  <!-- Stats Cards -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <div class="bg-white p-6 rounded-2xl border shadow-sm">
-      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Revenue</p>
+      <div class="flex items-center justify-between mb-2">
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Revenue</p>
+        <span class="text-lg">💰</span>
+      </div>
       <h3 class="text-3xl font-black">${{ data.totalSales }}</h3>
-      <!-- <h3 class="text-3xl font-black">400</h3> -->
-
       <p class="text-xs text-green-600 font-semibold mt-2">All time</p>
     </div>
 
     <div class="bg-white p-6 rounded-2xl border shadow-sm">
-      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Users</p>
+      <div class="flex items-center justify-between mb-2">
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Users</p>
+        <span class="text-lg">👥</span>
+      </div>
       <h3 class="text-3xl font-black">{{ data.totalUsers }}</h3>
-      <!-- <h3 class="text-3xl font-black">40</h3> -->
-
-      <p class="text-xs text-blue-600 font-semibold mt-2">Registered</p>
+      <p class="text-xs text-blue-600 font-semibold mt-2">
+        <a routerLink="../users" class="hover:underline">View all →</a>
+      </p>
     </div>
 
     <div class="bg-white p-6 rounded-2xl border shadow-sm">
-      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Orders</p>
+      <div class="flex items-center justify-between mb-2">
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Orders</p>
+        <span class="text-lg">📦</span>
+      </div>
       <h3 class="text-3xl font-black">{{ data.totalOrders }}</h3>
-      <!-- <h3 class="text-3xl font-black">200</h3> -->
-
       <p class="text-xs text-gray-500 font-semibold mt-2">All statuses</p>
     </div>
 
     <div class="bg-white p-6 rounded-2xl border shadow-sm">
-      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Paid Orders</p>
+      <div class="flex items-center justify-between mb-2">
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Paid Orders</p>
+        <span class="text-lg">✅</span>
+      </div>
       <h3 class="text-3xl font-black">{{ data.paidOrders }}</h3>
-      <!-- <h3 class="text-3xl font-black">200</h3> -->
-
-      <p class="text-xs text-green-600 font-semibold mt-2">Completed</p>
+      <p class="text-xs text-green-600 font-semibold mt-2">
+        @if (data.totalOrders > 0) {
+          {{ ((data.paidOrders / data.totalOrders) * 100).toFixed(0) }}% payment rate
+        } @else {
+          No orders yet
+        }
+      </p>
     </div>
   </div>
 
-  <div class="bg-white rounded-2xl border shadow-sm p-6">
-    <h2 class="font-bold text-sm uppercase tracking-tight mb-4">Recent Orders</h2>
-    <p class="text-sm text-gray-400">Recent orders table coming soon...</p>
+  <!-- Quick Links -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <a
+      routerLink="../users"
+      class="bg-white p-4 rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
+    >
+      <span class="text-xl">👥</span>
+      <div>
+        <p class="text-sm font-bold group-hover:text-black">Users</p>
+        <p class="text-xs text-gray-400">Manage accounts</p>
+      </div>
+    </a>
+    <a
+      routerLink="../categories"
+      class="bg-white p-4 rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
+    >
+      <span class="text-xl">🛍️</span>
+      <div>
+        <p class="text-sm font-bold group-hover:text-black">Categories</p>
+        <p class="text-xs text-gray-400">Organize products</p>
+      </div>
+    </a>
+    <a
+      routerLink="../coupon"
+      class="bg-white p-4 rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
+    >
+      <span class="text-xl">🏷️</span>
+      <div>
+        <p class="text-sm font-bold group-hover:text-black">Coupons</p>
+        <p class="text-xs text-gray-400">Discount codes</p>
+      </div>
+    </a>
+    <a
+      routerLink="../orders"
+      class="bg-white p-4 rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
+    >
+      <span class="text-xl">📋</span>
+      <div>
+        <p class="text-sm font-bold group-hover:text-black">Orders</p>
+        <p class="text-xs text-gray-400">Track & manage</p>
+      </div>
+    </a>
   </div>
 } @else {
-  <!-- Loading skeleton -->
+  <!-- Loading skeleton for stats -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     @for (_ of [1, 2, 3, 4]; track $index) {
       <div class="bg-white p-6 rounded-2xl border shadow-sm animate-pulse">
@@ -52,4 +104,114 @@
       </div>
     }
   </div>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    @for (_ of [1, 2, 3, 4]; track $index) {
+      <div class="bg-white p-4 rounded-2xl border shadow-sm animate-pulse">
+        <div class="h-3 bg-gray-200 rounded w-20 mb-2"></div>
+        <div class="h-3 bg-gray-200 rounded w-16"></div>
+      </div>
+    }
+  </div>
 }
+
+<!-- Recent Orders -->
+<div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+  <div class="px-6 py-4 border-b flex items-center justify-between">
+    <h2 class="font-bold text-sm uppercase tracking-tight">Recent Orders</h2>
+    <a
+      routerLink="../orders"
+      class="text-xs font-semibold text-gray-400 hover:text-black transition-colors"
+    >
+      View all →
+    </a>
+  </div>
+
+  @if (admin.recentOrders(); as orders) {
+    @if (orders.length > 0) {
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 border-b">
+          <tr>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Order ID
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Date
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Status
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Payment
+            </th>
+            <th
+              class="text-right px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Total
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          @for (order of orders; track order._id) {
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <span class="font-mono text-xs text-gray-500">{{ order._id.slice(0, 10) }}...</span>
+              </td>
+              <td class="px-6 py-4 text-gray-500 text-xs">
+                {{ order.createdAt | date: 'MMM d, y' }}
+              </td>
+              <td class="px-6 py-4">
+                <span
+                  class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                  [class]="getStatusClass(order.status)"
+                >
+                  {{ order.status }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-gray-500">{{ order.paymentMethod }}</span>
+                  @if (order.isPaid) {
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500" title="Paid"></span>
+                  } @else {
+                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-400" title="Unpaid"></span>
+                  }
+                </div>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <span class="font-bold">${{ order.finalPrice }}</span>
+                @if (order.discountAmount > 0) {
+                  <span class="text-xs text-green-600 ml-1">(-${{ order.discountAmount }})</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <div class="p-12 text-center">
+        <p class="text-gray-400 text-sm">No orders yet.</p>
+      </div>
+    }
+  } @else {
+    <!-- Loading skeleton for orders -->
+    <div class="divide-y divide-gray-100">
+      @for (_ of [1, 2, 3, 4, 5]; track $index) {
+        <div class="flex items-center gap-6 px-6 py-4 animate-pulse">
+          <div class="h-3 bg-gray-200 rounded w-24"></div>
+          <div class="h-3 bg-gray-200 rounded w-20"></div>
+          <div class="h-5 bg-gray-200 rounded-full w-16"></div>
+          <div class="h-3 bg-gray-200 rounded w-12"></div>
+          <div class="h-4 bg-gray-200 rounded w-16 ml-auto"></div>
+        </div>
+      }
+    </div>
+  }
+</div>

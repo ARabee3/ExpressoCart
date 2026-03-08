@@ -1,0 +1,566 @@
+<!-- Page Header -->
+<div class="mb-8 flex items-center justify-between">
+  <div>
+    <h1 class="text-2xl font-black tracking-tight">Users</h1>
+    <p class="text-sm text-gray-500 mt-1">
+      Manage registered users, roles, and view order history.
+    </p>
+  </div>
+</div>
+
+<!-- Stats Cards -->
+@if (admin.users(); as users) {
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+    <div class="bg-white p-4 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Total Users</p>
+      <h3 class="text-2xl font-black">{{ totalUsers() }}</h3>
+      <p class="text-xs text-gray-400 mt-1">On this page</p>
+    </div>
+    <div class="bg-white p-4 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Active</p>
+      <h3 class="text-2xl font-black text-green-600">{{ activeUsers() }}</h3>
+      <p class="text-xs text-gray-400 mt-1">On this page</p>
+    </div>
+    <div class="bg-white p-4 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Deleted</p>
+      <h3 class="text-2xl font-black text-red-500">{{ deletedUsers() }}</h3>
+      <p class="text-xs text-gray-400 mt-1">On this page</p>
+    </div>
+    <div class="bg-white p-4 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Sellers</p>
+      <h3 class="text-2xl font-black text-blue-600">{{ sellerCount() }}</h3>
+      <p class="text-xs text-gray-400 mt-1">On this page</p>
+    </div>
+    <div class="bg-white p-4 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Customers</p>
+      <h3 class="text-2xl font-black text-gray-600">{{ customerCount() }}</h3>
+      <p class="text-xs text-gray-400 mt-1">On this page</p>
+    </div>
+  </div>
+}
+
+<!-- Search & Filter -->
+<div class="mb-6 flex flex-wrap items-center gap-3">
+  <input
+    [(ngModel)]="searchQuery"
+    placeholder="Search by name or email..."
+    class="w-full max-w-sm px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
+  />
+  <select
+    [(ngModel)]="roleFilter"
+    class="px-4 py-2.5 border rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black"
+  >
+    <option value="">All Roles</option>
+    <option value="Admin">Admin</option>
+    <option value="Seller">Seller</option>
+    <option value="Customer">Customer</option>
+  </select>
+  <select
+    [(ngModel)]="statusFilter"
+    class="px-4 py-2.5 border rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black"
+  >
+    <option value="all">All Status</option>
+    <option value="active">Active Only</option>
+    <option value="deleted">Deleted Only</option>
+  </select>
+</div>
+
+<!-- Users Table -->
+@if (admin.users(); as users) {
+  @if (filteredUsers().length > 0) {
+    <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 border-b">
+          <tr>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              User
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Email
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Role
+            </th>
+            <th
+              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Status
+            </th>
+            <th class="px-6 py-3"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          @for (user of filteredUsers(); track user._id) {
+            <tr
+              class="transition-colors"
+              [class.hover:bg-gray-50]="!user.isDeleted"
+              [class.bg-red-50/50]="user.isDeleted"
+              [class.opacity-60]="user.isDeleted"
+            >
+              <!-- User Name + Avatar -->
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+                    [style.background]="getGradient(user.name)"
+                  >
+                    {{ user.name.charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="min-w-0">
+                    <span class="font-semibold block truncate">{{ user.name }}</span>
+                    @if (user.storeName) {
+                      <span class="text-xs text-gray-400 block truncate">{{ user.storeName }}</span>
+                    }
+                  </div>
+                </div>
+              </td>
+
+              <!-- Email -->
+              <td class="px-6 py-4 text-gray-500 text-xs font-mono truncate max-w-50">
+                {{ user.email }}
+              </td>
+
+              <!-- Role Badge -->
+              <td class="px-6 py-4">
+                <span
+                  class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                  [class]="getRoleClass(user.role)"
+                >
+                  {{ user.role }}
+                </span>
+              </td>
+
+              <!-- Status -->
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  @if (user.isDeleted) {
+                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-red-600">
+                      <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Deleted
+                    </span>
+                  } @else if (user.isActive) {
+                    <span
+                      class="inline-flex items-center gap-1 text-xs font-semibold text-green-600"
+                    >
+                      <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active
+                    </span>
+                  } @else {
+                    <span
+                      class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400"
+                    >
+                      <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Inactive
+                    </span>
+                  }
+                  @if (user.isVerified) {
+                    <span class="text-blue-500 text-xs" title="Verified">✓</span>
+                  }
+                </div>
+              </td>
+
+              <!-- Actions -->
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2 justify-end">
+                  <button
+                    (click)="viewUser(user)"
+                    class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors"
+                  >
+                    View
+                  </button>
+                  @if (user.role !== 'Admin') {
+                    @if (user.isDeleted) {
+                      <button
+                        (click)="confirmRestore(user)"
+                        class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition-colors"
+                      >
+                        Restore
+                      </button>
+                    } @else {
+                      <button
+                        (click)="openRoleChange(user)"
+                        class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                      >
+                        Role
+                      </button>
+                      <button
+                        (click)="confirmDelete(user)"
+                        class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    }
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Bar -->
+    <div class="mt-4 flex items-center justify-between">
+      <p class="text-xs text-gray-400">
+        Showing {{ filteredUsers().length }} of {{ totalUsers() }} users
+        @if (totalPages() > 1) {
+          — Page {{ currentPage() }} of {{ totalPages() }}
+        }
+      </p>
+
+      @if (totalPages() > 1) {
+        <div class="flex items-center gap-1">
+          <!-- Prev -->
+          <button
+            (click)="goToPage(currentPage() - 1)"
+            [disabled]="currentPage() <= 1"
+            class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            ←
+          </button>
+
+          <!-- Page Numbers -->
+          @for (page of pageNumbers(); track page) {
+            <button
+              (click)="goToPage(page)"
+              class="w-8 h-8 text-xs font-semibold rounded-lg transition-colors"
+              [class.bg-black]="page === currentPage()"
+              [class.text-white]="page === currentPage()"
+              [class.border]="page !== currentPage()"
+              [class.hover:bg-gray-50]="page !== currentPage()"
+            >
+              {{ page }}
+            </button>
+          }
+
+          <!-- Next -->
+          <button
+            (click)="goToPage(currentPage() + 1)"
+            [disabled]="currentPage() >= totalPages()"
+            class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            →
+          </button>
+        </div>
+      }
+    </div>
+  } @else if (searchQuery() || roleFilter() || statusFilter() !== 'all') {
+    <div class="bg-white rounded-2xl border shadow-sm p-12 text-center">
+      <p class="text-gray-400 text-sm">No users match your search criteria.</p>
+    </div>
+  } @else {
+    <div class="bg-white rounded-2xl border shadow-sm p-12 text-center">
+      <p class="text-gray-400 text-sm">No users found.</p>
+    </div>
+  }
+} @else {
+  <!-- Loading skeleton -->
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+    @for (_ of [1, 2, 3, 4, 5]; track $index) {
+      <div class="bg-white p-4 rounded-2xl border shadow-sm animate-pulse">
+        <div class="h-3 bg-gray-200 rounded w-20 mb-3"></div>
+        <div class="h-7 bg-gray-200 rounded w-12"></div>
+      </div>
+    }
+  </div>
+  <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+    <div class="h-10 bg-gray-50 border-b"></div>
+    @for (_ of [1, 2, 3, 4, 5]; track $index) {
+      <div class="flex gap-4 px-6 py-4 border-b animate-pulse">
+        <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+        <div class="h-4 bg-gray-200 rounded w-32"></div>
+        <div class="h-4 bg-gray-200 rounded w-40 ml-4"></div>
+        <div class="h-4 bg-gray-200 rounded w-16 ml-auto"></div>
+      </div>
+    }
+  </div>
+}
+
+<!-- User Detail Slide-in Panel -->
+@if (viewingUser(); as user) {
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/30 z-40" (click)="closeUserPanel()"></div>
+
+  <!-- Panel -->
+  <div class="fixed right-0 top-0 h-full w-full max-w-lg bg-white shadow-2xl z-50 flex flex-col">
+    <div class="px-6 py-5 border-b flex items-center justify-between">
+      <h2 class="font-black text-lg">User Details</h2>
+      <button (click)="closeUserPanel()" class="text-gray-400 hover:text-black text-xl font-bold">
+        ✕
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-auto px-6 py-6">
+      <!-- Deleted Banner -->
+      @if (user.isDeleted) {
+        <div
+          class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center justify-between"
+        >
+          <div>
+            <p class="text-sm font-semibold text-red-700">This user has been deleted</p>
+            <p class="text-xs text-red-500 mt-0.5">
+              Account is soft-deleted and currently inactive.
+            </p>
+          </div>
+          @if (user.role !== 'Admin') {
+            <button
+              (click)="confirmRestore(user)"
+              class="px-4 py-2 text-xs font-semibold rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors shrink-0"
+            >
+              Restore
+            </button>
+          }
+        </div>
+      }
+
+      <!-- User Info -->
+      <div class="flex items-center gap-4 mb-6">
+        <div
+          class="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-bold shrink-0"
+          [style.background]="getGradient(user.name)"
+        >
+          {{ user.name.charAt(0).toUpperCase() }}
+        </div>
+        <div class="min-w-0">
+          <h3 class="font-black text-lg truncate">{{ user.name }}</h3>
+          <p class="text-sm text-gray-500 truncate">{{ user.email }}</p>
+          <div class="flex items-center gap-2 mt-1">
+            <span
+              class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold"
+              [class]="getRoleClass(user.role)"
+            >
+              {{ user.role }}
+            </span>
+            @if (user.isVerified) {
+              <span class="text-xs text-blue-600 font-semibold">Verified</span>
+            }
+            @if (user.isActive && !user.isDeleted) {
+              <span class="text-xs text-green-600 font-semibold">Active</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Details Grid -->
+      <div class="bg-gray-50 rounded-xl p-4 mb-6">
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Details</p>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <p class="text-xs text-gray-400">Phone</p>
+            <p class="font-semibold">{{ user.phone || '—' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400">Auth Provider</p>
+            <p class="font-semibold capitalize">{{ user.authProvider }}</p>
+          </div>
+          @if (user.storeName) {
+            <div class="col-span-2">
+              <p class="text-xs text-gray-400">Store Name</p>
+              <p class="font-semibold">{{ user.storeName }}</p>
+            </div>
+          }
+          <div>
+            <p class="text-xs text-gray-400">Approved</p>
+            <p class="font-semibold">{{ user.isApproved ? 'Yes' : 'No' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400">Addresses</p>
+            <p class="font-semibold">{{ user.addresses.length || 0 }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Addresses -->
+      @if (user.addresses && user.addresses.length > 0) {
+        <div class="mb-6">
+          <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Addresses</p>
+          <div class="flex flex-col gap-2">
+            @for (addr of user.addresses; track addr.id) {
+              <div class="bg-gray-50 rounded-xl p-3 text-sm">
+                <div class="flex items-center gap-2">
+                  <span class="font-semibold">{{ addr.city }}</span>
+                  @if (addr.isDefault) {
+                    <span class="text-xs bg-black text-white px-1.5 py-0.5 rounded-md"
+                      >Default</span
+                    >
+                  }
+                </div>
+                <p class="text-gray-500 text-xs mt-0.5">
+                  {{ addr.street }}{{ addr.state ? ', ' + addr.state : '' }}
+                </p>
+                @if (addr.phone) {
+                  <p class="text-gray-400 text-xs mt-0.5">{{ addr.phone }}</p>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- User Orders -->
+      <div>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Order History</p>
+        @if (admin.selectedUserOrders(); as orders) {
+          @if (orders.length > 0) {
+            <div class="flex flex-col gap-2">
+              @for (order of orders; track order._id) {
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-mono text-gray-400"
+                      >{{ order._id | slice: 0 : 12 }}...</span
+                    >
+                    <span
+                      class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold"
+                      [class]="getStatusClass(order.status)"
+                    >
+                      {{ order.status }}
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-500">{{ order.createdAt | date: 'mediumDate' }}</span>
+                    <span class="font-black">${{ order.finalPrice }}</span>
+                  </div>
+                  <div class="flex items-center gap-3 mt-1.5 text-xs text-gray-400">
+                    <span
+                      >{{ order.orderItems.length }} item{{
+                        order.orderItems.length > 1 ? 's' : ''
+                      }}</span
+                    >
+                    <span>{{ order.paymentMethod }}</span>
+                    @if (order.isPaid) {
+                      <span class="text-green-600 font-semibold">Paid</span>
+                    } @else {
+                      <span class="text-yellow-600 font-semibold">Unpaid</span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="bg-gray-50 rounded-xl p-6 text-center">
+              <p class="text-gray-400 text-sm">No orders found for this user.</p>
+            </div>
+          }
+        } @else {
+          <!-- Loading orders -->
+          <div class="flex flex-col gap-2">
+            @for (_ of [1, 2, 3]; track $index) {
+              <div class="bg-gray-50 rounded-xl p-4 animate-pulse">
+                <div class="h-3 bg-gray-200 rounded w-32 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-20"></div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Change Role Modal -->
+@if (changingRole(); as user) {
+  <div class="fixed inset-0 bg-black/30 z-40 flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 z-50">
+      <h3 class="font-black text-lg mb-2">Change Role</h3>
+      <p class="text-sm text-gray-500 mb-4">
+        Update role for <span class="font-semibold text-black">"{{ user.name }}"</span>
+      </p>
+
+      <div class="flex flex-col gap-1.5 mb-6">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">New Role</label>
+        <select
+          [(ngModel)]="newRole"
+          class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
+        >
+          <option value="Customer">Customer</option>
+          <option value="Seller">Seller</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </div>
+
+      <div class="flex gap-3">
+        <button
+          (click)="changingRole.set(null)"
+          class="flex-1 py-2.5 border rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="confirmRoleChange()"
+          class="flex-1 py-2.5 bg-black text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors"
+        >
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete Confirmation Modal -->
+@if (deletingUser(); as user) {
+  <div class="fixed inset-0 bg-black/30 z-40 flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 z-50">
+      <h3 class="font-black text-lg mb-2">Delete User</h3>
+      <p class="text-sm text-gray-500 mb-4">
+        Are you sure you want to soft-delete
+        <span class="font-semibold text-black">"{{ user.name }}"</span>?
+      </p>
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-6">
+        <p class="text-xs text-amber-700">
+          This is a soft delete. The user will be marked as deleted but their data will be
+          preserved. You can restore the user later.
+        </p>
+      </div>
+      <div class="flex gap-3">
+        <button
+          (click)="deletingUser.set(null)"
+          class="flex-1 py-2.5 border rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="deleteConfirmed()"
+          class="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition-colors"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Restore Confirmation Modal -->
+@if (restoringUser(); as user) {
+  <div class="fixed inset-0 bg-black/30 z-40 flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 z-50">
+      <h3 class="font-black text-lg mb-2">Restore User</h3>
+      <p class="text-sm text-gray-500 mb-4">
+        Are you sure you want to restore
+        <span class="font-semibold text-black">"{{ user.name }}"</span>?
+      </p>
+      <div class="bg-green-50 border border-green-200 rounded-xl p-3 mb-6">
+        <p class="text-xs text-green-700">
+          This will reactivate the user account. They will be able to log in and use the platform
+          again.
+        </p>
+      </div>
+      <div class="flex gap-3">
+        <button
+          (click)="restoringUser.set(null)"
+          class="flex-1 py-2.5 border rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="restoreConfirmed()"
+          class="flex-1 py-2.5 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors"
+        >
+          Restore
+        </button>
+      </div>
+    </div>
+  </div>
+}
