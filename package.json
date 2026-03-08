@@ -31,6 +31,8 @@
     "@stripe/stripe-js": "^8.9.0",
     "@tailwindcss/postcss": "^4.2.1",
     "jwt-decode": "^4.0.0",
+    "marked": "^17.0.4",
+    "ngx-markdown": "^21.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
