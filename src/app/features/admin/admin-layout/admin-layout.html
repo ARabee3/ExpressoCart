@@ -39,13 +39,6 @@
       >
         <span>👥</span> Users
       </a>
-      <a
-        routerLink="users"
-        routerLinkActive="bg-white/10 text-white"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
-      >
-        <span>👥</span> Sellers
-      </a>
 
       <a
         routerLink="coupon"
@@ -54,18 +47,6 @@
       >
         <span>🏪</span> Coupons
       </a>
-
-      <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mt-4 mb-2">
-        Config
-      </p>
-
-      <a
-        routerLink="settings"
-        routerLinkActive="bg-white/10 text-white"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
-      >
-        <span>⚙️</span> Settings
-      </a>
     </nav>
 
     <div class="px-4 py-4 border-t border-white/10">
@@ -73,11 +54,11 @@
         <div
           class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold"
         >
-          A
+          {{ initial() }}
         </div>
         <div class="flex-1 min-w-0">
-          <p class="text-sm font-semibold truncate">Admin</p>
-          <p class="text-xs text-gray-400 truncate">admin&#64;expresso.com</p>
+          <p class="text-sm font-semibold truncate">{{ displayName() }}</p>
+          <p class="text-xs text-gray-400 truncate">{{ email() }}</p>
         </div>
       </div>
     </div>
@@ -94,6 +75,7 @@
           <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
         <button
+          (click)="logout()"
           class="text-sm font-semibold px-4 py-1.5 rounded-lg bg-black text-white hover:bg-gray-800 transition-colors"
         >
           Logout

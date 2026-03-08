@@ -7,6 +7,11 @@ export const routes: Routes = [
       import('./features/admin/admin-layout/admin-layout').then((com) => com.AdminLayout),
     children: [
       {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
         path: 'dashboard',
         loadComponent: () =>
           import('./features/admin/dashboard/dashboard.component').then(
@@ -21,6 +26,16 @@ export const routes: Routes = [
         path: 'categories',
         loadComponent: () =>
           import('./features/admin/categories/admin-categories').then((com) => com.AdminCategories),
+      },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./features/admin/users/admin-users').then((com) => com.AdminUsers),
+      },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./features/admin/orders/admin-orders').then((com) => com.AdminOrders),
       },
       {
         path: '**',

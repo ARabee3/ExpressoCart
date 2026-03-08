@@ -39,4 +39,8 @@ export class AuthApi {
   updateProfile(data: { name?: string; phone?: string }) {
     return this.api.patch('update-profile', data);
   }
+
+  logout() {
+    return this.api.post('logout', {});
+  }
 }
