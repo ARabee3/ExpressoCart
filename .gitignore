@@ -44,4 +44,6 @@ Thumbs.db
 
 
 .env
+.env.*
+!.env.example
 FULL_API_DOCUMENTATION.md

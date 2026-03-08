@@ -16,7 +16,7 @@ export class AuthApi {
     return this.api.post('login', data);
   }
 
-  verifyEmail(data: { otp: string }): Observable<any> {
+  verifyEmail(data: { otp: string; email?: string }): Observable<any> {
     return this.api.post('verify-email', data);
   }
 
@@ -42,6 +42,8 @@ export class AuthApi {
 
   logout() {
     return this.api.post('logout', {});
+  }
+
   registerAsSeller(storeName: string) {
     return this.api.post('seller/register-as-seller', { storeName });
   }
