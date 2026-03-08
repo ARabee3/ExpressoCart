@@ -62,9 +62,15 @@ export class Login {
         this.loading.set(false);
       },
 
-      error: () => {
+      error: (err) => {
+        console.log(err);
+
         this.loading.set(false);
-        //console.log("I am still in Login Component, current URL is:", this.router.url);
+        if (err.error?.error === 'Please Confirm Your Email First') {
+          this.router.navigate(['/auth/verify-otp'], {
+            state: { email: this.loginForm.value.email },
+          });
+        }
       },
     });
   }

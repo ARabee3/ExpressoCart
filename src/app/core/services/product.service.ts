@@ -2,7 +2,6 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Observable, of, delay, map, catchError, forkJoin } from 'rxjs';
 import { Product } from '../models/cart.model';
 import { ApiService } from './api.service';
-import { environment } from '../../environments/environment.development';
 
 interface ProductsApiResponse {
   totalProducts: number;
@@ -14,7 +13,7 @@ interface ProductsApiResponse {
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private api = inject(ApiService);
-  private readonly baseUrl = environment.apiUrl;
+  private readonly baseUrl = import.meta.env['NG_APP_API_URL'];
 
   /** Cache of all loaded products (API + mock) for single-product fallback */
   private readonly cachedProducts = signal<Product[]>([]);
