@@ -40,6 +40,8 @@ export class AuthApi {
     return this.api.patch('update-profile', data);
   }
 
+  logout() {
+    return this.api.post('logout', {});
   registerAsSeller(storeName: string) {
     return this.api.post('seller/register-as-seller', { storeName });
   }
