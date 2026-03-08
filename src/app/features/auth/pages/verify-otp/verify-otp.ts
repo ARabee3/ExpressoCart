@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthApi } from '../../../../core/services/auth-api';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -15,9 +15,13 @@ export class VerifyOtp {
   private toast = inject(ToastService);
   private router = inject(Router);
 
+  email: string | null = this.router.getCurrentNavigation()?.extras.state?.['email'] ?? null;
+  resendLoading = signal(false);
+
   form = this.fb.group({
     otp: ['', Validators.required],
   });
+
   submit() {
     if (this.form.invalid) return;
 
@@ -30,6 +34,21 @@ export class VerifyOtp {
       },
       error: (err) => {
         this.toast.error(err.error?.message || 'Verification failed');
+      },
+    });
+  }
+
+  resendOtp() {
+    if (!this.email) return;
+    this.resendLoading.set(true);
+    this.authApi.resendVerification(this.email).subscribe({
+      next: () => {
+        this.toast.success('Verification email resent');
+        this.resendLoading.set(false);
+      },
+      error: (err) => {
+        this.toast.error(err.error?.message || 'Failed to resend OTP');
+        this.resendLoading.set(false);
       },
     });
   }
