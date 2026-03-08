@@ -1,0 +1,163 @@
+<!-- One-time welcome banner -->
+@if (showWelcome()) {
+  <div
+    class="flex items-start justify-between gap-4 bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-2xl px-6 py-4 mb-6 shadow-md"
+  >
+    <div class="flex items-center gap-3">
+      <span class="text-2xl">🎉</span>
+      <div>
+        <p class="font-bold text-base">Welcome to your Seller Dashboard!</p>
+        <p class="text-sm text-white/85 mt-0.5">
+          Your store is now active. Start adding products and growing your business.
+        </p>
+      </div>
+    </div>
+    <button
+      (click)="dismissWelcome()"
+      class="text-white/70 hover:text-white transition-colors shrink-0 mt-0.5"
+      aria-label="Dismiss"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        class="size-5"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+}
+
+<!-- Page Header -->
+<div class="mb-8">
+  <h1 class="text-2xl font-black tracking-tight">Dashboard</h1>
+  <p class="text-sm text-gray-500 mt-1">Here's an overview of your store performance.</p>
+</div>
+
+<!-- Stats Cards -->
+@if (loading()) {
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    @for (_ of [1, 2, 3]; track $index) {
+      <div class="bg-white p-6 rounded-2xl border shadow-sm animate-pulse">
+        <div class="h-3 bg-gray-200 rounded w-24 mb-4"></div>
+        <div class="h-8 bg-gray-200 rounded w-16"></div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Products</p>
+      <h3 class="text-3xl font-black">{{ totalProducts() }}</h3>
+      <p class="text-xs text-brand-accent font-semibold mt-2">In your store</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Recent Products</p>
+      <h3 class="text-3xl font-black">{{ recentProducts().length }}</h3>
+      <p class="text-xs text-blue-600 font-semibold mt-2">Shown below</p>
+    </div>
+
+    <div
+      class="bg-white p-6 rounded-2xl border shadow-sm border-dashed flex flex-col items-center justify-center text-center"
+    >
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Quick Action</p>
+      <a
+        routerLink="../products"
+        class="mt-1 inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-brand-accent text-white rounded-xl hover:bg-brand-accent/90 transition-colors"
+      >
+        + Add Product
+      </a>
+    </div>
+  </div>
+}
+
+<!-- Recent Products Table -->
+<div class="bg-white rounded-2xl border shadow-sm p-6">
+  <div class="flex items-center justify-between mb-5">
+    <h2 class="font-bold text-sm uppercase tracking-tight">Recent Products</h2>
+    <a routerLink="../products" class="text-xs text-brand-accent font-semibold hover:underline">
+      View All →
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="space-y-3">
+      @for (_ of [1, 2, 3]; track $index) {
+        <div class="h-12 bg-gray-100 rounded-xl animate-pulse"></div>
+      }
+    </div>
+  } @else if (recentProducts().length === 0) {
+    <div class="flex flex-col items-center justify-center py-12 text-center">
+      <div
+        class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-3 text-2xl"
+      >
+        📦
+      </div>
+      <p class="text-sm font-medium text-gray-500">No products yet</p>
+      <p class="text-xs text-gray-400 mt-1">Add your first product to start selling</p>
+      <a
+        routerLink="../products"
+        class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-brand-accent text-white rounded-xl hover:bg-brand-accent/90 transition-colors"
+      >
+        Add Your First Product
+      </a>
+    </div>
+  } @else {
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr
+            class="text-left text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100"
+          >
+            <th class="pb-3 pr-4">Product</th>
+            <th class="pb-3 pr-4">Price</th>
+            <th class="pb-3 pr-4">Stock</th>
+            <th class="pb-3">Category</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          @for (product of recentProducts(); track product._id) {
+            <tr class="hover:bg-gray-50/50 transition-colors">
+              <td class="py-3 pr-4">
+                <div class="flex items-center gap-3">
+                  @if (product.images?.[0]) {
+                    <img
+                      [src]="'http://localhost:3000/' + product.images[0]"
+                      [alt]="product.name"
+                      class="w-9 h-9 rounded-lg object-cover bg-gray-100 border"
+                    />
+                  } @else {
+                    <div
+                      class="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center text-base border"
+                    >
+                      📦
+                    </div>
+                  }
+                  <span class="font-medium text-gray-800 truncate max-w-40">{{
+                    product.name
+                  }}</span>
+                </div>
+              </td>
+              <td class="py-3 pr-4 font-semibold text-gray-700">${{ product.price }}</td>
+              <td class="py-3 pr-4">
+                <span
+                  class="px-2 py-0.5 rounded-full text-xs font-semibold"
+                  [class]="
+                    product.stock > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'
+                  "
+                >
+                  {{ product.stock > 0 ? product.stock + ' in stock' : 'Out of stock' }}
+                </span>
+              </td>
+              <td class="py-3 text-gray-500">{{ product.category?.name ?? '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -4,7 +4,6 @@ import { CartService } from '../../../../../core/services/cart.service';
 
 @Component({
     selector: 'app-checkout-summary',
-    standalone: true,
     imports: [CommonModule],
     templateUrl: './checkout-summary.component.html'
 })

@@ -20,11 +20,11 @@ export class AuthApi {
     return this.api.post('verify-email', data);
   }
 
-  forgotPassword(email: string) {
+  forgetPassword(email: string): Observable<any> {
     return this.api.post('forgot-password', { email });
   }
 
-  resetPassword(data: any) {
+  resetPassword(data: any): Observable<any> {
     return this.api.patch('reset-password', data);
   }
 
@@ -36,11 +36,17 @@ export class AuthApi {
     return this.api.get('me');
   }
 
-  updateProfile(data: { name?: string; phone?: string }) {
+  updateProfile(data: { name?: string; phone?: string; storeName?: string }) {
     return this.api.patch('update-profile', data);
   }
 
   logout() {
     return this.api.post('logout', {});
+  registerAsSeller(storeName: string) {
+    return this.api.post('seller/register-as-seller', { storeName });
+  }
+
+  resendVerification(email: string) {
+    return this.api.post('resend-verification', { email });
   }
 }

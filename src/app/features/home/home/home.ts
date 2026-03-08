@@ -27,8 +27,8 @@ export class Home implements OnInit {
   readonly wishlistIds = this.wishlistService.wishlistIds;
 
   ngOnInit() {
-    this.productService.getProducts().subscribe((products) => {
-      this.latestProducts.set(products.slice(0, 8));
+    this.productService.getLatestProducts(8).subscribe((products) => {
+      this.latestProducts.set(products);
       this.loadingProducts.set(false);
     });
   }

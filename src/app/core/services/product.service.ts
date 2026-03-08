@@ -178,6 +178,13 @@ export class ProductService {
     );
   }
 
+  getLatestProducts(limit = 8): Observable<Product[]> {
+    return this.api.get<ProductsApiResponse>('products', { limit, sort: 'newest' }).pipe(
+      map((res) => (res.products ?? []).map((p) => this.normalizeProduct(p))),
+      catchError(() => of([])),
+    );
+  }
+
   searchProducts(keyword: string): Observable<Product[]> {
     return forkJoin({
       apiProducts: this.api.get<ProductsApiResponse>('products', { keyword }).pipe(

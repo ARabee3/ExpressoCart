@@ -1,33 +1,50 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserAddress } from '../../../../../core/models/user.model';
+import { AuthApi } from '../../../../../core/services/auth-api';
 
 @Component({
     selector: 'app-checkout-shipping',
-    standalone: true,
     imports: [CommonModule, FormsModule],
     templateUrl: './checkout-shipping.component.html'
 })
-export class CheckoutShippingComponent {
-    @Output() nextStep = new EventEmitter<string>();
+export class CheckoutShippingComponent implements OnInit {
+    private authApi = inject(AuthApi);
+    private cdr = inject(ChangeDetectorRef);
+    @Output() nextStep = new EventEmitter<{ address: any, formatted: string }>();
 
     addrMode: 'saved' | 'new' = 'saved';
     selectedAddrIndex = 0;
 
-    savedAddresses: UserAddress[] = [
-        { id: 'addr_001', street: 'Abdelsalam Aref Street', city: 'Beni Suef', state: 'Beni Suef', phone: '+20 100 123 4567', isDefault: true },
-        { id: 'addr_002', street: 'salah salem street', city: 'Beni Suef', state: 'Beni Suef', phone: '+20 111 987 6543', isDefault: false },
-        { id: 'addr_003', street: 'El Kornish Street', city: 'Beni Suef', state: 'Beni Suef', phone: '+20 122 456 7890', isDefault: false },
-    ];
+    savedAddresses: UserAddress[] = [];
+    isLoadingAddresses = true;
 
     newAddress = { street: '', city: '', state: '', phone: '' };
     formErrors = { street: false, city: false, state: false, phone: false };
 
-    get resolvedAddress(): string {
-        if (this.addrMode === 'saved') {
+    ngOnInit() {
+        this.authApi.getMe().subscribe({
+            next: (res: any) => {
+                this.savedAddresses = res.data.addresses || [];
+                if (this.savedAddresses.length === 0) {
+                    this.addrMode = 'new';
+                }
+               this.isLoadingAddresses = false;
+                this.cdr.detectChanges();
+            },
+            error: () => {
+                this.isLoadingAddresses = false;
+                this.addrMode = 'new';
+                this.cdr.detectChanges(); 
+            }
+        });
+    }
+
+    get storedAddress(): string {
+        if (this.addrMode === 'saved' && this.savedAddresses.length > 0) {
             const a = this.savedAddresses[this.selectedAddrIndex];
-            return `${a.street}, ${a.city}, ${a.state} · 📞 ${a.phone}`;
+            return `${a.street}, ${a.city}${a.state ? ', ' + a.state : ''} · 📞 ${a.phone || ''}`;
         }
         return `${this.newAddress.street}, ${this.newAddress.city}, ${this.newAddress.state} · 📞 ${this.newAddress.phone}`;
     }
@@ -35,8 +52,16 @@ export class CheckoutShippingComponent {
     continue() {
         if (this.addrMode === 'new') {
             if (!this.validateNewAddress()) return;
+            const formatted = this.storedAddress;
+            const address = { ...this.newAddress };
+            this.nextStep.emit({ address, formatted });
+        } else {
+            if (this.savedAddresses.length === 0) return;
+            const addr = this.savedAddresses[this.selectedAddrIndex];
+            const address = { street: addr.street, city: addr.city, state: addr.state, phone: addr.phone };
+            const formatted = this.storedAddress;
+            this.nextStep.emit({ address, formatted });
         }
-        this.nextStep.emit(this.resolvedAddress);
     }
 
     private validateNewAddress(): boolean {

@@ -96,7 +96,7 @@ export class Navbar {
   logout() {
     this.userMenuOpen.set(false);
     this.authState.clear();
-    this.router.navigate(['/']);
+    this.router.navigate(['/auth/login']);
   }
 
   @HostListener('document:click', ['$event.target'])

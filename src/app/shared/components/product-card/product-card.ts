@@ -30,6 +30,14 @@ export class ProductCard {
     return null;
   });
 
+  protected readonly storeName = computed(() => {
+    const seller = this.product().sellerId;
+    if (typeof seller === 'object' && seller !== null) {
+      return (seller as { storeName?: string }).storeName?.trim() || null;
+    }
+    return null;
+  });
+
   protected readonly stars = computed(() => {
     const avg = this.product().ratingsAverage ?? 0;
     const full = Math.floor(avg);

@@ -7,7 +7,7 @@ export interface Product {
   stock: number;
   description: string;
   category?: string;
-  sellerId?: { _id?: string; name?: string } | string;
+  sellerId?: { _id?: string; name?: string; storeName?: string } | string;
   ratingsAverage?: number;
   ratingsQuantity?: number;
 }
@@ -20,6 +20,7 @@ export interface CartItem {
 }
 
 export interface CartData {
+  _id: string;
   items: CartItem[];
   totalPrice: number;
   discountAmount: number;
