@@ -11,12 +11,13 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   return next(req).pipe(
     catchError((error) => {
-      const isAuthPath = 
-        req.url.includes('login') || 
-        req.url.includes('forgot-password') || 
+      const isAuthPath =
+        req.url.includes('login') ||
+        req.url.includes('forgot-password') ||
         req.url.includes('reset-password') ||
         req.url.includes('register') ||
-        req.url.includes('verify-email');
+        req.url.includes('verify-email') ||
+        req.url.includes('logout');
 
       if (error.status === 401 && !req.url.includes('refresh') && !isAuthPath) {
         return authApi.refresh().pipe(
