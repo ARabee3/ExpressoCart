@@ -1,11 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from '../../environments/enviroment';
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private http = inject(HttpClient);
-  private readonly baseUrl = import.meta.env['NG_APP_API_URL'];
+  private readonly baseUrl = environment.apiUrl;
+  // private readonly baseUrl = import.meta.env['NG_APP_API_URL'];
 
   get<T>(
     endpoint: string,
