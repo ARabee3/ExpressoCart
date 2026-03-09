@@ -82,7 +82,7 @@
             {{ p.name }}
           </h1>
 
-          @if (sellerName()) {
+          @if (storeName() || sellerName()) {
             <p class="text-sm text-gray-500 font-medium mb-4">
               🏪 {{ storeName() || sellerName() }}
             </p>

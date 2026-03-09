@@ -38,6 +38,20 @@ export class SellerProducts implements OnInit {
   protected readonly deleteConfirmId = signal<string | null>(null);
   protected readonly deleting = signal(false);
 
+  // Custom category dropdowns
+  protected readonly addCategoryOpen = signal(false);
+  protected readonly editCategoryOpen = signal(false);
+
+  protected getCategoryName(formType: 'add' | 'edit'): string {
+    const id = (formType === 'add' ? this.addForm : this.editForm).get('category')?.value;
+    return this.categories().find((c) => c._id === id)?.name ?? 'Select a category';
+  }
+
+  protected selectCategory(formType: 'add' | 'edit', id: string) {
+    (formType === 'add' ? this.addForm : this.editForm).get('category')?.setValue(id);
+    (formType === 'add' ? this.addCategoryOpen : this.editCategoryOpen).set(false);
+  }
+
   protected readonly addForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     description: ['', [Validators.required, Validators.minLength(10)]],
