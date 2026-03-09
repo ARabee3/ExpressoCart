@@ -11,6 +11,7 @@ import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { sessionInterceptor } from './core/interceptors/session/session-interceptor';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { refreshInterceptor } from './core/interceptors/refresh-interceptor';
+import { provideMarkdown } from 'ngx-markdown';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,5 +21,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([authInterceptor, refreshInterceptor, errorInterceptor, sessionInterceptor]),
     ),
+    provideMarkdown(),
   ],
 };
