@@ -36,8 +36,10 @@ export class Navbar {
   private readonly elementRef = inject(ElementRef);
 
   protected readonly mobileMenuOpen = signal(false);
+  protected readonly mobileMenuClosing = signal(false);
   protected readonly isLoggedIn = this.authState.isLoggedIn;
   protected readonly userMenuOpen = signal(false);
+  protected readonly userMenuClosing = signal(false);
 
   protected readonly isSearchOpen = signal(false);
   protected readonly searchQuery = signal('');
@@ -82,19 +84,39 @@ export class Navbar {
   }
 
   toggleMobileMenu() {
-    this.mobileMenuOpen.update((v) => !v);
+    if (this.mobileMenuOpen()) {
+      this.mobileMenuClosing.set(true);
+      setTimeout(() => {
+        this.mobileMenuOpen.set(false);
+        this.mobileMenuClosing.set(false);
+      }, 320);
+    } else {
+      this.mobileMenuOpen.set(true);
+    }
   }
 
   toggleUserMenu() {
-    this.userMenuOpen.update((v) => !v);
+    if (this.userMenuOpen()) {
+      this.closeUserMenu();
+    } else {
+      this.userMenuOpen.set(true);
+    }
   }
 
   closeUserMenu() {
-    this.userMenuOpen.set(false);
+    this.userMenuClosing.set(true);
+    setTimeout(() => {
+      this.userMenuOpen.set(false);
+      this.userMenuClosing.set(false);
+    }, 280);
   }
 
   logout() {
-    this.userMenuOpen.set(false);
+    this.userMenuClosing.set(true);
+    setTimeout(() => {
+      this.userMenuOpen.set(false);
+      this.userMenuClosing.set(false);
+    }, 280);
     this.authState.clear();
     this.router.navigate(['/auth/login']);
   }
@@ -102,7 +124,9 @@ export class Navbar {
   @HostListener('document:click', ['$event.target'])
   onDocumentClick(target: EventTarget | null) {
     if (target && !this.elementRef.nativeElement.contains(target as Node)) {
-      this.userMenuOpen.set(false);
+      if (this.userMenuOpen() && !this.userMenuClosing()) {
+        this.closeUserMenu();
+      }
     }
   }
 
