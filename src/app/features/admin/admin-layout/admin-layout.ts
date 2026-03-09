@@ -41,16 +41,18 @@ export class AdminLayout {
   role = computed(() => this.user()?.role ?? 'Admin');
 
   logout() {
-    this.authApi.logout().subscribe({
-      complete: () => {
-        this.authState.clear();
-        this.router.navigate(['/']);
-      },
-      error: () => {
-        // Still clear local state even if API call fails
-        this.authState.clear();
-        this.router.navigate(['/']);
-      },
-    });
+    // this.authApi.logout().subscribe({
+    //   complete: () => {
+    //     this.authState.clear();
+    //     this.router.navigate(['/']);
+    //   },
+    //   error: () => {
+    //     // Still clear local state even if API call fails
+    //     this.authState.clear();
+    //     this.router.navigate(['/']);
+    //  },
+   // });
+    this.authState.clear();
+    this.router.navigate(['/auth/login']);
   }
 }
