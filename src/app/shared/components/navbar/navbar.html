@@ -130,9 +130,12 @@
             </svg>
           </button>
 
-          @if (userMenuOpen()) {
+          @if (userMenuOpen() || userMenuClosing()) {
             <div
-              class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-black/5 py-1.5 z-50"
+              [class]="
+                'absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-black/5 py-1.5 z-50 ' +
+                (userMenuClosing() ? 'user-menu-goo-out' : 'user-menu-goo')
+              "
             >
               @if (isLoggedIn()) {
                 <a
@@ -285,8 +288,13 @@
   </div>
 
   <!-- Mobile Menu Dropdown -->
-  @if (mobileMenuOpen()) {
-    <div class="md:hidden border-t border-black/5 bg-brand-secondary">
+  @if (mobileMenuOpen() || mobileMenuClosing()) {
+    <div
+      [class]="
+        'md:hidden border-t border-black/5 bg-brand-secondary ' +
+        (mobileMenuClosing() ? 'mobile-menu-goo-out' : 'mobile-menu-goo')
+      "
+    >
       <div class="px-4 py-3 space-y-1">
         @for (link of navLinks; track link.route) {
           <a

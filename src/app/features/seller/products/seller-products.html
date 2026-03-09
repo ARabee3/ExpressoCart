@@ -278,21 +278,79 @@
             />
           </div>
 
-          <!-- Category -->
+          <!-- Category (Add) -->
           <div class="sm:col-span-2">
             <label class="block text-xs font-semibold text-gray-600 mb-1.5"
               >Category <span class="text-red-500">*</span></label
             >
-            <select
-              formControlName="category"
-              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition bg-white"
-              [class.border-red-400]="fieldError('add', 'category', 'required')"
-            >
-              <option value="">Select a category</option>
-              @for (cat of categories(); track cat._id) {
-                <option [value]="cat._id">{{ cat.name }}</option>
+            <div class="relative">
+              <button
+                type="button"
+                (click)="addCategoryOpen.set(!addCategoryOpen())"
+                class="w-full flex items-center justify-between px-4 py-2.5 text-sm border rounded-xl outline-none transition bg-white text-left"
+                [class]="
+                  addForm.get('category')?.touched && addForm.get('category')?.errors?.['required']
+                    ? 'border-red-400'
+                    : 'border-gray-200 focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent'
+                "
+              >
+                <span
+                  [class]="addForm.get('category')?.value ? 'text-gray-800' : 'text-gray-400'"
+                  >{{ getCategoryName('add') }}</span
+                >
+                <svg
+                  class="size-4 text-gray-400 transition-transform duration-200"
+                  [class.rotate-180]="addCategoryOpen()"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+                </svg>
+              </button>
+              @if (addCategoryOpen()) {
+                <div
+                  class="absolute z-20 mt-1.5 w-full bg-white border border-gray-100 rounded-xl shadow-lg overflow-hidden"
+                >
+                  <div class="max-h-48 overflow-y-auto py-1">
+                    @for (cat of categories(); track cat._id) {
+                      <button
+                        type="button"
+                        (click)="selectCategory('add', cat._id)"
+                        class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition hover:bg-brand-accent/5"
+                        [class]="
+                          addForm.get('category')?.value === cat._id
+                            ? 'text-brand-accent font-semibold bg-brand-accent/5'
+                            : 'text-gray-700'
+                        "
+                      >
+                        <span class="size-4 shrink-0 flex items-center justify-center">
+                          @if (addForm.get('category')?.value === cat._id) {
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="2.5"
+                              stroke="currentColor"
+                              class="size-4 text-brand-accent"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m4.5 12.75 6 6 9-13.5"
+                              />
+                            </svg>
+                          }
+                        </span>
+                        {{ cat.name }}
+                      </button>
+                    }
+                  </div>
+                </div>
               }
-            </select>
+            </div>
             @if (fieldError('add', 'category', 'required')) {
               <p class="text-xs text-red-500 mt-1">Category is required</p>
             }
@@ -461,15 +519,75 @@
             <label class="block text-xs font-semibold text-gray-600 mb-1.5"
               >Category <span class="text-red-500">*</span></label
             >
-            <select
-              formControlName="category"
-              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition bg-white"
-            >
-              <option value="">Select a category</option>
-              @for (cat of categories(); track cat._id) {
-                <option [value]="cat._id">{{ cat.name }}</option>
+            <div class="relative">
+              <button
+                type="button"
+                (click)="editCategoryOpen.set(!editCategoryOpen())"
+                class="w-full flex items-center justify-between px-4 py-2.5 text-sm border rounded-xl outline-none transition bg-white text-left"
+                [class]="
+                  editForm.get('category')?.touched &&
+                  editForm.get('category')?.errors?.['required']
+                    ? 'border-red-400'
+                    : 'border-gray-200 focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent'
+                "
+              >
+                <span
+                  [class]="editForm.get('category')?.value ? 'text-gray-800' : 'text-gray-400'"
+                  >{{ getCategoryName('edit') }}</span
+                >
+                <svg
+                  class="size-4 text-gray-400 transition-transform duration-200"
+                  [class.rotate-180]="editCategoryOpen()"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+                </svg>
+              </button>
+              @if (editCategoryOpen()) {
+                <div
+                  class="absolute z-20 mt-1.5 w-full bg-white border border-gray-100 rounded-xl shadow-lg overflow-hidden"
+                >
+                  <div class="max-h-48 overflow-y-auto py-1">
+                    @for (cat of categories(); track cat._id) {
+                      <button
+                        type="button"
+                        (click)="selectCategory('edit', cat._id)"
+                        class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition hover:bg-brand-accent/5"
+                        [class]="
+                          editForm.get('category')?.value === cat._id
+                            ? 'text-brand-accent font-semibold bg-brand-accent/5'
+                            : 'text-gray-700'
+                        "
+                      >
+                        <span class="size-4 shrink-0 flex items-center justify-center">
+                          @if (editForm.get('category')?.value === cat._id) {
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="2.5"
+                              stroke="currentColor"
+                              class="size-4 text-brand-accent"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m4.5 12.75 6 6 9-13.5"
+                              />
+                            </svg>
+                          }
+                        </span>
+                        {{ cat.name }}
+                      </button>
+                    }
+                  </div>
+                </div>
               }
-            </select>
+            </div>
             @if (fieldError('edit', 'category', 'required')) {
               <p class="text-xs text-red-500 mt-1">Category is required</p>
             }
