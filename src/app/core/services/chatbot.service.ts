@@ -1,43 +1,59 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { ApiService } from './api.service';
-import { Observable, tap } from 'rxjs';
-import { ChatMessage } from '../models/chatbot.model';
+import { Observable, tap, map } from 'rxjs';
+import { ChatMessage, ChatbotResponse, ChatbotProduct } from '../models/chatbot.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ChatbotService {
     private api = inject(ApiService);
-    
+
     chatHistory = signal<ChatMessage[]>([]);
     isLoading = signal<boolean>(false);
+    conversationId = signal<string | null>(null);
+    contextProducts = signal<ChatbotProduct[]>([]);
 
-    sendMessage(message: string): Observable<any> {
-        const currentHistory = this.chatHistory();
-
-        this.chatHistory.update((history) => [...history, { role: 'user', text: message }]);
-
+    sendMessage(message: string): Observable<ChatbotResponse> {
+       
+        this.chatHistory.update((history) => [...history, { role: 'user', content: message }]);
         this.isLoading.set(true);
 
-        const historyForBackend = currentHistory.map((m) => ({
-            role: m.role,
-            text: m.text,
-        }));
+        const body: any = { message };
+        if (this.conversationId()) {
+            body.conversationId = this.conversationId();
+        }
 
-        return this.api.post<any>('chat', { message, history: historyForBackend }).pipe(
+        return this.api.post<ChatbotResponse>('chatbot/chat', body).pipe(
             tap({
                 next: (response) => {
+                    const data = response.data;
+
+                    if (data?.conversationId) {
+                        this.conversationId.set(data.conversationId);
+                    }
+                    if (data?.context?.products) {
+                        this.contextProducts.set(data.context.products);
+                    } else {
+                        // Clear products if no new ones are provided
+                        this.contextProducts.set([]);
+                    }
+
                     this.chatHistory.update((history) => [
                         ...history,
-                        { role: 'assistant', text: response.reply || response.text || 'No response' },
+                        {
+                            role: 'model',
+                            content: data?.response || 'No response',
+                            isBot: true
+                        },
                     ]);
                     this.isLoading.set(false);
                 },
-                error: () => {
+                error: (err) => {
                     this.isLoading.set(false);
                     this.chatHistory.update((history) => [
                         ...history,
-                        { role: 'assistant', text: 'Sorry, I encountered an error. Please try again later.' },
+                        { role: 'model', content: 'Sorry, I encountered an error. Please try again later.', isBot: true },
                     ]);
                 },
             })
@@ -46,5 +62,7 @@ export class ChatbotService {
 
     clearHistory() {
         this.chatHistory.set([]);
+        this.conversationId.set(null);
+        this.contextProducts.set([]);
     }
 }
