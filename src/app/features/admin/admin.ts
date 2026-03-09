@@ -235,4 +235,44 @@ export class AdminService {
       },
     });
   }
+
+  // -- Sellers
+  sellers = signal<User[] | null>(null);
+
+  loadSellers() {
+    this.sellers.set(null);
+    this.api.get<{ message: string; data: User[] }>('admin/sellers').subscribe((response) => {
+      this.sellers.set(response.data);
+    });
+  }
+
+  approveSeller(id: string) {
+    this.api.put<{ message: string; data: User }>(`admin/sellers/${id}/approve`, {}).subscribe({
+      next: (response) => {
+        this.sellers.update((sellers) =>
+          sellers ? sellers.map((s) => (s._id === id ? response.data : s)) : [],
+        );
+      },
+    });
+  }
+
+  suspendSeller(id: string) {
+    this.api.put<{ message: string; data: User }>(`admin/sellers/${id}/suspend`, {}).subscribe({
+      next: (response) => {
+        this.sellers.update((sellers) =>
+          sellers ? sellers.map((s) => (s._id === id ? response.data : s)) : [],
+        );
+      },
+    });
+  }
+
+  reactivateSeller(id: string) {
+    this.api.put<{ message: string; data: User }>(`admin/sellers/${id}/reactivate`, {}).subscribe({
+      next: (response) => {
+        this.sellers.update((sellers) =>
+          sellers ? sellers.map((s) => (s._id === id ? response.data : s)) : [],
+        );
+      },
+    });
+  }
 }

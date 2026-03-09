@@ -41,6 +41,11 @@ export const routes: Routes = [
           import('./features/admin/orders/admin-orders').then((com) => com.AdminOrders),
       },
       {
+        path: 'sellers',
+        loadComponent: () =>
+          import('./features/admin/sellers/admin-sellers').then((com) => com.AdminSellers),
+      },
+      {
         path: '**',
         loadComponent: () =>
           import('./shared/components/notfound/notfound').then((com) => com.Notfound),
