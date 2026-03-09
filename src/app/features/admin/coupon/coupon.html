@@ -1,7 +1,7 @@
 <!-- Page Header -->
-<div class="mb-8 flex items-center justify-between">
+<div class="mb-6 lg:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
   <div>
-    <h1 class="text-2xl font-black tracking-tight">Coupons</h1>
+    <h1 class="text-xl lg:text-2xl font-black tracking-tight">Coupons</h1>
     <p class="text-sm text-gray-500 mt-1">Manage discount codes and promotions.</p>
   </div>
   <button
@@ -16,7 +16,8 @@
 @if (admin.coupons(); as coupons) {
   @if (coupons.length > 0) {
     <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
-      <table class="w-full text-sm">
+      <div class="overflow-x-auto">
+      <table class="w-full text-sm min-w-[750px]">
         <thead class="bg-gray-50 border-b">
           <tr>
             <th
@@ -53,7 +54,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
-          @for (coupon of coupons; track coupon._id) {
+          @for (coupon of paginatedCoupons(); track coupon._id) {
             <tr class="hover:bg-gray-50 transition-colors">
               <td class="px-6 py-4 font-mono font-bold text-sm">{{ coupon.code }}</td>
               <td class="px-6 py-4">
@@ -109,6 +110,50 @@
           }
         </tbody>
       </table>
+      </div>
+    </div>
+
+    <!-- Pagination Bar -->
+    <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-xs text-gray-400">
+        Showing {{ paginatedCoupons().length }} of {{ totalCoupons() }} coupons
+        @if (totalPages() > 1) {
+          — Page {{ currentPage() }} of {{ totalPages() }}
+        }
+      </p>
+
+      @if (totalPages() > 1) {
+        <div class="flex items-center gap-1">
+          <button
+            (click)="goToPage(currentPage() - 1)"
+            [disabled]="currentPage() <= 1"
+            class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            ←
+          </button>
+
+          @for (page of pageNumbers(); track page) {
+            <button
+              (click)="goToPage(page)"
+              class="w-8 h-8 text-xs font-semibold rounded-lg transition-colors"
+              [class.bg-black]="page === currentPage()"
+              [class.text-white]="page === currentPage()"
+              [class.border]="page !== currentPage()"
+              [class.hover:bg-gray-50]="page !== currentPage()"
+            >
+              {{ page }}
+            </button>
+          }
+
+          <button
+            (click)="goToPage(currentPage() + 1)"
+            [disabled]="currentPage() >= totalPages()"
+            class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            →
+          </button>
+        </div>
+      }
     </div>
   } @else {
     <div class="bg-white rounded-2xl border shadow-sm p-12 text-center">
