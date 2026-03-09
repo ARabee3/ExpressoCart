@@ -37,7 +37,7 @@ export class ChatbotService {
                     this.isLoading.set(false);
                     this.chatHistory.update((history) => [
                         ...history,
-                        { role: 'assistant', text: 'Sorry, I encountered an error. Please try again.' },
+                        { role: 'assistant', text: 'Sorry, I encountered an error. Please try again later.' },
                     ]);
                 },
             })
