@@ -1,5 +1,15 @@
 <div class="flex h-screen bg-gray-100">
-  <aside class="w-64 bg-black text-white flex flex-col">
+  <!-- Mobile Backdrop -->
+  @if (sidebarOpen()) {
+    <div class="fixed inset-0 bg-black/40 z-40 lg:hidden" (click)="closeSidebar()"></div>
+  }
+
+  <!-- Sidebar -->
+  <aside
+    class="fixed inset-y-0 left-0 z-50 w-64 bg-black text-white flex flex-col transition-transform duration-200 lg:static lg:translate-x-0"
+    [class.-translate-x-full]="!sidebarOpen()"
+    [class.translate-x-0]="sidebarOpen()"
+  >
     <div class="px-6 py-5 border-b border-white/10">
       <h1 class="text-xl font-black tracking-tighter italic">EXPRESSO.</h1>
       <p class="text-xs text-gray-400 mt-0.5">Admin Panel</p>
@@ -11,6 +21,7 @@
       <a
         routerLink="dashboard"
         routerLinkActive="bg-white/10 text-white"
+        (click)="closeSidebar()"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
       >
         <span>📊</span> Dashboard
@@ -19,6 +30,7 @@
       <a
         routerLink="orders"
         routerLinkActive="bg-white/10 text-white"
+        (click)="closeSidebar()"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
       >
         <span>📦</span> Orders
@@ -27,6 +39,7 @@
       <a
         routerLink="categories"
         routerLinkActive="bg-white/10 text-white"
+        (click)="closeSidebar()"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
       >
         <span>🛍️</span> Categories
@@ -35,6 +48,7 @@
       <a
         routerLink="users"
         routerLinkActive="bg-white/10 text-white"
+        (click)="closeSidebar()"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
       >
         <span>👥</span> Users
@@ -43,9 +57,19 @@
       <a
         routerLink="coupon"
         routerLinkActive="bg-white/10 text-white"
+        (click)="closeSidebar()"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
       >
         <span>🏪</span> Coupons
+      </a>
+
+      <a
+        routerLink="sellers"
+        routerLinkActive="bg-white/10 text-white"
+        (click)="closeSidebar()"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+      >
+        <span>🧑‍💼</span> Sellers
       </a>
     </nav>
 
@@ -65,25 +89,35 @@
   </aside>
 
   <div class="flex-1 flex flex-col overflow-hidden">
-    <header class="h-16 bg-white border-b px-8 flex items-center justify-between shrink-0">
-      <div>
+    <header class="h-14 lg:h-16 bg-white border-b px-4 lg:px-8 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-3">
+        <!-- Hamburger button (mobile only) -->
+        <button
+          (click)="toggleSidebar()"
+          class="lg:hidden p-1.5 -ml-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+          aria-label="Toggle sidebar"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
         <h2 class="font-bold uppercase tracking-tight text-sm">Admin Panel</h2>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3 lg:gap-4">
         <button class="relative text-gray-500 hover:text-black transition-colors">
           🔔
           <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
         <button
           (click)="logout()"
-          class="text-sm font-semibold px-4 py-1.5 rounded-lg bg-black text-white hover:bg-gray-800 transition-colors"
+          class="text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1.5 rounded-lg bg-black text-white hover:bg-gray-800 transition-colors"
         >
           Logout
         </button>
       </div>
     </header>
 
-    <main class="flex-1 p-8 overflow-auto">
+    <main class="flex-1 p-4 lg:p-8 overflow-auto">
       <router-outlet></router-outlet>
     </main>
   </div>

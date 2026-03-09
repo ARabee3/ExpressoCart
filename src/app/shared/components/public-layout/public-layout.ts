@@ -3,12 +3,13 @@ import { RouterOutlet } from '@angular/router';
 import { Navbar } from '../navbar/navbar';
 import { Footer } from '../footer/footer';
 import { ScrollToTop } from '../scroll-to-top/scroll-to-top';
+import { ChatbotComponent } from '../chatbot/chatbot.component';
 
 @Component({
   selector: 'app-public-layout',
   templateUrl: './public-layout.html',
   styleUrl: './public-layout.scss',
-  imports: [RouterOutlet, Navbar, Footer, ScrollToTop],
+  imports: [RouterOutlet, Navbar, Footer, ScrollToTop, ChatbotComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PublicLayout {}

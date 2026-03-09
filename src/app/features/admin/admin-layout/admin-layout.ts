@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthState } from '../../../core/services/auth-state';
 import { AuthApi } from '../../../core/services/auth-api';
@@ -13,6 +13,16 @@ export class AdminLayout {
   private authState = inject(AuthState);
   private authApi = inject(AuthApi);
   private router = inject(Router);
+
+  sidebarOpen = signal(false);
+
+  toggleSidebar() {
+    this.sidebarOpen.update((v) => !v);
+  }
+
+  closeSidebar() {
+    this.sidebarOpen.set(false);
+  }
 
   user = this.authState.user;
 

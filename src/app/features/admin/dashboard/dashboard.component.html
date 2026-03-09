@@ -1,11 +1,11 @@
-<div class="mb-8">
+<div class="mb-6 lg:mb-8">
   <h1 class="text-2xl font-black tracking-tight">Dashboard</h1>
   <p class="text-sm text-gray-500 mt-1">Welcome back. Here's what's happening today.</p>
 </div>
 
 @if (admin.stats(); as data) {
   <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
     <div class="bg-white p-6 rounded-2xl border shadow-sm">
       <div class="flex items-center justify-between mb-2">
         <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Revenue</p>
@@ -52,10 +52,10 @@
   </div>
 
   <!-- Quick Links -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
     <a
       routerLink="../users"
-      class="bg-white p-4 rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
+      class="bg-white p-3 lg:p-4 rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
     >
       <span class="text-xl">👥</span>
       <div>
@@ -96,7 +96,7 @@
   </div>
 } @else {
   <!-- Loading skeleton for stats -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
     @for (_ of [1, 2, 3, 4]; track $index) {
       <div class="bg-white p-6 rounded-2xl border shadow-sm animate-pulse">
         <div class="h-3 bg-gray-200 rounded w-24 mb-4"></div>
@@ -104,7 +104,7 @@
       </div>
     }
   </div>
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
     @for (_ of [1, 2, 3, 4]; track $index) {
       <div class="bg-white p-4 rounded-2xl border shadow-sm animate-pulse">
         <div class="h-3 bg-gray-200 rounded w-20 mb-2"></div>
@@ -128,7 +128,8 @@
 
   @if (admin.recentOrders(); as orders) {
     @if (orders.length > 0) {
-      <table class="w-full text-sm">
+      <div class="overflow-x-auto">
+    <table class="w-full text-sm min-w-[640px]">
         <thead class="bg-gray-50 border-b">
           <tr>
             <th
@@ -195,6 +196,7 @@
           }
         </tbody>
       </table>
+    </div>
     } @else {
       <div class="p-12 text-center">
         <p class="text-gray-400 text-sm">No orders yet.</p>
