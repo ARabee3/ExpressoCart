@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../core/models/cart.model';
+import { AuthState } from '../../../core/services/auth-state';
 
 @Component({
   selector: 'app-product-card',
@@ -15,6 +16,8 @@ export class ProductCard {
   readonly isInWishlist = input<boolean>(false);
   readonly addToCart = output<Product>();
   readonly addToWishlist = output<Product>();
+
+  private readonly authState = inject(AuthState);
 
   protected readonly isOutOfStock = computed(() => this.product().stock <= 0);
   protected readonly primaryImage = computed(() => this.product().images?.[0] ?? '');
@@ -36,6 +39,12 @@ export class ProductCard {
       return (seller as { storeName?: string }).storeName?.trim() || null;
     }
     return null;
+  });
+
+  protected readonly isOwnProduct = computed(() => {
+    const uid = this.authState.user()?._id;
+    const seller = this.product().sellerId;
+    return !!uid && typeof seller === 'object' && seller !== null && (seller as any)._id === uid;
   });
 
   protected readonly stars = computed(() => {
