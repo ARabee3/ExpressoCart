@@ -16,6 +16,7 @@ export interface ChatMessage {
     createdAt?: string;
     updatedAt?: string;
     isBot?: boolean;
+    products?: ChatbotProduct[];
 }
 
 export interface ChatbotResponse {

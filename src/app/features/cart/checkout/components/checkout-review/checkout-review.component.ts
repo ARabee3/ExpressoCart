@@ -58,20 +58,18 @@ export class CheckoutReviewComponent implements OnChanges,OnDestroy {
         try {
             const result = await this.cardPaymentService.confirmPayment(this.stripeElements, this.orderId);
 
-            if (result.error) {
+             if (result.error) {
                 this.stripeError.set(result.error.message);
                 this.isConfirmingPayment.set(false);
                 this.paymentError.emit(result.error.message);
             } else if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
                 this.paymentSuccess.emit(this.orderId);
             } else if (result.paymentIntent && result.paymentIntent.status === 'processing') {
-                // Payment is being processed, but not yet succeeded. 
-                // We'll let the redirect or a background process handle it, or show a message.
                 this.stripeError.set('Payment is processing. We will notify you once confirmed.');
                 this.isConfirmingPayment.set(false);
             } else {
-                // Handle other statuses or if stripe redirects (redirect happens automatically, 
-                // so code execution here might stop).
+                this.stripeError.set('Unexpected payment status. Please try again.');
+                this.isConfirmingPayment.set(false);
             }
         } catch (err: any) {
             this.stripeError.set(err.message || 'Payment failed');
