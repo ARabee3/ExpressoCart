@@ -95,11 +95,13 @@ export const routes: Routes = [
       },
       {
         path: 'shipping',
-        loadComponent: () => import('./features/shipping-returns/shipping-returns').then((m) => m.ShippingReturns),
+        loadComponent: () =>
+          import('./features/shipping-returns/shipping-returns').then((m) => m.ShippingReturns),
       },
       {
         path: 'privacy',
-        loadComponent: () => import('./features/privacy-policy/privacy-policy').then((m) => m.PrivacyPolicy),
+        loadComponent: () =>
+          import('./features/privacy-policy/privacy-policy').then((m) => m.PrivacyPolicy),
       },
       {
         path: 'cart',
@@ -165,6 +167,11 @@ export const routes: Routes = [
         path: 'products',
         loadComponent: () =>
           import('./features/seller/products/seller-products').then((m) => m.SellerProducts),
+      },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./features/seller/orders/seller-orders').then((m) => m.SellerOrders),
       },
       {
         path: 'profile',

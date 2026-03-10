@@ -24,4 +24,12 @@ export class SellerApiService {
   getCategories() {
     return this.api.get<any>('categories');
   }
+
+  getSellerOrders(page = 1, limit = 10) {
+    return this.api.get<any>('seller/orders', { page, limit });
+  }
+
+  updateSellerOrderStatus(id: string, status: string) {
+    return this.api.put<any>(`seller/orders/${id}/status`, { status });
+  }
 }

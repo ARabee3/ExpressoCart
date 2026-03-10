@@ -197,24 +197,40 @@ export class ProductService {
   }
 
   searchProducts(keyword: string): Observable<Product[]> {
+    const search = keyword.toLowerCase();
+
+    const matchesLocally = (p: Product): boolean => {
+      const s = typeof p.sellerId === 'object' && p.sellerId ? p.sellerId : null;
+      return (
+        p.name.toLowerCase().includes(search) ||
+        p.description.toLowerCase().includes(search) ||
+        (!!p.category && p.category.toLowerCase().includes(search)) ||
+        !!(s?.name && s.name.toLowerCase().includes(search)) ||
+        !!(s?.storeName && s.storeName.toLowerCase().includes(search))
+      );
+    };
+
     return forkJoin({
       apiProducts: this.api.get<ProductsApiResponse>('products', { keyword }).pipe(
         map((res) => (res.products ?? []).map((p) => this.normalizeProduct(p))),
         catchError(() => of([])),
       ),
-      mockProducts: of(
-        this.MOCK_PRODUCTS.filter((p) => {
-          const search = keyword.toLowerCase();
-          const s = typeof p.sellerId === 'object' && p.sellerId ? p.sellerId : null;
-          const sellerDisplay = s?.name ?? '';
-          return (
-            p.name.toLowerCase().includes(search) ||
-            p.description.toLowerCase().includes(search) ||
-            (p.category && p.category.toLowerCase().includes(search)) ||
-            (sellerDisplay && sellerDisplay.toLowerCase().includes(search))
-          );
-        }),
-      ),
-    }).pipe(map(({ apiProducts, mockProducts }) => [...apiProducts, ...mockProducts]));
+      mockProducts: of(this.MOCK_PRODUCTS.filter(matchesLocally)),
+    }).pipe(
+      map(({ apiProducts, mockProducts }) => {
+        // Merge API results with cached products filtered locally (covers
+        // storeName, category and description searches not handled by the API)
+        const cached = this.cachedProducts().filter(matchesLocally);
+        const apiIds = new Set(apiProducts.map((p) => p._id));
+        const localExtras = cached.filter((p) => !apiIds.has(p._id));
+        return [...apiProducts, ...localExtras, ...mockProducts];
+      }),
+    );
+  }
+
+  /** Invalidate all product caches (call after seller updates store name / products change) */
+  clearCache(): void {
+    this.cachedProducts.set([]);
+    this.cachedLatestProducts.set([]);
   }
 }
