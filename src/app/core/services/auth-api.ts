@@ -51,4 +51,9 @@ export class AuthApi {
   resendVerification(email: string) {
     return this.api.post('resend-verification', { email });
   }
+  googleLogin(idToken: string, sessionId?: string | null): Observable<any> {
+    const body: any = { idToken };
+    if (sessionId) body.sessionId = sessionId;
+    return this.api.post('google-login', body);
+  }
 }
