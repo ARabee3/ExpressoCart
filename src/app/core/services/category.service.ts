@@ -1,5 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { map } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { ApiService } from './api.service';
 import { Category, CategoriesResponse } from '../models/category.model';
 
@@ -31,8 +32,18 @@ const CATEGORY_GRADIENTS = [
 export class CategoryService {
   private readonly apiService = inject(ApiService);
 
+  private readonly cachedCategories = signal<Category[]>([]);
+
   getCategories() {
-    return this.apiService.get<CategoriesResponse>('categories').pipe(map((res) => res.data));
+    if (this.cachedCategories().length > 0) {
+      return of(this.cachedCategories());
+    }
+    return this.apiService.get<CategoriesResponse>('categories').pipe(
+      map((res) => {
+        this.cachedCategories.set(res.data);
+        return res.data;
+      })
+    );
   }
 
   getImageForSlug(slug: string): string {
