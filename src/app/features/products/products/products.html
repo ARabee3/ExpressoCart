@@ -51,8 +51,14 @@
           class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 bg-white p-4 rounded-2xl shadow-sm border border-black/5"
         >
           <p class="text-sm font-medium text-brand-primary/70">
-            Showing <span class="text-brand-primary">{{ filteredProducts().length }}</span> of
-            <span class="text-brand-primary">{{ allProducts().length }}</span> products
+            @if (filteredProducts().length > 0) {
+              Showing
+              <span class="text-brand-primary">{{ pageRangeStart() }}–{{ pageRangeEnd() }}</span>
+              of
+              <span class="text-brand-primary">{{ filteredProducts().length }}</span> products
+            } @else {
+              No products found
+            }
           </p>
 
           <div class="flex items-center gap-3">
@@ -141,9 +147,9 @@
         </div>
 
         <!-- Products Grid -->
-        @if (filteredProducts().length > 0) {
+        @if (paginatedProducts().length > 0) {
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            @for (product of filteredProducts(); track product._id) {
+            @for (product of paginatedProducts(); track product._id) {
               <app-product-card
                 [product]="product"
                 [isInWishlist]="wishlistIds().has(product._id)"
@@ -152,6 +158,66 @@
               />
             }
           </div>
+          <!-- Pagination Controls -->
+          @if (totalPages() > 1) {
+            <nav class="mt-10 flex items-center justify-center gap-1" aria-label="Pagination">
+              <!-- Prev -->
+              <button
+                (click)="setPage(currentPage() - 1)"
+                [disabled]="currentPage() === 1"
+                class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-black/10 bg-white text-brand-primary/60 hover:border-brand-accent hover:text-brand-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Previous page"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+
+              @for (page of visiblePages(); track $index) {
+                @if (page === -1) {
+                  <span
+                    class="w-9 h-9 flex items-center justify-center text-brand-primary/40 text-sm select-none"
+                    >…</span
+                  >
+                } @else {
+                  <button
+                    (click)="setPage(page)"
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-sm font-medium transition-colors"
+                    [class]="
+                      currentPage() === page
+                        ? 'bg-brand-accent text-white shadow-sm'
+                        : 'border border-black/10 bg-white text-brand-primary/70 hover:border-brand-accent hover:text-brand-accent'
+                    "
+                    [attr.aria-current]="currentPage() === page ? 'page' : null"
+                  >
+                    {{ page }}
+                  </button>
+                }
+              }
+
+              <!-- Next -->
+              <button
+                (click)="setPage(currentPage() + 1)"
+                [disabled]="currentPage() === totalPages()"
+                class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-black/10 bg-white text-brand-primary/60 hover:border-brand-accent hover:text-brand-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Next page"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </nav>
+          }
         } @else {
           <!-- Empty State -->
           <div

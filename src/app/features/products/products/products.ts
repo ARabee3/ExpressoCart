@@ -40,8 +40,12 @@ export class Products implements OnInit {
   readonly allProducts = signal<Product[]>([]);
   readonly isLoading = signal(true);
 
+  readonly pageSize = 12;
+  readonly currentPage = signal(1);
+
   readonly sortOptions = [
     { value: 'featured', label: 'Featured' },
+    { value: 'newest', label: 'Newest First' },
     { value: 'price-asc', label: 'Price: Low → High' },
     { value: 'price-desc', label: 'Price: High → Low' },
     { value: 'name-asc', label: 'Name: A → Z' },
@@ -76,13 +80,49 @@ export class Products implements OnInit {
       products = [...products].sort((a, b) => b.price - a.price);
     } else if (sort === 'name-asc') {
       products = [...products].sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sort === 'newest') {
+      // Sort by ObjectId creation timestamp (first 8 hex chars = Unix seconds)
+      products = [...products].sort(
+        (a, b) => parseInt(b._id.substring(0, 8), 16) - parseInt(a._id.substring(0, 8), 16),
+      );
     }
 
     return products;
   });
 
+  readonly totalPages = computed(() => Math.ceil(this.filteredProducts().length / this.pageSize));
+
+  readonly paginatedProducts = computed(() => {
+    const page = this.currentPage() - 1;
+    return this.filteredProducts().slice(page * this.pageSize, (page + 1) * this.pageSize);
+  });
+
+  readonly pageRangeStart = computed(() =>
+    this.filteredProducts().length === 0 ? 0 : (this.currentPage() - 1) * this.pageSize + 1,
+  );
+
+  readonly pageRangeEnd = computed(() =>
+    Math.min(this.currentPage() * this.pageSize, this.filteredProducts().length),
+  );
+
+  /** Returns an array of page numbers to render (max 5 visible, with -1 as ellipsis) */
+  readonly visiblePages = computed(() => {
+    const total = this.totalPages();
+    const cur = this.currentPage();
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const pages: number[] = [1];
+    if (cur > 3) pages.push(-1);
+    const start = Math.max(2, cur - 1);
+    const end = Math.min(total - 1, cur + 1);
+    for (let i = start; i <= end; i++) pages.push(i);
+    if (cur < total - 2) pages.push(-1);
+    pages.push(total);
+    return pages;
+  });
+
   setCategory(category: string) {
     this.currentCategory.set(category);
+    this.currentPage.set(1);
   }
 
   toggleSort() {
@@ -96,6 +136,14 @@ export class Products implements OnInit {
   setSortOption(value: string) {
     this.sortOption.set(value);
     this.isSortOpen.set(false);
+    this.currentPage.set(1);
+  }
+
+  setPage(page: number) {
+    const total = this.totalPages();
+    if (page < 1 || page > total) return;
+    this.currentPage.set(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   handleAddToCart(product: Product) {

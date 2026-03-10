@@ -15,6 +15,7 @@ import { ProductService } from '../../../core/services/product.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { ReviewService, Review } from '../../../core/services/review.service';
+import { OrderService } from '../../../core/services/order.service';
 import { AuthState } from '../../../core/services/auth-state';
 import { Product } from '../../../core/models/cart.model';
 
@@ -34,6 +35,7 @@ export class ProductDetails implements OnInit {
   private wishlistService = inject(WishlistService);
   private reviewService = inject(ReviewService);
   private authState = inject(AuthState);
+  private orderService = inject(OrderService);
   private fb = inject(FormBuilder);
 
   quantity = signal(1);
@@ -47,6 +49,10 @@ export class ProductDetails implements OnInit {
   reviewPage = signal(1);
   submittingReview = signal(false);
   readonly hoverRating = signal(0);
+
+  // Purchase gate
+  readonly hasPurchasedProduct = signal(false);
+  readonly checkingPurchase = signal(false);
 
   protected readonly isLoggedIn = this.authState.isLoggedIn;
 
@@ -63,11 +69,32 @@ export class ProductDetails implements OnInit {
         this.isLoading.set(false);
         if (p && !p._id.startsWith('prod_')) {
           this.loadReviews(p._id, 1);
+          if (this.isLoggedIn()) {
+            this.checkPurchase(p._id);
+          }
         }
       });
     } else {
       this.isLoading.set(false);
     }
+  }
+
+  private checkPurchase(productId: string) {
+    this.checkingPurchase.set(true);
+    this.orderService
+      .getMyOrders(1, 100)
+      .pipe(catchError(() => of(null)))
+      .subscribe((res) => {
+        if (res) {
+          const purchased = res.data.some(
+            (order) =>
+              (order.status === 'Delivered' || order.status === 'Shipped') &&
+              order.orderItems.some((item) => item.productId === productId),
+          );
+          this.hasPurchasedProduct.set(purchased);
+        }
+        this.checkingPurchase.set(false);
+      });
   }
 
   loadReviews(productId: string, page: number) {
@@ -159,6 +186,14 @@ export class ProductDetails implements OnInit {
       return (seller as { storeName?: string }).storeName?.trim() || null;
     }
     return null;
+  });
+
+  protected readonly isOwnProduct = computed(() => {
+    const uid = this.authState.user()?._id;
+    const p = this.product();
+    if (!uid || !p) return false;
+    const seller = p.sellerId;
+    return typeof seller === 'object' && seller !== null && (seller as any)._id === uid;
   });
 
   incrementQuantity() {

@@ -67,7 +67,7 @@
         }
       </button>
 
-      @if (!isOutOfStock()) {
+      @if (!isOutOfStock() && !isOwnProduct()) {
         <button
           (click)="onAddToCart($event)"
           class="p-3 bg-brand-accent text-white rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:bg-brand-accent/90 shadow-xl"

@@ -168,27 +168,35 @@
 
             <!-- Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 mt-2">
-              <button
-                (click)="addToCart()"
-                [disabled]="isOutOfStock()"
-                class="flex-1 flex items-center justify-center gap-2 bg-brand-primary text-white px-8 py-4 rounded-xl font-medium shadow-lg shadow-brand-primary/30 hover:bg-brand-primary/90 hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  class="size-5"
+              @if (isOwnProduct()) {
+                <div
+                  class="flex-1 flex items-center justify-center gap-2 bg-gray-100 text-gray-500 px-8 py-4 rounded-xl font-medium border border-dashed border-gray-300 cursor-default"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                  />
-                </svg>
-                {{ isOutOfStock() ? 'Out of Stock' : 'Add to Cart' }}
-              </button>
+                  <span>🏪</span> This is your product
+                </div>
+              } @else {
+                <button
+                  (click)="addToCart()"
+                  [disabled]="isOutOfStock()"
+                  class="flex-1 flex items-center justify-center gap-2 bg-brand-primary text-white px-8 py-4 rounded-xl font-medium shadow-lg shadow-brand-primary/30 hover:bg-brand-primary/90 hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="size-5"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                    />
+                  </svg>
+                  {{ isOutOfStock() ? 'Out of Stock' : 'Add to Cart' }}
+                </button>
+              }
 
               <button
                 (click)="addToWishlist()"
@@ -358,7 +366,63 @@
           <div class="lg:col-span-1">
             <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 sticky top-24">
               <h3 class="text-base font-bold text-gray-800 mb-4">Write a Review</h3>
-              @if (isLoggedIn()) {
+              @if (!isLoggedIn()) {
+                <p class="text-sm text-gray-500">
+                  <a
+                    routerLink="/auth/login"
+                    class="font-semibold text-brand-accent hover:underline"
+                    >Sign in</a
+                  >
+                  to leave a review.
+                </p>
+              } @else if (checkingPurchase()) {
+                <div class="flex items-center gap-2 text-sm text-gray-400 py-4">
+                  <svg
+                    class="animate-spin w-4 h-4 text-brand-accent shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    />
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                  Checking your orders…
+                </div>
+              } @else if (!hasPurchasedProduct()) {
+                <div class="flex flex-col items-center text-center gap-3 py-4">
+                  <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6 text-amber-500"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+                      />
+                    </svg>
+                  </div>
+                  <p class="text-sm font-semibold text-gray-700">Verified purchases only</p>
+                  <p class="text-xs text-gray-400 leading-relaxed">
+                    Only customers who have bought and received this product can leave a review.
+                  </p>
+                  <a
+                    routerLink="/products"
+                    class="mt-1 text-xs font-semibold text-brand-accent hover:underline"
+                    >Browse products</a
+                  >
+                </div>
+              } @else {
                 <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="space-y-4">
                   <!-- Star Picker -->
                   <div>
@@ -423,15 +487,6 @@
                     {{ submittingReview() ? 'Submitting…' : 'Submit Review' }}
                   </button>
                 </form>
-              } @else {
-                <p class="text-sm text-gray-500">
-                  <a
-                    routerLink="/auth/login"
-                    class="font-semibold text-brand-accent hover:underline"
-                    >Sign in</a
-                  >
-                  to leave a review.
-                </p>
               }
             </div>
           </div>
