@@ -15,7 +15,7 @@ export class ChatbotService {
     contextProducts = signal<ChatbotProduct[]>([]);
 
     sendMessage(message: string): Observable<ChatbotResponse> {
-       
+
         this.chatHistory.update((history) => [...history, { role: 'user', content: message }]);
         this.isLoading.set(true);
 
@@ -44,7 +44,8 @@ export class ChatbotService {
                         {
                             role: 'model',
                             content: data?.response || 'No response',
-                            isBot: true
+                            isBot: true,
+                            products: data?.context?.products
                         },
                     ]);
                     this.isLoading.set(false);

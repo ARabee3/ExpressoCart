@@ -147,6 +147,9 @@ export class ProductService {
   ];
 
   getProducts(): Observable<Product[]> {
+    if (this.cachedProducts().length > 0) {
+      return of(this.cachedProducts());
+    }
     return forkJoin({
       apiProducts: this.api.get<ProductsApiResponse>('products', { limit: 100 }).pipe(
         map((res) => (res.products ?? []).map((p) => this.normalizeProduct(p))),
@@ -177,9 +180,18 @@ export class ProductService {
     );
   }
 
+  private readonly cachedLatestProducts = signal<Product[]>([]);
+
   getLatestProducts(limit = 8): Observable<Product[]> {
+    if (this.cachedLatestProducts().length > 0) {
+      return of(this.cachedLatestProducts());
+    }
     return this.api.get<ProductsApiResponse>('products', { limit, sort: 'newest' }).pipe(
-      map((res) => (res.products ?? []).map((p) => this.normalizeProduct(p))),
+      map((res) => {
+        const products = (res.products ?? []).map((p) => this.normalizeProduct(p));
+        this.cachedLatestProducts.set(products);
+        return products;
+      }),
       catchError(() => of([])),
     );
   }

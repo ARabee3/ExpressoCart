@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { ChatbotService } from '../../../core/services/chatbot.service';
 import { ScrollToBottomDirective } from '../../directives/scroll-to-bottom.directive';
 import { MarkdownModule } from 'ngx-markdown';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-chatbot',
-    imports: [CommonModule, FormsModule, ScrollToBottomDirective, MarkdownModule],
+    imports: [CommonModule, FormsModule, ScrollToBottomDirective, MarkdownModule, RouterLink],
     templateUrl: './chatbot.component.html',
     styleUrl: './chatbot.component.scss',
 })
