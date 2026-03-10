@@ -67,17 +67,17 @@
             appScrollToBottom #messageList>
             @for (msg of chatService.chatHistory(); track $index) {
             <div class="flex w-full" [class.justify-end]="msg.role === 'user'"
-                [class.justify-start]="msg.role === 'assistant'">
+                [class.justify-start]="msg.role === 'model'">
                 <div class="max-w-[80%] px-4 py-3 rounded-[16px] text-[0.925rem] leading-relaxed shadow-sm"
                     [class.bg-brand-accent]="msg.role === 'user'" [class.text-white]="msg.role === 'user'"
-                    [class.rounded-br-sm]="msg.role === 'user'" [class.bg-white]="msg.role === 'assistant'"
-                    [class.dark:bg-slate-800]="msg.role === 'assistant'"
-                    [class.text-slate-900]="msg.role === 'assistant'"
-                    [class.dark:text-slate-100]="msg.role === 'assistant'"
-                    [class.rounded-bl-sm]="msg.role === 'assistant'" [class.border]="msg.role === 'assistant'"
-                    [class.border-slate-200]="msg.role === 'assistant'"
-                    [class.dark:border-slate-700]="msg.role === 'assistant'">
-                    <markdown [data]="msg.text" class="prose prose-sm dark:prose-invert max-w-none prose-p:m-0">
+                    [class.rounded-br-sm]="msg.role === 'user'" [class.bg-white]="msg.role === 'model'"
+                    [class.dark:bg-slate-800]="msg.role === 'model'"
+                    [class.text-slate-900]="msg.role === 'model'"
+                    [class.dark:text-slate-100]="msg.role === 'model'"
+                    [class.rounded-bl-sm]="msg.role === 'model'" [class.border]="msg.role === 'model'"
+                    [class.border-slate-200]="msg.role === 'model'"
+                    [class.dark:border-slate-700]="msg.role === 'model'">
+                    <markdown [data]="msg.content" class="prose prose-sm dark:prose-invert max-w-none prose-p:m-0">
                     </markdown>
                 </div>
             </div>

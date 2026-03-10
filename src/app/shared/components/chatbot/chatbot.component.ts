@@ -20,7 +20,7 @@ export class ChatbotComponent {
 
     suggestions = [
         'Track my last order',
-        'Find laptops under 500',
+        'Find laptops under 2000',
         'Show my order history'
     ];
 
