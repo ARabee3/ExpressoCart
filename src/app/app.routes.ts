@@ -90,6 +90,18 @@ export const routes: Routes = [
         loadComponent: () => import('./features/contact-us/contact-us').then((m) => m.ContactUs),
       },
       {
+        path: 'faq',
+        loadComponent: () => import('./features/faqs/faqs').then((m) => m.Faqs),
+      },
+      {
+        path: 'shipping',
+        loadComponent: () => import('./features/shipping-returns/shipping-returns').then((m) => m.ShippingReturns),
+      },
+      {
+        path: 'privacy',
+        loadComponent: () => import('./features/privacy-policy/privacy-policy').then((m) => m.PrivacyPolicy),
+      },
+      {
         path: 'cart',
         loadComponent: () => import('./features/cart/cart/cart').then((m) => m.Cart),
       },
