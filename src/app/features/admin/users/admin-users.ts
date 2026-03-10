@@ -2,14 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, SlicePipe } from '@angular/common';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User, UserRole } from '../../../core/models/user.model';
-import { Order } from '../../../core/models/order.model';
 import { AdminService } from '../admin';
 
 const GRADIENTS = [
@@ -45,6 +47,7 @@ const STATUS_COLORS: Record<string, string> = {
 })
 export class AdminUsers implements OnInit {
   admin = inject(AdminService);
+  private destroyRef = inject(DestroyRef);
 
   // UI state
   searchQuery = signal('');
@@ -56,13 +59,35 @@ export class AdminUsers implements OnInit {
   changingRole = signal<User | null>(null);
   newRole = signal<UserRole>('Customer');
 
-  // Filtered + searched users
-  filteredUsers = computed(() => {
-    const users = this.admin.users() ?? [];
+  // Debounced search — triggers loading all users for client-side search
+  private searchSubject$ = new Subject<string>();
+
+  /** Whether we're in filtered mode (showing client-side results across all users) */
+  isFiltering = computed(
+    () =>
+      this.searchQuery().trim().length > 0 ||
+      this.roleFilter() !== '' ||
+      this.statusFilter() !== 'all',
+  );
+
+  constructor() {
+    this.searchSubject$
+      .pipe(debounceTime(400), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((query) => {
+        if (query.trim()) {
+          // Trigger loading all users for client-side search
+          this.admin.loadAllUsers();
+        }
+      });
+  }
+
+  // Search/filter results: filter ALL users client-side when searching or filtering
+  searchResults = computed(() => {
+    const allUsers = this.admin.allUsers() ?? [];
     const query = this.searchQuery().toLowerCase().trim();
     const role = this.roleFilter();
     const status = this.statusFilter();
-    return users.filter((u) => {
+    return allUsers.filter((u) => {
       const matchesQuery =
         !query || u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query);
       const matchesRole = !role || u.role === role;
@@ -74,18 +99,54 @@ export class AdminUsers implements OnInit {
     });
   });
 
-  // Stats — use API total when available, otherwise count loaded array
-  totalUsers = computed(() => this.admin.usersTotalCount() || (this.admin.users() ?? []).length);
-  activeUsers = computed(
-    () => (this.admin.users() ?? []).filter((u) => u.isActive && !u.isDeleted).length,
+  // Paginated view of the current page (non-search mode)
+  filteredUsers = computed(() => {
+    const users = this.admin.users() ?? [];
+    const role = this.roleFilter();
+    const status = this.statusFilter();
+    return users.filter((u) => {
+      const matchesRole = !role || u.role === role;
+      const matchesStatus =
+        status === 'all' ||
+        (status === 'active' && !u.isDeleted) ||
+        (status === 'deleted' && u.isDeleted);
+      return matchesRole && matchesStatus;
+    });
+  });
+
+  // Client-side pagination for search results
+  readonly searchItemsPerPage = 10;
+  searchPage = signal(1);
+  searchTotalPages = computed(() =>
+    Math.max(1, Math.ceil(this.searchResults().length / this.searchItemsPerPage)),
   );
-  deletedUsers = computed(() => (this.admin.users() ?? []).filter((u) => u.isDeleted).length);
-  sellerCount = computed(
-    () => (this.admin.users() ?? []).filter((u) => u.role === 'Seller').length,
+  paginatedSearchResults = computed(() => {
+    const start = (this.searchPage() - 1) * this.searchItemsPerPage;
+    return this.searchResults().slice(start, start + this.searchItemsPerPage);
+  });
+  searchPageNumbers = computed(() => {
+    const total = this.searchTotalPages();
+    const current = this.searchPage();
+    const pages: number[] = [];
+    let start = Math.max(1, current - 2);
+    const end = Math.min(total, start + 4);
+    start = Math.max(1, end - 4);
+    for (let i = start; i <= end; i++) pages.push(i);
+    return pages;
+  });
+
+  // Stats — when filtering/searching, derive from searchResults; otherwise from current page
+  private statsSource = computed(() =>
+    this.isFiltering() ? this.searchResults() : (this.admin.users() ?? []),
   );
-  customerCount = computed(
-    () => (this.admin.users() ?? []).filter((u) => u.role === 'Customer').length,
-  );
+  totalUsers = computed(() => {
+    if (this.isFiltering()) return this.searchResults().length;
+    return this.admin.usersTotalCount() || (this.admin.users() ?? []).length;
+  });
+  activeUsers = computed(() => this.statsSource().filter((u) => u.isActive && !u.isDeleted).length);
+  deletedUsers = computed(() => this.statsSource().filter((u) => u.isDeleted).length);
+  sellerCount = computed(() => this.statsSource().filter((u) => u.role === 'Seller').length);
+  customerCount = computed(() => this.statsSource().filter((u) => u.role === 'Customer').length);
 
   // Pagination helpers
   currentPage = computed(() => this.admin.usersCurrentPage());
@@ -106,9 +167,38 @@ export class AdminUsers implements OnInit {
     this.admin.loadUsers();
   }
 
+  // --- Search & filter handlers ---
+
+  onSearchInput(value: string) {
+    this.searchQuery.set(value);
+    this.searchPage.set(1);
+    this.searchSubject$.next(value);
+  }
+
+  onRoleFilterChange(value: UserRole | '') {
+    this.roleFilter.set(value);
+    this.searchPage.set(1);
+    // Load all users for client-side filtering if a filter is active
+    if (value) this.admin.loadAllUsers();
+  }
+
+  onStatusFilterChange(value: 'all' | 'active' | 'deleted') {
+    this.statusFilter.set(value);
+    this.searchPage.set(1);
+    // Load all users for client-side filtering if a filter is active
+    if (value !== 'all') this.admin.loadAllUsers();
+  }
+
   goToPage(page: number) {
-    if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;
-    this.admin.loadUsers(page);
+    if (this.isFiltering()) {
+      // Client-side pagination for search/filter
+      if (page < 1 || page > this.searchTotalPages() || page === this.searchPage()) return;
+      this.searchPage.set(page);
+    } else {
+      // Server-side pagination for normal browsing
+      if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;
+      this.admin.loadUsers(page);
+    }
   }
 
   // Gradient avatar

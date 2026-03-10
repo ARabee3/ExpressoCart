@@ -9,45 +9,56 @@
 </div>
 
 <!-- Stats Cards -->
-@if (admin.users(); as users) {
+@if (admin.users() || isFiltering()) {
   <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-4 mb-6">
     <div class="bg-white p-4 rounded-2xl border shadow-sm">
       <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Total Users</p>
       <h3 class="text-2xl font-black">{{ totalUsers() }}</h3>
-      <p class="text-xs text-gray-400 mt-1">On this page</p>
+      <p class="text-xs text-gray-400 mt-1">
+        {{ isFiltering() ? 'Matching results' : 'All users' }}
+      </p>
     </div>
     <div class="bg-white p-4 rounded-2xl border shadow-sm">
       <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Active</p>
       <h3 class="text-2xl font-black text-green-600">{{ activeUsers() }}</h3>
-      <p class="text-xs text-gray-400 mt-1">On this page</p>
     </div>
     <div class="bg-white p-4 rounded-2xl border shadow-sm">
       <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Deleted</p>
       <h3 class="text-2xl font-black text-red-500">{{ deletedUsers() }}</h3>
-      <p class="text-xs text-gray-400 mt-1">On this page</p>
     </div>
     <div class="bg-white p-4 rounded-2xl border shadow-sm">
       <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Sellers</p>
       <h3 class="text-2xl font-black text-blue-600">{{ sellerCount() }}</h3>
-      <p class="text-xs text-gray-400 mt-1">On this page</p>
     </div>
     <div class="bg-white p-4 rounded-2xl border shadow-sm">
       <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Customers</p>
       <h3 class="text-2xl font-black text-gray-600">{{ customerCount() }}</h3>
-      <p class="text-xs text-gray-400 mt-1">On this page</p>
     </div>
   </div>
 }
 
 <!-- Search & Filter -->
 <div class="mb-6 flex flex-wrap items-center gap-3">
-  <input
-    [(ngModel)]="searchQuery"
-    placeholder="Search by name or email..."
-    class="w-full max-w-sm px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
-  />
+  <div class="relative w-full max-w-sm">
+    <input
+      [ngModel]="searchQuery()"
+      (ngModelChange)="onSearchInput($event)"
+      placeholder="Search all users by name or email..."
+      class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black pr-8"
+    />
+    @if (searchQuery()) {
+      <button
+        (click)="onSearchInput('')"
+        class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
+        title="Clear search"
+      >
+        ✕
+      </button>
+    }
+  </div>
   <select
-    [(ngModel)]="roleFilter"
+    [ngModel]="roleFilter()"
+    (ngModelChange)="onRoleFilterChange($event)"
     class="px-4 py-2.5 border rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black"
   >
     <option value="">All Roles</option>
@@ -56,7 +67,8 @@
     <option value="Customer">Customer</option>
   </select>
   <select
-    [(ngModel)]="statusFilter"
+    [ngModel]="statusFilter()"
+    (ngModelChange)="onStatusFilterChange($event)"
     class="px-4 py-2.5 border rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black"
   >
     <option value="all">All Status</option>
@@ -66,141 +78,340 @@
 </div>
 
 <!-- Users Table -->
-@if (admin.users(); as users) {
+@if (isFiltering()) {
+  <!-- FILTER/SEARCH MODE: client-side filtered results across all users -->
+  @if (admin.allUsers() === null) {
+    <!-- Loading all users -->
+    <div class="bg-white rounded-2xl border shadow-sm p-12 text-center">
+      <div
+        class="inline-block w-6 h-6 border-2 border-gray-300 border-t-black rounded-full animate-spin mb-3"
+      ></div>
+      <p class="text-gray-400 text-sm">Loading all users...</p>
+    </div>
+  } @else if (searchResults().length > 0) {
+    <div class="mb-3">
+      <p class="text-xs text-gray-500 font-semibold">
+        🔍 Found {{ searchResults().length }} result{{ searchResults().length > 1 ? 's' : '' }}
+        across all users
+      </p>
+    </div>
+    <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm min-w-[700px]">
+          <thead class="bg-gray-50 border-b">
+            <tr>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                User
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Email
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Role
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th class="px-6 py-3"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            @for (user of paginatedSearchResults(); track user._id) {
+              <tr
+                class="transition-colors"
+                [class.hover:bg-gray-50]="!user.isDeleted"
+                [class.bg-red-50/50]="user.isDeleted"
+                [class.opacity-60]="user.isDeleted"
+              >
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+                      [style.background]="getGradient(user.name)"
+                    >
+                      {{ user.name.charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="min-w-0">
+                      <span class="font-semibold block truncate">{{ user.name }}</span>
+                      @if (user.storeName) {
+                        <span class="text-xs text-gray-400 block truncate">{{
+                          user.storeName
+                        }}</span>
+                      }
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-gray-500 text-xs font-mono truncate max-w-50">
+                  {{ user.email }}
+                </td>
+                <td class="px-6 py-4">
+                  <span
+                    class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                    [class]="getRoleClass(user.role)"
+                  >
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    @if (user.isDeleted) {
+                      <span
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-red-600"
+                      >
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Deleted
+                      </span>
+                    } @else if (user.isActive) {
+                      <span
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-green-600"
+                      >
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active
+                      </span>
+                    } @else {
+                      <span
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400"
+                      >
+                        <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Inactive
+                      </span>
+                    }
+                    @if (user.isVerified) {
+                      <span class="text-blue-500 text-xs" title="Verified">✓</span>
+                    }
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button
+                      (click)="viewUser(user)"
+                      class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors"
+                    >
+                      View
+                    </button>
+                    @if (user.role !== 'Admin') {
+                      @if (user.isDeleted) {
+                        <button
+                          (click)="confirmRestore(user)"
+                          class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition-colors"
+                        >
+                          Restore
+                        </button>
+                      } @else {
+                        <button
+                          (click)="openRoleChange(user)"
+                          class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                        >
+                          Role
+                        </button>
+                        <button
+                          (click)="confirmDelete(user)"
+                          class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                        >
+                          Delete
+                        </button>
+                      }
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Search Pagination -->
+    <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-xs text-gray-400">
+        Showing {{ paginatedSearchResults().length }} of {{ searchResults().length }} results
+        @if (searchTotalPages() > 1) {
+          — Page {{ searchPage() }} of {{ searchTotalPages() }}
+        }
+      </p>
+
+      @if (searchTotalPages() > 1) {
+        <div class="flex items-center gap-1">
+          <button
+            (click)="goToPage(searchPage() - 1)"
+            [disabled]="searchPage() <= 1"
+            class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            ←
+          </button>
+          @for (page of searchPageNumbers(); track page) {
+            <button
+              (click)="goToPage(page)"
+              class="w-8 h-8 text-xs font-semibold rounded-lg transition-colors"
+              [class.bg-black]="page === searchPage()"
+              [class.text-white]="page === searchPage()"
+              [class.border]="page !== searchPage()"
+              [class.hover:bg-gray-50]="page !== searchPage()"
+            >
+              {{ page }}
+            </button>
+          }
+          <button
+            (click)="goToPage(searchPage() + 1)"
+            [disabled]="searchPage() >= searchTotalPages()"
+            class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            →
+          </button>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="bg-white rounded-2xl border shadow-sm p-12 text-center">
+      <p class="text-4xl mb-3">🔍</p>
+      <h3 class="font-bold text-lg">No results found</h3>
+      <p class="text-gray-400 text-sm mt-1">No users match your current search/filter criteria.</p>
+    </div>
+  }
+} @else if (admin.users(); as users) {
   @if (filteredUsers().length > 0) {
     <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
-      <table class="w-full text-sm min-w-[700px]">
-        <thead class="bg-gray-50 border-b">
-          <tr>
-            <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
-            >
-              User
-            </th>
-            <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
-            >
-              Email
-            </th>
-            <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
-            >
-              Role
-            </th>
-            <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
-            >
-              Status
-            </th>
-            <th class="px-6 py-3"></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-          @for (user of filteredUsers(); track user._id) {
-            <tr
-              class="transition-colors"
-              [class.hover:bg-gray-50]="!user.isDeleted"
-              [class.bg-red-50/50]="user.isDeleted"
-              [class.opacity-60]="user.isDeleted"
-            >
-              <!-- User Name + Avatar -->
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                    [style.background]="getGradient(user.name)"
-                  >
-                    {{ user.name.charAt(0).toUpperCase() }}
-                  </div>
-                  <div class="min-w-0">
-                    <span class="font-semibold block truncate">{{ user.name }}</span>
-                    @if (user.storeName) {
-                      <span class="text-xs text-gray-400 block truncate">{{ user.storeName }}</span>
-                    }
-                  </div>
-                </div>
-              </td>
-
-              <!-- Email -->
-              <td class="px-6 py-4 text-gray-500 text-xs font-mono truncate max-w-50">
-                {{ user.email }}
-              </td>
-
-              <!-- Role Badge -->
-              <td class="px-6 py-4">
-                <span
-                  class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold"
-                  [class]="getRoleClass(user.role)"
-                >
-                  {{ user.role }}
-                </span>
-              </td>
-
-              <!-- Status -->
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  @if (user.isDeleted) {
-                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-red-600">
-                      <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Deleted
-                    </span>
-                  } @else if (user.isActive) {
-                    <span
-                      class="inline-flex items-center gap-1 text-xs font-semibold text-green-600"
-                    >
-                      <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active
-                    </span>
-                  } @else {
-                    <span
-                      class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400"
-                    >
-                      <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Inactive
-                    </span>
-                  }
-                  @if (user.isVerified) {
-                    <span class="text-blue-500 text-xs" title="Verified">✓</span>
-                  }
-                </div>
-              </td>
-
-              <!-- Actions -->
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2 justify-end">
-                  <button
-                    (click)="viewUser(user)"
-                    class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors"
-                  >
-                    View
-                  </button>
-                  @if (user.role !== 'Admin') {
-                    @if (user.isDeleted) {
-                      <button
-                        (click)="confirmRestore(user)"
-                        class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition-colors"
-                      >
-                        Restore
-                      </button>
-                    } @else {
-                      <button
-                        (click)="openRoleChange(user)"
-                        class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
-                      >
-                        Role
-                      </button>
-                      <button
-                        (click)="confirmDelete(user)"
-                        class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
-                      >
-                        Delete
-                      </button>
-                    }
-                  }
-                </div>
-              </td>
+        <table class="w-full text-sm min-w-[700px]">
+          <thead class="bg-gray-50 border-b">
+            <tr>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                User
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Email
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Role
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th class="px-6 py-3"></th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            @for (user of filteredUsers(); track user._id) {
+              <tr
+                class="transition-colors"
+                [class.hover:bg-gray-50]="!user.isDeleted"
+                [class.bg-red-50/50]="user.isDeleted"
+                [class.opacity-60]="user.isDeleted"
+              >
+                <!-- User Name + Avatar -->
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+                      [style.background]="getGradient(user.name)"
+                    >
+                      {{ user.name.charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="min-w-0">
+                      <span class="font-semibold block truncate">{{ user.name }}</span>
+                      @if (user.storeName) {
+                        <span class="text-xs text-gray-400 block truncate">{{
+                          user.storeName
+                        }}</span>
+                      }
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Email -->
+                <td class="px-6 py-4 text-gray-500 text-xs font-mono truncate max-w-50">
+                  {{ user.email }}
+                </td>
+
+                <!-- Role Badge -->
+                <td class="px-6 py-4">
+                  <span
+                    class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                    [class]="getRoleClass(user.role)"
+                  >
+                    {{ user.role }}
+                  </span>
+                </td>
+
+                <!-- Status -->
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    @if (user.isDeleted) {
+                      <span
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-red-600"
+                      >
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Deleted
+                      </span>
+                    } @else if (user.isActive) {
+                      <span
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-green-600"
+                      >
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active
+                      </span>
+                    } @else {
+                      <span
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400"
+                      >
+                        <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Inactive
+                      </span>
+                    }
+                    @if (user.isVerified) {
+                      <span class="text-blue-500 text-xs" title="Verified">✓</span>
+                    }
+                  </div>
+                </td>
+
+                <!-- Actions -->
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button
+                      (click)="viewUser(user)"
+                      class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors"
+                    >
+                      View
+                    </button>
+                    @if (user.role !== 'Admin') {
+                      @if (user.isDeleted) {
+                        <button
+                          (click)="confirmRestore(user)"
+                          class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition-colors"
+                        >
+                          Restore
+                        </button>
+                      } @else {
+                        <button
+                          (click)="openRoleChange(user)"
+                          class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                        >
+                          Role
+                        </button>
+                        <button
+                          (click)="confirmDelete(user)"
+                          class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                        >
+                          Delete
+                        </button>
+                      }
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -251,7 +462,7 @@
     </div>
   } @else if (searchQuery() || roleFilter() || statusFilter() !== 'all') {
     <div class="bg-white rounded-2xl border shadow-sm p-12 text-center">
-      <p class="text-gray-400 text-sm">No users match your search criteria.</p>
+      <p class="text-gray-400 text-sm">No users match your filter criteria on this page.</p>
     </div>
   } @else {
     <div class="bg-white rounded-2xl border shadow-sm p-12 text-center">

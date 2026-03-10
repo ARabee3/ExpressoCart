@@ -112,6 +112,10 @@ export class AdminService {
   usersTotalPages = signal(1);
   usersPerPage = 10;
 
+  // All users cache — loaded once for client-side search across all pages
+  allUsers = signal<User[] | null>(null);
+  private allUsersLoaded = false;
+
   loadUsers(page = 1) {
     this.users.set(null); // show loading state
     this.api
@@ -128,6 +132,27 @@ export class AdminService {
         if (response.currentPage != null) this.usersCurrentPage.set(response.currentPage);
         if (response.totalPages != null) this.usersTotalPages.set(response.totalPages);
       });
+  }
+
+  /** Fetch ALL users (no pagination) for client-side search. Cached after first load. */
+  loadAllUsers() {
+    if (this.allUsersLoaded) return;
+    this.api
+      .get<{
+        message: string;
+        data: User[];
+        totalUsers?: number;
+      }>('admin/users', { page: 1, limit: 10000 })
+      .subscribe((response) => {
+        this.allUsers.set(response.data);
+        this.allUsersLoaded = true;
+      });
+  }
+
+  /** Invalidate the allUsers cache so next search re-fetches */
+  invalidateAllUsersCache() {
+    this.allUsersLoaded = false;
+    this.allUsers.set(null);
   }
 
   getUser(id: string) {
@@ -149,7 +174,7 @@ export class AdminService {
 
   restoreUser(id: string) {
     this.api
-      .patch<{ message: string; data: User }>(`admin/users/${id}`, { isDeleted: false })
+      .patch<{ message: string; data: User }>(`admin/users/${id}/restore`, { isDeleted: false })
       .subscribe({
         next: (response) => {
           this.users.update((users) =>

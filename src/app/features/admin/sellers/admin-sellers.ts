@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   OnInit,
   signal,
@@ -72,7 +71,7 @@ export class AdminSellers implements OnInit {
     }
   }
 
-  // Filtered sellers
+  // Client-side filtering on all sellers (backend returns all at once)
   filteredSellers = computed(() => {
     const sellers = this.admin.sellers() ?? [];
     const query = this.searchQuery().toLowerCase().trim();
@@ -101,18 +100,13 @@ export class AdminSellers implements OnInit {
       (this.admin.sellers() ?? []).filter((s) => this.getSellerStatus(s) === 'suspended').length,
   );
 
-  // Client-side pagination
+  // Client-side pagination on the filtered results
   readonly itemsPerPage = 10;
   currentPage = signal(1);
 
-  // Reset page when filters change
-  private resetPage = effect(() => {
-    this.searchQuery();
-    this.statusFilter();
-    this.currentPage.set(1);
-  }, { allowSignalWrites: true });
-
-  totalPages = computed(() => Math.max(1, Math.ceil(this.filteredSellers().length / this.itemsPerPage)));
+  totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.filteredSellers().length / this.itemsPerPage)),
+  );
 
   paginatedSellers = computed(() => {
     const start = (this.currentPage() - 1) * this.itemsPerPage;
@@ -137,6 +131,18 @@ export class AdminSellers implements OnInit {
 
   ngOnInit(): void {
     this.admin.loadSellers();
+  }
+
+  // --- Search & filter handlers ---
+
+  onSearchInput(value: string) {
+    this.searchQuery.set(value);
+    this.currentPage.set(1);
+  }
+
+  onStatusFilterChange(value: SellerStatus) {
+    this.statusFilter.set(value);
+    this.currentPage.set(1);
   }
 
   // Gradient avatar
