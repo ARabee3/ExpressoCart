@@ -5,8 +5,9 @@ import { environment } from '../../environments/enviroment';
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private http = inject(HttpClient);
-  private readonly baseUrl = environment.apiUrl;
-  // private readonly baseUrl = import.meta.env['NG_APP_API_URL'];
+  //private readonly baseUrl = environment.apiUrl;
+  private readonly baseUrl = import.meta.env['NG_APP_API_URL'];
+  // private readonly baseUrl = 'http://localhost:3000';
 
   get<T>(
     endpoint: string,
