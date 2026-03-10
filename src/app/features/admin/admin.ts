@@ -149,7 +149,7 @@ export class AdminService {
 
   restoreUser(id: string) {
     this.api
-      .patch<{ message: string; data: User }>(`admin/users/${id}`, { isDeleted: false })
+      .patch<{ message: string; data: User }>(`admin/users/${id}/restore`, { isDeleted: false })
       .subscribe({
         next: (response) => {
           this.users.update((users) =>
