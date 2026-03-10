@@ -18,4 +18,8 @@ export class OrderService {
     payCard(orderId: string): Observable<{ status: string; clientSecret: string; paymentIntentId: string }> {
         return this.api.post(`orders/${orderId}/pay-intent`, {});
     }
+
+    getMyOrders(page = 1, limit = 50): Observable<{ status: string; data: Order[]; totalOrders: number; totalPages: number; currentPage: number }> {
+        return this.api.get<{ status: string; data: Order[]; totalOrders: number; totalPages: number; currentPage: number }>('orders', { page, limit });
+    }
 }

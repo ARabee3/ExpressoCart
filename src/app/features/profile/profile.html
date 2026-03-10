@@ -212,36 +212,15 @@
 
       <!-- Order History -->
       <div class="bg-white rounded-2xl shadow-sm border border-black/5 p-6">
-        <h3 class="text-base font-bold text-brand-primary mb-4 flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-5 text-brand-accent"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z"
-            />
-          </svg>
-          My Orders
-        </h3>
-
-        <!-- Placeholder state -->
-        <div class="flex flex-col items-center justify-center py-12 text-center">
-          <div
-            class="w-16 h-16 rounded-full bg-brand-secondary flex items-center justify-center mb-4"
-          >
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-bold text-brand-primary flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="size-8 text-brand-primary/30"
+              class="size-5 text-brand-accent"
             >
               <path
                 stroke-linecap="round"
@@ -249,22 +228,20 @@
                 d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z"
               />
             </svg>
-          </div>
-          <p class="text-sm font-medium text-brand-primary/50">No orders yet</p>
-          <p class="text-xs text-brand-primary/30 mt-1 max-w-xs">
-            Your order history will appear here once you place your first order.
-          </p>
+            My Orders
+          </h3>
           <a
-            routerLink="/products"
-            class="mt-5 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-brand-accent text-white rounded-xl hover:bg-brand-accent/90 transition-colors shadow-sm"
+            routerLink="/orders"
+            class="flex items-center gap-1.5 text-xs font-medium text-brand-accent hover:text-brand-accent/70 transition-colors"
           >
+            View All
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="2"
               stroke="currentColor"
-              class="size-4"
+              class="size-3.5"
             >
               <path
                 stroke-linecap="round"
@@ -272,9 +249,47 @@
                 d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
               />
             </svg>
-            Shop Now
           </a>
         </div>
+
+        <a
+          routerLink="/orders"
+          class="flex items-center gap-4 p-4 rounded-xl bg-brand-secondary/50 hover:bg-brand-secondary transition-colors group"
+        >
+          <div
+            class="w-12 h-12 rounded-xl bg-brand-accent/10 flex items-center justify-center shrink-0 group-hover:bg-brand-accent/15 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6 text-brand-accent"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+              />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold text-brand-primary">View Order History</p>
+            <p class="text-xs text-brand-primary/40 mt-0.5">
+              Track, manage, and review all your past orders
+            </p>
+          </div>
+          <svg
+            class="size-5 text-brand-primary/30 group-hover:text-brand-primary/50 transition-colors shrink-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
       </div>
     </div>
   </div>
