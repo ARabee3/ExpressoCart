@@ -128,6 +128,11 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'orders',
+        loadComponent: () =>
+          import('./features/order-history/order-history').then((m) => m.OrderHistory),
+      },
+      {
         path: 'profile',
         loadComponent: () => import('./features/profile/profile').then((m) => m.Profile),
       },
