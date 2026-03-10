@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AuthApi } from '../../../core/services/auth-api';
 import { ToastService } from '../../../core/services/toast.service';
+import { ProductService } from '../../../core/services/product.service';
 
 interface SellerProfileUser {
   name: string;
@@ -22,6 +23,7 @@ export class SellerProfile implements OnInit {
   private readonly authApi = inject(AuthApi);
   private readonly toast = inject(ToastService);
   private readonly fb = inject(FormBuilder);
+  private readonly productService = inject(ProductService);
 
   protected readonly user = signal<Partial<SellerProfileUser>>({});
   protected readonly isEditing = signal(false);
@@ -86,6 +88,7 @@ export class SellerProfile implements OnInit {
             phone: phone || u.phone,
             storeName: storeName || u.storeName,
           }));
+          this.productService.clearCache();
           this.toast.success('Profile updated successfully');
           this.isEditing.set(false);
           this.saving.set(false);
