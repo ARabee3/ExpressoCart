@@ -7,6 +7,7 @@ import { ToastService } from '../../core/services/toast.service';
 import { VerifyOtp } from '../auth/pages/verify-otp/verify-otp';
 import { Address } from '../../core/services/address';
 import { UserAddress } from '../../core/models/user.model';
+import { ChangePassword } from './change-password/change-password';
 
 interface ProfileUser {
   name?: string;
@@ -22,7 +23,7 @@ interface ProfileUser {
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.html',
-  imports: [RouterLink, ReactiveFormsModule, VerifyOtp],
+  imports: [RouterLink, ReactiveFormsModule, VerifyOtp, ChangePassword],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Profile implements OnInit {
@@ -36,7 +37,8 @@ export class Profile implements OnInit {
   protected readonly user = signal<ProfileUser>({});
   protected readonly isEditing = signal(false);
   protected readonly saving = signal(false);
-
+  protected readonly isChangingPassword = signal(false);
+  
   //address state
   protected readonly addresses = signal<UserAddress[]>([]);
   protected readonly showAddressForm = signal(false);
