@@ -47,7 +47,7 @@
           >
             <img
               [src]="
-                p.images[0] ||
+                p.images[selectedImageIndex()] ||
                 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80'
               "
               [alt]="p.name"
@@ -56,12 +56,15 @@
             />
           </div>
 
-          <!-- Thumbnail gallery could go here in the future -->
           @if (p.images && p.images.length > 1) {
             <div class="flex gap-4 overflow-x-auto pb-2">
-              @for (img of p.images; track img) {
+              @for (img of p.images; track img; let i = $index) {
                 <button
-                  class="w-20 h-20 rounded-lg border-2 border-transparent hover:border-brand-primary focus:border-brand-primary bg-gray-50 overflow-hidden shrink-0 transition-colors"
+                  (click)="selectedImageIndex.set(i)"
+                  class="w-20 h-20 rounded-lg border-2 bg-gray-50 overflow-hidden shrink-0 transition-colors"
+                  [class.border-brand-primary]="selectedImageIndex() === i"
+                  [class.border-transparent]="selectedImageIndex() !== i"
+                  [class.hover:border-brand-primary]="selectedImageIndex() !== i"
                 >
                   <img [src]="img" [alt]="p.name" class="w-full h-full object-cover" />
                 </button>

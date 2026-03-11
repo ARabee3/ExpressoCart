@@ -2,11 +2,16 @@
   <!-- Header -->
   <div class="mb-10 text-center md:text-left">
     <h1 class="text-3xl md:text-4xl font-bold text-brand-primary mb-4 font-heading">
-      All Products
+      {{ currentCategory() === 'All' ? 'All Products' : currentCategory() }}
     </h1>
     <p class="text-brand-primary/60 text-sm md:text-base max-w-2xl">
-      Browse our extensive collection of high-quality furniture and home decor pieces designed to
-      elevate your living space.
+      @if (currentCategory() === 'All') {
+        Browse our extensive collection of high-quality furniture and home decor pieces designed to
+        elevate your living space.
+      } @else {
+        Browsing <span class="font-semibold text-brand-primary">{{ currentCategory() }}</span> —
+        find the perfect piece for your space.
+      }
     </p>
   </div>
 

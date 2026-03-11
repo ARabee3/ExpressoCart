@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { catchError, of } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { CartService } from '../../../core/services/cart.service';
 import { ProductService } from '../../../core/services/product.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -37,10 +38,12 @@ export class ProductDetails implements OnInit {
   private authState = inject(AuthState);
   private orderService = inject(OrderService);
   private fb = inject(FormBuilder);
+  private titleService = inject(Title);
 
   quantity = signal(1);
   isLoading = signal(true);
   product = signal<Product | null>(null);
+  selectedImageIndex = signal(0);
 
   // Reviews
   reviews = signal<Review[]>([]);
@@ -66,6 +69,10 @@ export class ProductDetails implements OnInit {
     if (productId) {
       this.productService.getProductById(productId).subscribe((p) => {
         this.product.set(p ?? null);
+        this.selectedImageIndex.set(0);
+        if (p) {
+          this.titleService.setTitle(`${p.name} | Expresso`);
+        }
         this.isLoading.set(false);
         if (p && !p._id.startsWith('prod_')) {
           this.loadReviews(p._id, 1);

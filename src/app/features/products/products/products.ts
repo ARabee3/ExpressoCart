@@ -15,6 +15,8 @@ import { WishlistService } from '../../../core/services/wishlist.service';
 import { FormsModule } from '@angular/forms';
 import { Spinner } from '../../../shared/components/spinner/spinner';
 import { CategoryService } from '../../../core/services/category.service';
+import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-products',
@@ -29,6 +31,8 @@ export class Products implements OnInit {
   private readonly toastService = inject(ToastService);
   private readonly wishlistService = inject(WishlistService);
   private readonly categoryService = inject(CategoryService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly titleService = inject(Title);
 
   /** Reactive set of wishlisted IDs for O(1) template lookup */
   readonly wishlistIds = computed(() => this.wishlistService.wishlistIds());
@@ -63,6 +67,18 @@ export class Products implements OnInit {
 
     this.categoryService.getCategories().subscribe((cats) => {
       this.categories.set(['All', ...cats.map((c) => c.name)]);
+
+      // Apply category filter from URL query param (e.g. /products?category=sofas)
+      const slug = this.route.snapshot.queryParamMap.get('category');
+      if (slug) {
+        const matched = cats.find(
+          (c) => c.slug === slug || c.name.toLowerCase() === slug.toLowerCase(),
+        );
+        if (matched) {
+          this.currentCategory.set(matched.name);
+          this.titleService.setTitle(`${matched.name} | Expresso`);
+        }
+      }
     });
   }
 
@@ -70,7 +86,8 @@ export class Products implements OnInit {
     let products = this.allProducts();
 
     if (this.currentCategory() !== 'All') {
-      products = products.filter((p) => p.category === this.currentCategory());
+      const cat = this.currentCategory().toLowerCase();
+      products = products.filter((p) => p.category?.toLowerCase() === cat);
     }
 
     const sort = this.sortOption();
@@ -123,6 +140,9 @@ export class Products implements OnInit {
   setCategory(category: string) {
     this.currentCategory.set(category);
     this.currentPage.set(1);
+    this.titleService.setTitle(
+      category === 'All' ? 'All Products | Expresso' : `${category} | Expresso`,
+    );
   }
 
   toggleSort() {
