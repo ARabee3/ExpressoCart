@@ -13,6 +13,7 @@
 <div class="mb-6 flex flex-wrap items-center gap-3">
   <select
     [(ngModel)]="statusFilter"
+    (ngModelChange)="onFilterChange()"
     class="px-4 py-2.5 border rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black"
   >
     <option value="">All Statuses</option>
@@ -25,143 +26,143 @@
 </div>
 
 <!-- Orders Table -->
-@if (admin.orders(); as orders) {
-  @if (filteredOrders().length > 0) {
+@if (admin.allOrders(); as orders) {
+  @if (pagedOrders().length > 0) {
     <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
-      <table class="w-full text-sm min-w-[800px]">
-        <thead class="bg-gray-50 border-b">
-          <tr>
-            <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
-            >
-              Order ID
-            </th>
-            <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
-            >
-              Date
-            </th>
-            <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
-            >
-              Status
-            </th>
-            <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
-            >
-              Payment
-            </th>
-            <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
-            >
-              Items
-            </th>
-            <th
-              class="text-right px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
-            >
-              Total
-            </th>
-            <th class="px-6 py-3"></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-          @for (order of filteredOrders(); track order._id) {
-            <tr
-              class="transition-colors hover:bg-gray-50"
-              [class.bg-red-50/30]="order.status === 'Cancelled'"
-              [class.opacity-60]="order.status === 'Cancelled'"
-            >
-              <!-- Order ID -->
-              <td class="px-6 py-4">
-                <span class="font-mono text-xs text-gray-500"
-                  >{{ order._id | slice: 0 : 10 }}...</span
-                >
-              </td>
-
-              <!-- Date -->
-              <td class="px-6 py-4 text-xs text-gray-500">
-                {{ order.createdAt | date: 'MMM d, y' }}
-              </td>
-
-              <!-- Status Badge -->
-              <td class="px-6 py-4">
-                <span
-                  class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold"
-                  [class]="getStatusClass(order.status)"
-                >
-                  {{ order.status }}
-                </span>
-              </td>
-
-              <!-- Payment -->
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <span
-                    class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold"
-                    [class]="getPaymentClass(order.paymentMethod)"
-                  >
-                    {{ order.paymentMethod }}
-                  </span>
-                  @if (order.isPaid) {
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500" title="Paid"></span>
-                  } @else {
-                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-400" title="Unpaid"></span>
-                  }
-                </div>
-              </td>
-
-              <!-- Items count -->
-              <td class="px-6 py-4 text-xs text-gray-500">
-                {{ order.orderItems.length }} item{{ order.orderItems.length > 1 ? 's' : '' }}
-              </td>
-
-              <!-- Total -->
-              <td class="px-6 py-4 text-right">
-                <span class="font-bold">${{ order.finalPrice }}</span>
-                @if (order.discountAmount > 0) {
-                  <span class="text-xs text-green-600 ml-1">(-${{ order.discountAmount }})</span>
-                }
-              </td>
-
-              <!-- Actions -->
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2 justify-end">
-                  <button
-                    (click)="viewOrder(order)"
-                    class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors"
-                  >
-                    View
-                  </button>
-                  @if (getAllowedTransitions(order.status).length > 0) {
-                    <button
-                      (click)="openStatusUpdate(order)"
-                      class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
-                    >
-                      Update
-                    </button>
-                  }
-                  @if (order.status === 'Cancelled') {
-                    <button
-                      (click)="confirmDelete(order)"
-                      class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
-                    >
-                      Delete
-                    </button>
-                  }
-                </div>
-              </td>
+        <table class="w-full text-sm min-w-[800px]">
+          <thead class="bg-gray-50 border-b">
+            <tr>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Order ID
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Date
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Payment
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Items
+              </th>
+              <th
+                class="text-right px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              >
+                Total
+              </th>
+              <th class="px-6 py-3"></th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            @for (order of pagedOrders(); track order._id) {
+              <tr
+                class="transition-colors hover:bg-gray-50"
+                [class.bg-red-50/30]="order.status === 'Cancelled'"
+                [class.opacity-60]="order.status === 'Cancelled'"
+              >
+                <!-- Order ID -->
+                <td class="px-6 py-4">
+                  <span class="font-mono text-xs text-gray-500"
+                    >{{ order._id | slice: 0 : 10 }}...</span
+                  >
+                </td>
+
+                <!-- Date -->
+                <td class="px-6 py-4 text-xs text-gray-500">
+                  {{ order.createdAt | date: 'MMM d, y' }}
+                </td>
+
+                <!-- Status Badge -->
+                <td class="px-6 py-4">
+                  <span
+                    class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                    [class]="getStatusClass(order.status)"
+                  >
+                    {{ order.status }}
+                  </span>
+                </td>
+
+                <!-- Payment -->
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold"
+                      [class]="getPaymentClass(order.paymentMethod)"
+                    >
+                      {{ order.paymentMethod }}
+                    </span>
+                    @if (order.isPaid) {
+                      <span class="w-1.5 h-1.5 rounded-full bg-green-500" title="Paid"></span>
+                    } @else {
+                      <span class="w-1.5 h-1.5 rounded-full bg-yellow-400" title="Unpaid"></span>
+                    }
+                  </div>
+                </td>
+
+                <!-- Items count -->
+                <td class="px-6 py-4 text-xs text-gray-500">
+                  {{ order.orderItems.length }} item{{ order.orderItems.length > 1 ? 's' : '' }}
+                </td>
+
+                <!-- Total -->
+                <td class="px-6 py-4 text-right">
+                  <span class="font-bold">${{ order.finalPrice }}</span>
+                  @if (order.discountAmount > 0) {
+                    <span class="text-xs text-green-600 ml-1">(-${{ order.discountAmount }})</span>
+                  }
+                </td>
+
+                <!-- Actions -->
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2 justify-end">
+                    <button
+                      (click)="viewOrder(order)"
+                      class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-gray-50 transition-colors"
+                    >
+                      View
+                    </button>
+                    @if (getAllowedTransitions(order.status).length > 0) {
+                      <button
+                        (click)="openStatusUpdate(order)"
+                        class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                      >
+                        Update
+                      </button>
+                    }
+                    @if (order.status === 'Cancelled') {
+                      <button
+                        (click)="confirmDelete(order)"
+                        class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
 
     <!-- Pagination Bar -->
     <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
       <p class="text-xs text-gray-400">
-        Showing {{ filteredOrders().length }} of {{ totalOrders() }} orders
+        Showing {{ pagedOrders().length }} of {{ totalOrders() }} orders
         @if (totalPages() > 1) {
           — Page {{ currentPage() }} of {{ totalPages() }}
         }

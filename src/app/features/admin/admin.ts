@@ -24,10 +24,13 @@ export class AdminService {
     this.api
       .get<{ message: string; data: Order[]; countOfOrders: number }>('admin/orders', {
         page: 1,
-        limit: 10,
+        limit: 10000,
       })
       .subscribe((response) => {
-        this.recentOrders.set(response.data);
+        const sorted = [...response.data].sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+        this.recentOrders.set(sorted.slice(0, 10));
       });
   }
 
@@ -204,15 +207,11 @@ export class AdminService {
   }
 
   // -- Orders (admin management)
-  orders = signal<Order[] | null>(null);
-  ordersTotalCount = signal(0);
-  ordersCurrentPage = signal(1);
-  ordersTotalPages = signal(1);
-  ordersPerPage = 10;
+  allOrders = signal<Order[] | null>(null);
   selectedOrder = signal<Order | null>(null);
 
-  loadOrders(page = 1) {
-    this.orders.set(null);
+  loadOrders() {
+    this.allOrders.set(null);
     this.api
       .get<{
         message: string;
@@ -220,12 +219,12 @@ export class AdminService {
         countOfOrders: number;
         currentPage: number;
         totalPages: number;
-      }>('admin/orders', { page, limit: this.ordersPerPage })
+      }>('admin/orders', { page: 1, limit: 10000 })
       .subscribe((response) => {
-        this.orders.set(response.data);
-        this.ordersTotalCount.set(response.countOfOrders);
-        this.ordersCurrentPage.set(response.currentPage);
-        this.ordersTotalPages.set(response.totalPages);
+        const sorted = [...response.data].sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+        this.allOrders.set(sorted);
       });
   }
 
@@ -241,12 +240,25 @@ export class AdminService {
       .put<{ message: string; data: Order }>(`admin/orders/${id}/status`, { status })
       .subscribe({
         next: (response) => {
-          this.orders.update((orders) =>
-            orders ? orders.map((o) => (o._id === id ? response.data : o)) : [],
+          let updatedOrder = response.data;
+          // When delivered with Cash payment, ensure isPaid is true
+          if (
+            status === 'Delivered' &&
+            updatedOrder.paymentMethod === 'Cash' &&
+            !updatedOrder.isPaid
+          ) {
+            updatedOrder = {
+              ...updatedOrder,
+              isPaid: true,
+              paidAt: updatedOrder.deliveredAt ?? new Date().toISOString(),
+            };
+          }
+          this.allOrders.update((orders) =>
+            orders ? orders.map((o) => (o._id === id ? updatedOrder : o)) : [],
           );
           // Also update selectedOrder if viewing this one
           if (this.selectedOrder()?._id === id) {
-            this.selectedOrder.set(response.data);
+            this.selectedOrder.set(updatedOrder);
           }
         },
       });
@@ -255,8 +267,7 @@ export class AdminService {
   deleteOrder(id: string) {
     this.api.delete<{ message: string; data: Order }>(`admin/orders/${id}`).subscribe({
       next: () => {
-        this.orders.update((orders) => (orders ? orders.filter((o) => o._id !== id) : []));
-        this.ordersTotalCount.update((c) => Math.max(0, c - 1));
+        this.allOrders.update((orders) => (orders ? orders.filter((o) => o._id !== id) : []));
       },
     });
   }
