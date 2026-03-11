@@ -16,6 +16,7 @@ export class CheckoutShippingComponent implements OnInit {
 
     addrMode: 'saved' | 'new' = 'saved';
     selectedAddrIndex = 0;
+    
 
     savedAddresses: UserAddress[] = [];
     isLoadingAddresses = true;
