@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { checkoutGuard } from './core/guards/checkout.guard';
+import { guestGuard } from './core/guards/guest-guard';
 import { orderSuccessGuard } from './core/guards/order-success.guard';
 import { sellerGuard } from './core/guards/seller-guard';
 
@@ -109,10 +110,12 @@ export const routes: Routes = [
       },
       {
         path: 'auth/login',
+        canActivate: [guestGuard],
         loadComponent: () => import('./features/auth/pages/login/login').then((m) => m.Login),
       },
       {
         path: 'auth/register',
+        canActivate: [guestGuard],
         loadComponent: () =>
           import('./features/auth/pages/register/register').then((m) => m.Register),
       },
@@ -149,6 +152,11 @@ export const routes: Routes = [
       {
         path: 'profile',
         loadComponent: () => import('./features/profile/profile').then((m) => m.Profile),
+      },
+      {
+        path: '**',
+        loadComponent: () =>
+          import('./shared/components/notfound/notfound').then((com) => com.Notfound),
       },
     ],
   },
@@ -189,10 +197,5 @@ export const routes: Routes = [
           import('./shared/components/notfound/notfound').then((com) => com.Notfound),
       },
     ],
-  },
-  {
-    path: '**',
-    loadComponent: () =>
-      import('./shared/components/notfound/notfound').then((com) => com.Notfound),
   },
 ];
