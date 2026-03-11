@@ -35,6 +35,7 @@ export class AdminSellers implements OnInit {
   // UI state
   searchQuery = signal('');
   statusFilter = signal<SellerStatus>('all');
+  sortField = signal<'status' | 'name' | 'newest'>('status');
   confirmingAction = signal<{ seller: User; action: 'approve' | 'suspend' | 'reactivate' } | null>(
     null,
   );
@@ -71,12 +72,14 @@ export class AdminSellers implements OnInit {
     }
   }
 
-  // Client-side filtering on all sellers (backend returns all at once)
+  // Client-side filtering + sorting on all sellers (backend returns all at once)
   filteredSellers = computed(() => {
     const sellers = this.admin.sellers() ?? [];
     const query = this.searchQuery().toLowerCase().trim();
     const status = this.statusFilter();
-    return sellers.filter((s) => {
+    const sort = this.sortField();
+
+    const filtered = sellers.filter((s) => {
       const matchesQuery =
         !query ||
         s.name.toLowerCase().includes(query) ||
@@ -84,6 +87,18 @@ export class AdminSellers implements OnInit {
         (s.storeName ?? '').toLowerCase().includes(query);
       const matchesStatus = status === 'all' || this.getSellerStatus(s) === status;
       return matchesQuery && matchesStatus;
+    });
+
+    const statusOrder: Record<string, number> = { pending: 0, approved: 1, suspended: 2 };
+    const newestOf = (s: User) => parseInt(s._id.substring(0, 8), 16);
+
+    return [...filtered].sort((a, b) => {
+      if (sort === 'status') {
+        const diff = statusOrder[this.getSellerStatus(a)] - statusOrder[this.getSellerStatus(b)];
+        return diff !== 0 ? diff : newestOf(b) - newestOf(a);
+      }
+      if (sort === 'name') return a.name.localeCompare(b.name);
+      return newestOf(b) - newestOf(a); // newest
     });
   });
 
@@ -142,6 +157,11 @@ export class AdminSellers implements OnInit {
 
   onStatusFilterChange(value: SellerStatus) {
     this.statusFilter.set(value);
+    this.currentPage.set(1);
+  }
+
+  onSortChange(value: 'status' | 'name' | 'newest') {
+    this.sortField.set(value);
     this.currentPage.set(1);
   }
 

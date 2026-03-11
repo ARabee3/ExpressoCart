@@ -277,9 +277,11 @@ export class AdminService {
 
   loadSellers() {
     this.sellers.set(null);
-    this.api.get<{ message: string; data: User[] }>('admin/sellers').subscribe((response) => {
-      this.sellers.set(response.data);
-    });
+    this.api
+      .get<{ message: string; data: User[] }>('admin/sellers', { limit: 10000 })
+      .subscribe((response) => {
+        this.sellers.set(response.data);
+      });
   }
 
   approveSeller(id: string) {
