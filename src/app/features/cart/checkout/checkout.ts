@@ -114,23 +114,26 @@ export class Checkout implements OnInit {
   }
 
   handleError(err?: any) {
+    console.log(err.error.error);
     this.isPlacingOrder.set(false);
 
     let msg = 'Failed to place order.';
-    const errorMsg = err?.error?.message;
+    const errorMsg = err?.error?.error;
 
     if (errorMsg) {
       msg = errorMsg;
       if (msg.includes('already has a placed order')) {
         this.toastService.error('You already have an order from this cart.');
-        setTimeout(() => this.router.navigate(['/profile/orders']), 2000);
+        setTimeout(() => this.router.navigate(['/orders']), 2000);
         return;
       }
       if (msg.includes('pending card order')) {
-        const confirmed = window.confirm('You have a pending card order waiting for payment. Do you want to go to your orders page to complete or cancel it?');
-        if (confirmed) {
-          this.router.navigate(['/profile/orders']);
-        }
+        this.router.navigate(['/orders']);
+
+        // const confirmed = window.confirm('You have a pending card order waiting for payment.');
+        // if (confirmed) {
+        //   this.router.navigate(['/profile/orders']);
+        // }
         return;
       }
       if (msg.includes('Cart not found') || msg.includes('Cart is empty')) {
