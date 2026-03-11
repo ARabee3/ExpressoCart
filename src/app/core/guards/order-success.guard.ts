@@ -6,10 +6,11 @@ export const orderSuccessGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
 
     const prevNav = router.getCurrentNavigation()?.previousNavigation;
     const isComingFromCheckout = prevNav?.finalUrl?.toString().includes('/checkout');
+    const isComingFromOrders = prevNav?.finalUrl?.toString().includes('/orders');
     const hasOrderId = !!route.queryParams['orderId'];
 
-    // only allow if user is coming from checkout and has an orderId
-    if (isComingFromCheckout && hasOrderId) {
+    // allow if user is coming from checkout or orders and has an orderId
+    if ((isComingFromCheckout || isComingFromOrders) && hasOrderId) {
         return true;
     }
 
