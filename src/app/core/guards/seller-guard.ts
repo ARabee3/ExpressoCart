@@ -1,8 +1,17 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, CanMatchFn, Router } from '@angular/router';
 import { AuthState } from '../services/auth-state';
 import { AuthApi } from '../services/auth-api';
 import { map, catchError, of } from 'rxjs';
+
+// Prevents /seller/pending from being caught by the SellerLayout route,
+// so it falls through to the public layout (avoids an approval-redirect loop).
+export const sellerMatchGuard: CanMatchFn = (_route, segments) => {
+  if (segments.length >= 2 && segments[1].path === 'pending') {
+    return false;
+  }
+  return inject(AuthState).role() === 'Seller';
+};
 
 export const sellerGuard: CanActivateFn = (route, state) => {
   const auth = inject(AuthState);
@@ -10,7 +19,7 @@ export const sellerGuard: CanActivateFn = (route, state) => {
   const authApi = inject(AuthApi);
 
   if (auth.role() !== 'Seller') {
-    router.navigate(['/']);
+    router.navigate(['/unauthorized']);
     return false;
   }
 
