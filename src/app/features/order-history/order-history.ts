@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { DatePipe, SlicePipe, CurrencyPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import { OrderService } from '../../core/services/order.service';
@@ -11,7 +18,15 @@ type FilterTab = 'All' | OrderStatus;
 @Component({
   selector: 'app-order-history',
   templateUrl: './order-history.html',
-  imports: [RouterLink, DatePipe, SlicePipe, CurrencyPipe, LowerCasePipe, UpperCasePipe, PaymentModalComponent],
+  imports: [
+    RouterLink,
+    DatePipe,
+    SlicePipe,
+    CurrencyPipe,
+    LowerCasePipe,
+    UpperCasePipe,
+    PaymentModalComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderHistory implements OnInit {
@@ -28,7 +43,14 @@ export class OrderHistory implements OnInit {
   protected readonly activeTab = signal<FilterTab>('All');
   protected readonly expandedOrderId = signal<string | null>(null);
 
-  protected readonly tabs: FilterTab[] = ['All', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+  protected readonly tabs: FilterTab[] = [
+    'All',
+    'Pending',
+    'Processing',
+    'Shipped',
+    'Delivered',
+    'Cancelled',
+  ];
 
   protected readonly filteredOrders = computed(() => {
     const tab = this.activeTab();
@@ -118,24 +140,32 @@ export class OrderHistory implements OnInit {
   }
 
   protected getTimelineSteps(order: Order) {
+    const statusOrder: Record<string, number> = {
+      Pending: 0,
+      Processing: 1,
+      Shipped: 2,
+      Delivered: 3,
+    };
+    const currentLevel = statusOrder[order.status] ?? 0;
+
     const steps = [
       { label: 'Ordered', date: order.createdAt, active: true, color: 'bg-brand-accent' },
       {
         label: 'Processing',
         date: order.processedAt,
-        active: !!order.processedAt,
+        active: currentLevel >= 1,
         color: 'bg-blue-500',
       },
       {
         label: 'Shipped',
         date: order.shippedAt,
-        active: !!order.shippedAt,
+        active: currentLevel >= 2,
         color: 'bg-indigo-500',
       },
       {
         label: 'Delivered',
         date: order.deliveredAt,
-        active: !!order.deliveredAt,
+        active: currentLevel >= 3,
         color: 'bg-emerald-500',
       },
     ];
@@ -174,7 +204,7 @@ export class OrderHistory implements OnInit {
       },
       error: (err) => {
         this.toastService.error(err?.error?.message || 'Failed to initialize payment.');
-      }
+      },
     });
   }
 
@@ -207,7 +237,11 @@ export class OrderHistory implements OnInit {
       next: () => {
         this.toastService.success('Order cancelled successfully.');
         this.orders.update((prev) =>
-          prev.map((o) => (o._id === orderId ? { ...o, status: 'Cancelled' as OrderStatus, cancelledAt: new Date().toISOString() } : o))
+          prev.map((o) =>
+            o._id === orderId
+              ? { ...o, status: 'Cancelled' as OrderStatus, cancelledAt: new Date().toISOString() }
+              : o,
+          ),
         );
         this.isCancellingOrder.set(null);
         this.confirmingCancelId.set(null);
