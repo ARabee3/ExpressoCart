@@ -11,6 +11,7 @@ import { CategoryService } from '../../../core/services/category.service';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { Product } from '../../../core/models/cart.model';
 import { Category } from '../../../core/models/category.model';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -27,6 +28,7 @@ export class ExploreCategories implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
   private readonly wishlistService = inject(WishlistService);
+  private readonly toast = inject(ToastService);
 
   readonly categories = toSignal(this.categoryService.getCategories(), {
     initialValue: [] as Category[],
@@ -94,7 +96,10 @@ export class ExploreCategories implements OnInit {
   }
 
   onAddToCart(product: Product) {
-    this.cartService.addToCart(product._id, 1);
+    this.cartService.addToCart(product._id, 1).subscribe({
+      next: () => this.toast.success(`${product.name} added to cart`),
+      error: () => this.toast.error('Failed to add to cart'),
+    });
   }
 
   onAddToWishlist(product: Product) {

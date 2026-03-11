@@ -8,6 +8,7 @@ import { Spinner } from '../../../shared/components/spinner/spinner';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { Product } from '../../../core/models/cart.model';
 
 @Component({
@@ -21,6 +22,7 @@ export class Home implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
   private readonly wishlistService = inject(WishlistService);
+  private readonly toast = inject(ToastService);
 
   readonly latestProducts = signal<Product[]>([]);
   readonly loadingProducts = signal<boolean>(true);
@@ -34,7 +36,10 @@ export class Home implements OnInit {
   }
 
   onAddToCart(product: Product) {
-    this.cartService.addToCart(product._id, 1);
+    this.cartService.addToCart(product._id, 1).subscribe({
+      next: () => this.toast.success(`${product.name} added to cart`),
+      error: () => this.toast.error('Failed to add to cart'),
+    });
   }
 
   onAddToWishlist(product: Product) {

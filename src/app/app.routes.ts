@@ -1,12 +1,63 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './core/guards/admin-guard';
 import { checkoutGuard } from './core/guards/checkout.guard';
 import { guestGuard } from './core/guards/guest-guard';
 import { orderSuccessGuard } from './core/guards/order-success.guard';
-import { sellerGuard } from './core/guards/seller-guard';
+import { sellerGuard, sellerMatchGuard } from './core/guards/seller-guard';
 
 export const routes: Routes = [
+  // NOTE: seller layout MUST come before the public layout (path: '').
+  // The public layout's '**' child would otherwise catch all /seller/* URLs
+  // before the seller route is ever evaluated.
+  // sellerMatchGuard excludes /seller/pending so it falls through to the
+  // public layout (which shows it with the regular navbar, no redirect loop).
+  {
+    path: 'seller',
+    canMatch: [sellerMatchGuard],
+    canActivate: [sellerGuard],
+    loadComponent: () =>
+      import('./features/seller/seller-layout/seller-layout').then((m) => m.SellerLayout),
+    children: [
+      {
+        path: 'dashboard',
+        title: 'Dashboard | Expresso Seller',
+        loadComponent: () =>
+          import('./features/seller/dashboard/seller-dashboard').then((m) => m.SellerDashboard),
+      },
+      {
+        path: 'products',
+        title: 'My Products | Expresso Seller',
+        loadComponent: () =>
+          import('./features/seller/products/seller-products').then((m) => m.SellerProducts),
+      },
+      {
+        path: 'orders',
+        title: 'Orders | Expresso Seller',
+        loadComponent: () =>
+          import('./features/seller/orders/seller-orders').then((m) => m.SellerOrders),
+      },
+      {
+        path: 'profile',
+        title: 'Seller Profile | Expresso Seller',
+        loadComponent: () =>
+          import('./features/seller/seller-profile/seller-profile').then((m) => m.SellerProfile),
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: '**',
+        title: 'Not Found | Expresso',
+        loadComponent: () =>
+          import('./shared/components/notfound/notfound').then((com) => com.Notfound),
+      },
+    ],
+  },
   {
     path: 'admin',
+    canActivate: [adminGuard],
     loadComponent: () =>
       import('./features/admin/admin-layout/admin-layout').then((com) => com.AdminLayout),
     children: [
@@ -187,51 +238,14 @@ export const routes: Routes = [
           ),
       },
       {
-        path: '**',
-        title: 'Page Not Found | Expresso',
+        path: 'unauthorized',
+        title: 'Access Denied | Expresso',
         loadComponent: () =>
-          import('./shared/components/notfound/notfound').then((com) => com.Notfound),
-      },
-    ],
-  },
-  {
-    path: 'seller',
-    loadComponent: () =>
-      import('./features/seller/seller-layout/seller-layout').then((m) => m.SellerLayout),
-    canActivate: [sellerGuard],
-    children: [
-      {
-        path: 'dashboard',
-        title: 'Dashboard | Expresso Seller',
-        loadComponent: () =>
-          import('./features/seller/dashboard/seller-dashboard').then((m) => m.SellerDashboard),
-      },
-      {
-        path: 'products',
-        title: 'My Products | Expresso Seller',
-        loadComponent: () =>
-          import('./features/seller/products/seller-products').then((m) => m.SellerProducts),
-      },
-      {
-        path: 'orders',
-        title: 'Orders | Expresso Seller',
-        loadComponent: () =>
-          import('./features/seller/orders/seller-orders').then((m) => m.SellerOrders),
-      },
-      {
-        path: 'profile',
-        title: 'Seller Profile | Expresso Seller',
-        loadComponent: () =>
-          import('./features/seller/seller-profile/seller-profile').then((m) => m.SellerProfile),
-      },
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
+          import('./shared/components/unauthorized/unauthorized').then((m) => m.Unauthorized),
       },
       {
         path: '**',
-        title: 'Not Found | Expresso',
+        title: 'Page Not Found | Expresso',
         loadComponent: () =>
           import('./shared/components/notfound/notfound').then((com) => com.Notfound),
       },
