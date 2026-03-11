@@ -120,8 +120,7 @@ export class SellerOrders implements OnInit {
   protected getProductImg(item: any): string {
     const p = item.productId;
     if (typeof p === 'object' && p?.images?.length) {
-      const img = p.images[0];
-      return img.startsWith('http') ? img : `http://localhost:3000/${img}`;
+      return p.images[0];
     }
     return '';
   }

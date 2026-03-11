@@ -63,7 +63,7 @@
                 <div class="flex items-center gap-3">
                   @if (product.images?.[0]) {
                     <img
-                      [src]="'http://localhost:3000/' + product.images[0]"
+                      [src]="product.images[0]"
                       [alt]="product.name"
                       class="w-11 h-11 rounded-xl object-cover bg-gray-100 border shrink-0"
                     />
