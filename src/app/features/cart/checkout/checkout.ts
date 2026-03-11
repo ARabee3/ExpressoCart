@@ -150,7 +150,7 @@ export class Checkout implements OnInit {
   cancelPendingPayment() {
     this.activeClientSecret.set(null);
     if (this.orderId && this.selectedPayment === 'Card') {
-      // Optionally cancel the order on backend as defined in flow
+  //if he cancel payment then cancel the order
       this.orderService.cancelOrder(this.orderId).subscribe({
         next: () => {
           this.toastService.success('Order payment cancelled successfully.');
