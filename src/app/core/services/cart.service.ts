@@ -58,9 +58,14 @@ export class CartService {
       .pipe(tap((res) => this.setCart(res.data)));
   }
 
-  // clear cart
+  // clear cart (API)
   clearCart(): Observable<CartResponse> {
     return this.api.delete<CartResponse>('cart').pipe(tap((res) => this.setCart(res.data)));
+  }
+
+  // reset cart signal locally (no API call) — used after a successful order
+  clearLocalCart(): void {
+    this.cart.set({ _id: '', items: [], totalPrice: 0, discountAmount: 0, finalPrice: 0 });
   }
 
   // apply coupon
