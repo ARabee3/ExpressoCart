@@ -48,19 +48,25 @@ export class AdminOrders implements OnInit {
   updatingStatus = signal<Order | null>(null);
   newStatus = signal<OrderStatus>('Processing');
   deletingOrder = signal<Order | null>(null);
+  currentPage = signal(1);
+  readonly perPage = 10;
 
-  // Client-side filter on current page
+  // Filter ALL orders by status
   filteredOrders = computed(() => {
-    const orders = this.admin.orders() ?? [];
+    const orders = this.admin.allOrders() ?? [];
     const status = this.statusFilter();
     if (!status) return orders;
     return orders.filter((o) => o.status === status);
   });
 
-  // Pagination
-  currentPage = computed(() => this.admin.ordersCurrentPage());
-  totalPages = computed(() => this.admin.ordersTotalPages());
-  totalOrders = computed(() => this.admin.ordersTotalCount());
+  // Pagination computed from filtered results
+  totalOrders = computed(() => this.filteredOrders().length);
+  totalPages = computed(() => Math.max(1, Math.ceil(this.filteredOrders().length / this.perPage)));
+
+  pagedOrders = computed(() => {
+    const start = (this.currentPage() - 1) * this.perPage;
+    return this.filteredOrders().slice(start, start + this.perPage);
+  });
 
   pageNumbers = computed(() => {
     const total = this.totalPages();
@@ -77,9 +83,13 @@ export class AdminOrders implements OnInit {
     this.admin.loadOrders();
   }
 
+  onFilterChange() {
+    this.currentPage.set(1);
+  }
+
   goToPage(page: number) {
     if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;
-    this.admin.loadOrders(page);
+    this.currentPage.set(page);
   }
 
   getStatusClass(status: string): string {
