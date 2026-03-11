@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 import { CheckoutStepperComponent } from './components/checkout-stepper/checkout-stepper.component';
 import { CheckoutShippingComponent } from './components/checkout-shipping/checkout-shipping.component';
@@ -28,6 +29,7 @@ export class Checkout implements OnInit {
   private orderService = inject(OrderService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   currentStep = 1;
   orderId = '';
@@ -86,23 +88,24 @@ export class Checkout implements OnInit {
         this.orderId = orderId;
 
         if (this.selectedPayment === 'Cash') {
-          this.orderService.payCash(orderId).subscribe({
-            next: () => this.handleSuccess(orderId),
-            error: () => this.handleError()
-          });
+          // For Cash flow, order is successfully placed and marked as Processing by backend
+          this.handleSuccess(orderId);
         } else if (this.selectedPayment === 'Card') {
+          // For Card flow, need to generate a payment intent
           this.orderService.payCard(orderId).subscribe({
             next: (payRes) => {
               this.isPlacingOrder.set(false);
               this.activeClientSecret.set(payRes.clientSecret);
             },
-            error: () => this.handleError()
+            error: (err) => this.handleError(err)
           });
         }
       },
-      error: () => this.handleError()
+      error: (err) => this.handleError(err)
     });
   }
+
+
 
   handleSuccess(orderId: string) {
     this.isPlacingOrder.set(false);
@@ -110,8 +113,52 @@ export class Checkout implements OnInit {
     this.router.navigate(['/checkout/success'], { queryParams: { orderId } });
   }
 
-  handleError(msg?: string) {
+  handleError(err?: any) {
     this.isPlacingOrder.set(false);
-    console.error('Failed to place order.', msg);
+
+    let msg = 'Failed to place order.';
+    const errorMsg = err?.error?.message;
+
+    if (errorMsg) {
+      msg = errorMsg;
+      if (msg.includes('already has a placed order')) {
+        this.toastService.error('You already have an order from this cart.');
+        setTimeout(() => this.router.navigate(['/profile/orders']), 2000);
+        return;
+      }
+      if (msg.includes('pending card order')) {
+        const confirmed = window.confirm('You have a pending card order waiting for payment. Do you want to go to your orders page to complete or cancel it?');
+        if (confirmed) {
+          this.router.navigate(['/profile/orders']);
+        }
+        return;
+      }
+      if (msg.includes('Cart not found') || msg.includes('Cart is empty')) {
+        this.toastService.error(msg);
+        this.router.navigate(['/shop']);
+        return;
+      }
+      if (msg.includes('Insufficient stock')) {
+        this.toastService.error(msg);
+        return;
+      }
+    }
+
+    this.toastService.error(msg);
+  }
+
+  cancelPendingPayment() {
+    this.activeClientSecret.set(null);
+    if (this.orderId && this.selectedPayment === 'Card') {
+      // Optionally cancel the order on backend as defined in flow
+      this.orderService.cancelOrder(this.orderId).subscribe({
+        next: () => {
+          this.toastService.success('Order payment cancelled successfully.');
+        },
+        error: () => {
+          this.toastService.error('Failed to cancel the pending order.');
+        }
+      });
+    }
   }
 }

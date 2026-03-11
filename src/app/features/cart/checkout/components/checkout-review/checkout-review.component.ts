@@ -8,7 +8,7 @@ import { CheckoutPaymentService } from '../../../../../core/services/cardPayment
     imports: [CommonModule],
     templateUrl: './checkout-review.component.html'
 })
-export class CheckoutReviewComponent implements OnChanges,OnDestroy {
+export class CheckoutReviewComponent implements OnChanges, OnDestroy {
     private cartService = inject(CartService);
     private cardPaymentService = inject(CheckoutPaymentService);
 
@@ -58,7 +58,7 @@ export class CheckoutReviewComponent implements OnChanges,OnDestroy {
         try {
             const result = await this.cardPaymentService.confirmPayment(this.stripeElements, this.orderId);
 
-             if (result.error) {
+            if (result.error) {
                 this.stripeError.set(result.error.message);
                 this.isConfirmingPayment.set(false);
                 this.paymentError.emit(result.error.message);

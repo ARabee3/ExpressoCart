@@ -29,7 +29,7 @@
             <app-checkout-review [resolvedAddress]="resolvedAddressFormatted" [selectedPayment]="selectedPayment"
                 [isPlacingOrder]="isPlacingOrder()" [clientSecret]="activeClientSecret()" [orderId]="orderId"
                 (backStep)="goStep(2)" (placeOrder)="placeOrder()" (paymentSuccess)="handleSuccess($event)"
-                (paymentError)="handleError($event)" (cancelPayment)="activeClientSecret.set(null)">
+                (paymentError)="handleError($event)" (cancelPayment)="cancelPendingPayment()">
             </app-checkout-review>
             }
         </div>
