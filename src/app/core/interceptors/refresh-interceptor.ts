@@ -1,39 +1,65 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, switchMap, throwError, BehaviorSubject, filter, take } from 'rxjs';
 import { AuthApi } from '../services/auth-api';
 import { AuthState } from '../services/auth-state';
 import { Router } from '@angular/router';
+
+let isRefreshing = false;
+let refreshTokens = new BehaviorSubject<string | null>(null);
 
 export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
   const authApi = inject(AuthApi);
   const authState = inject(AuthState);
   const router = inject(Router);
+
+  const isAuthPath =
+    req.url.includes('login') ||
+    req.url.includes('forgot-password') ||
+    req.url.includes('reset-password') ||
+    req.url.includes('register') ||
+    req.url.includes('verify-email') ||
+    req.url.includes('logout');
+
   return next(req).pipe(
     catchError((error) => {
-      const isAuthPath =
-        req.url.includes('login') ||
-        req.url.includes('forgot-password') ||
-        req.url.includes('reset-password') ||
-        req.url.includes('register') ||
-        req.url.includes('verify-email') ||
-        req.url.includes('logout');
-
       if (error.status === 401 && !req.url.includes('refresh') && !isAuthPath) {
+        // ── If already refreshing, WAIT for new token then retry
+        if (isRefreshing) {
+          return refreshTokens.pipe(
+            filter((token) => token !== null),
+            take(1),
+            switchMap((token) => {
+              return next(
+                req.clone({
+                  setHeaders: { Authorization: `Bearer ${token}` },
+                }),
+              );
+            }),
+          );
+        }
+        // ── Start refreshing
+        isRefreshing = true;
+        refreshTokens.next(null); // block other requests
+
         return authApi.refresh().pipe(
           switchMap((res: any) => {
             const newToken = res.data;
             authState.setToken(newToken);
+            isRefreshing = false;
+            refreshTokens.next(newToken); // unblock waiting requests
 
-            const newReq = req.clone({
-              setHeaders: {
-                Authorization: `Bearer ${newToken}`,
-              },
-            });
-
-            return next(newReq);
+            // retry original request with new token
+            return next(
+              req.clone({
+                setHeaders: { Authorization: `Bearer ${newToken}` },
+              }),
+            );
           }),
+
           catchError((refreshErr) => {
+            isRefreshing = false;
+            refreshTokens.next(null);
             authState.clear();
             router.navigate(['/auth/login']);
             return throwError(() => refreshErr);
