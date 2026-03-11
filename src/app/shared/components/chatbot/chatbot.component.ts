@@ -7,57 +7,59 @@ import { MarkdownModule } from 'ngx-markdown';
 import { RouterLink } from '@angular/router';
 
 @Component({
-    selector: 'app-chatbot',
-    imports: [CommonModule, FormsModule, ScrollToBottomDirective, MarkdownModule, RouterLink],
-    templateUrl: './chatbot.component.html',
-    styleUrl: './chatbot.component.scss',
+  selector: 'app-chatbot',
+  imports: [CommonModule, FormsModule, ScrollToBottomDirective, MarkdownModule, RouterLink],
+  templateUrl: './chatbot.component.html',
+  styleUrl: './chatbot.component.scss',
 })
 export class ChatbotComponent {
-    chatService = inject(ChatbotService);
+  chatService = inject(ChatbotService);
 
-    isExpanded = signal<boolean>(false);
-    userInput = '';
-    newMessagesCount = signal<number>(0);
+  isExpanded = signal<boolean>(false);
+  userInput = '';
+  newMessagesCount = signal<number>(0);
 
-    suggestions = [
-        'Track my last order',
-        'Find laptops under 2000',
-        'Show my order history'
-    ];
+  suggestions = [
+    "What's in my cart?",
+    'Show sofa recommendations',
+    'Find beds under $20,000',
+    'Best bedroom furniture',
+    'Track my last order',
+  ];
 
-    isConfirmingClear = signal<boolean>(false);
+  isConfirmingClear = signal<boolean>(false);
 
-    toggleChat() {
-        this.isExpanded.update(v => !v);
-        if (this.isExpanded()) {
-            this.newMessagesCount.set(0);
-        }
+  toggleChat() {
+    this.isExpanded.update((v) => !v);
+    if (this.isExpanded()) {
+      this.newMessagesCount.set(0);
     }
+  }
 
-    sendMessage() {
-        if (!this.userInput.trim() || this.chatService.isLoading()) return;
+  sendMessage() {
+    if (!this.userInput.trim() || this.chatService.isLoading()) return;
 
-        const message = this.userInput;
-        this.userInput = '';
+    const message = this.userInput;
+    this.userInput = '';
 
-        this.chatService.sendMessage(message).subscribe();
-    }
+    this.chatService.sendMessage(message).subscribe();
+  }
 
-    sendQuickMessage(message: string) {
-        this.userInput = message;
-        this.sendMessage();
-    }
+  sendQuickMessage(message: string) {
+    this.userInput = message;
+    this.sendMessage();
+  }
 
-    triggerClearHistory() {
-        this.isConfirmingClear.set(true);
-    }
+  triggerClearHistory() {
+    this.isConfirmingClear.set(true);
+  }
 
-    confirmClear() {
-        this.chatService.clearHistory();
-        this.isConfirmingClear.set(false);
-    }
+  confirmClear() {
+    this.chatService.clearHistory();
+    this.isConfirmingClear.set(false);
+  }
 
-    cancelClear() {
-        this.isConfirmingClear.set(false);
-    }
+  cancelClear() {
+    this.isConfirmingClear.set(false);
+  }
 }
