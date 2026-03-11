@@ -74,7 +74,20 @@ export class Login implements OnInit {
         this.toast.success('Login successful');
         //navigate base role
         if (role === 'Seller') {
-          this.router.navigate(['/seller/dashboard']);
+          this.authApi.getMe().subscribe({
+            next: (meRes: any) => {
+              if (meRes?.data?.isApproved) {
+                this.router.navigate(['/seller/dashboard']);
+              } else {
+                this.router.navigate(['/seller/pending']);
+              }
+              this.loading.set(false);
+            },
+            error: () => {
+              this.router.navigate(['/seller/pending']);
+              this.loading.set(false);
+            },
+          });
         } else if (role === 'Customer') {
           this.router.navigate(['/']);
           this.loading.set(false);
@@ -115,13 +128,26 @@ export class Login implements OnInit {
         const role = this.authState.role();
         if (role === 'Admin') {
           this.router.navigate(['/admin/dashboard']);
+          this.loading.set(false);
         } else if (role === 'Seller') {
-          this.router.navigate(['/seller/dashboard']);
+          this.authApi.getMe().subscribe({
+            next: (meRes: any) => {
+              if (meRes?.data?.isApproved) {
+                this.router.navigate(['/seller/dashboard']);
+              } else {
+                this.router.navigate(['/seller/pending']);
+              }
+              this.loading.set(false);
+            },
+            error: () => {
+              this.router.navigate(['/seller/pending']);
+              this.loading.set(false);
+            },
+          });
         } else {
           this.router.navigate(['/']);
+          this.loading.set(false);
         }
-
-        this.loading.set(false);
       },
 
       error: (err) => {

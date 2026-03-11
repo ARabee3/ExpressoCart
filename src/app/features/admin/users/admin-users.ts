@@ -53,6 +53,7 @@ export class AdminUsers implements OnInit {
   searchQuery = signal('');
   roleFilter = signal<UserRole | ''>('');
   statusFilter = signal<'all' | 'active' | 'deleted'>('all');
+  sortField = signal<'newest' | 'name' | 'role'>('newest');
   deletingUser = signal<User | null>(null);
   restoringUser = signal<User | null>(null);
   viewingUser = signal<User | null>(null);
@@ -65,9 +66,11 @@ export class AdminUsers implements OnInit {
   /** Whether we're in filtered mode (showing client-side results across all users) */
   isFiltering = computed(
     () =>
+      this.admin.allUsers() !== null || // once all users loaded, always use client-side path
       this.searchQuery().trim().length > 0 ||
       this.roleFilter() !== '' ||
-      this.statusFilter() !== 'all',
+      this.statusFilter() !== 'all' ||
+      this.sortField() !== 'newest',
   );
 
   constructor() {
@@ -87,7 +90,7 @@ export class AdminUsers implements OnInit {
     const query = this.searchQuery().toLowerCase().trim();
     const role = this.roleFilter();
     const status = this.statusFilter();
-    return allUsers.filter((u) => {
+    const filtered = allUsers.filter((u) => {
       const matchesQuery =
         !query || u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query);
       const matchesRole = !role || u.role === role;
@@ -97,6 +100,7 @@ export class AdminUsers implements OnInit {
         (status === 'deleted' && u.isDeleted);
       return matchesQuery && matchesRole && matchesStatus;
     });
+    return this.applySort(filtered);
   });
 
   // Paginated view of the current page (non-search mode)
@@ -104,7 +108,7 @@ export class AdminUsers implements OnInit {
     const users = this.admin.users() ?? [];
     const role = this.roleFilter();
     const status = this.statusFilter();
-    return users.filter((u) => {
+    const filtered = users.filter((u) => {
       const matchesRole = !role || u.role === role;
       const matchesStatus =
         status === 'all' ||
@@ -112,7 +116,18 @@ export class AdminUsers implements OnInit {
         (status === 'deleted' && u.isDeleted);
       return matchesRole && matchesStatus;
     });
+    return this.applySort(filtered);
   });
+
+  private applySort(users: User[]): User[] {
+    const sort = this.sortField();
+    const newestOf = (u: User) => parseInt(u._id.substring(0, 8), 16);
+    return [...users].sort((a, b) => {
+      if (sort === 'name') return a.name.localeCompare(b.name);
+      if (sort === 'role') return a.role.localeCompare(b.role);
+      return newestOf(b) - newestOf(a); // newest first
+    });
+  }
 
   // Client-side pagination for search results
   readonly searchItemsPerPage = 10;
@@ -165,6 +180,7 @@ export class AdminUsers implements OnInit {
 
   ngOnInit(): void {
     this.admin.loadUsers();
+    this.admin.loadAllUsers(); // pre-load for client-side sort/filter
   }
 
   // --- Search & filter handlers ---
@@ -187,6 +203,12 @@ export class AdminUsers implements OnInit {
     this.searchPage.set(1);
     // Load all users for client-side filtering if a filter is active
     if (value !== 'all') this.admin.loadAllUsers();
+  }
+
+  onSortChange(value: 'newest' | 'name' | 'role') {
+    this.sortField.set(value);
+    this.searchPage.set(1);
+    this.admin.loadAllUsers();
   }
 
   goToPage(page: number) {

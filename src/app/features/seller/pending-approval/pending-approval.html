@@ -1,0 +1,139 @@
+<div class="flex items-center justify-center px-4 py-16">
+  <div class="max-w-md w-full text-center">
+    <!-- Icon -->
+    <div class="flex justify-center mb-6">
+      <div class="w-24 h-24 rounded-full bg-amber-100 flex items-center justify-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-12 h-12 text-amber-500"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Heading -->
+    <h1 class="text-2xl font-bold text-brand-primary mb-3">Your account is pending approval</h1>
+    <p class="text-brand-primary/60 text-sm leading-relaxed mb-8">
+      Your seller account has been created and is currently under review by our team. You'll receive
+      a notification once it's approved — this usually takes up to 24 hours.
+    </p>
+
+    <!-- Steps -->
+    <div class="bg-white border border-gray-100 rounded-2xl p-6 text-left mb-8 space-y-4 shadow-sm">
+      <div class="flex items-start gap-3">
+        <div
+          class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center shrink-0 mt-0.5"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="w-3.5 h-3.5 text-green-600"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-brand-primary">Account created</p>
+          <p class="text-xs text-brand-primary/50">Your seller account has been registered.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <div
+          class="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center shrink-0 mt-0.5"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="w-3.5 h-3.5 text-amber-600"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-amber-700">Awaiting admin review</p>
+          <p class="text-xs text-brand-primary/50">Our team is reviewing your application.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <div
+          class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center shrink-0 mt-0.5"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="w-3.5 h-3.5 text-gray-400"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-brand-primary/40">Access granted</p>
+          <p class="text-xs text-brand-primary/30">
+            You'll get full access to the seller dashboard.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <button
+        (click)="checkStatus()"
+        [disabled]="checking()"
+        class="px-6 py-3 bg-brand-primary text-white text-sm font-medium rounded-xl hover:bg-brand-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        @if (checking()) {
+          <svg
+            class="animate-spin w-4 h-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+          </svg>
+          Checking...
+        } @else {
+          Check Approval Status
+        }
+      </button>
+      <button
+        (click)="logout()"
+        class="px-6 py-3 bg-white border border-gray-200 text-brand-primary text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
+      >
+        Sign Out
+      </button>
+    </div>
+  </div>
+</div>

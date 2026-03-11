@@ -75,6 +75,15 @@
     <option value="active">Active Only</option>
     <option value="deleted">Deleted Only</option>
   </select>
+  <select
+    [ngModel]="sortField()"
+    (ngModelChange)="onSortChange($event)"
+    class="px-4 py-2.5 border rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black"
+  >
+    <option value="newest">Newest First</option>
+    <option value="name">Name A → Z</option>
+    <option value="role">Group by Role</option>
+  </select>
 </div>
 
 <!-- Users Table -->
