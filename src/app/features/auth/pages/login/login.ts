@@ -64,16 +64,21 @@ export class Login implements OnInit {
 
         const role = this.authState.role();
         // Block Admins and Sellers from using Google Sign-In
-        if (role === 'Admin' || role === 'Seller') {
-          this.authState.clear(); 
+        if (role === 'Admin') {
+          this.authState.clear();
           this.toast.error('Please use email and password to sign in.');
           this.loading.set(false);
           return;
         }
         localStorage.removeItem('guest_session_id');
         this.toast.success('Login successful');
-      this.router.navigate(['/']);       
-       this.loading.set(false);
+        //navigate base role
+        if (role === 'Seller') {
+          this.router.navigate(['/seller/dashboard']);
+        } else if (role === 'Customer') {
+          this.router.navigate(['/']);
+          this.loading.set(false);
+        }
       },
       error: (err) => {
         console.error('Google Login Error:', err);
