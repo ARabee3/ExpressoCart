@@ -46,4 +46,6 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+!.env.production
 FULL_API_DOCUMENTATION.md
+.vercel

@@ -1,0 +1,11 @@
+{
+  "buildCommand": "NG_APP_API_URL=https://express-e-commerce-xi.vercel.app npm run build",
+  "outputDirectory": "dist/ExpressoCart/browser",
+  "framework": null,
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "build": {
+    "env": {
+      "NG_APP_API_URL": "https://express-e-commerce-xi.vercel.app"
+    }
+  }
+}
