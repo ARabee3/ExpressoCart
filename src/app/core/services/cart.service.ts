@@ -6,9 +6,8 @@ import { inject } from '@angular/core';
 import { ApiService } from './api.service';
 @Injectable({ providedIn: 'root' })
 export class CartService {
-
   //using in integration with backend
-    private api = inject(ApiService);
+  private api = inject(ApiService);
 
   // Expose reactive cart state
   cart = signal<CartData>({
@@ -19,22 +18,17 @@ export class CartService {
     finalPrice: 0,
   });
 
-
   // integration with backend
   // helper fun
   private setCart(data: CartData): void {
-  this.cart.set({
-    ...data,
-    items: data.items.filter((item: any) => !item.isDeleted)
-  });
-}
-  //  get cart 
+    this.cart.set({
+      ...data,
+      items: data.items.filter((item: any) => !item.isDeleted),
+    });
+  }
+  //  get cart
   getCart(): Observable<CartResponse> {
-    return this.api.get<CartResponse>('cart').pipe(
-      tap((res) => {
-         console.log('GET CART RESPONSE:', res.data);
-       this.setCart(res.data)}),
-    );
+    return this.api.get<CartResponse>('cart').pipe(tap((res) => this.setCart(res.data)));
   }
 
   //add item to cart
@@ -52,36 +46,32 @@ export class CartService {
 
   // update item quantity
   updateQuantity(itemId: string, quantity: number): Observable<CartResponse> {
-    return this.api.patch<CartResponse>(`cart/items/${itemId}`, { quantity }).pipe(
-      tap((res) => this.setCart(res.data)),
-    );
+    return this.api
+      .patch<CartResponse>(`cart/items/${itemId}`, { quantity })
+      .pipe(tap((res) => this.setCart(res.data)));
   }
 
   // remove item from cart
   removeFromCart(productId: string): Observable<CartResponse> {
-    return this.api.delete<CartResponse>(`cart/items/${productId}`).pipe(
-      tap((res) =>this.setCart(res.data)),
-    );
+    return this.api
+      .delete<CartResponse>(`cart/items/${productId}`)
+      .pipe(tap((res) => this.setCart(res.data)));
   }
 
   // clear cart
   clearCart(): Observable<CartResponse> {
-    return this.api.delete<CartResponse>('cart').pipe(
-      tap((res) => this.setCart(res.data)),
-    );
+    return this.api.delete<CartResponse>('cart').pipe(tap((res) => this.setCart(res.data)));
   }
 
   // apply coupon
   applyCoupon(couponCode: string): Observable<CartResponse> {
-    return this.api.post<CartResponse>('cart/coupon', { couponCode }).pipe(
-      tap((res) => this.setCart(res.data)),
-    );
+    return this.api
+      .post<CartResponse>('cart/coupon', { couponCode })
+      .pipe(tap((res) => this.setCart(res.data)));
   }
 
   // remove coupon
   removeCoupon(): Observable<CartResponse> {
-    return this.api.delete<CartResponse>('cart/coupon').pipe(
-      tap((res) => this.setCart(res.data)),
-    );
+    return this.api.delete<CartResponse>('cart/coupon').pipe(tap((res) => this.setCart(res.data)));
   }
 }
