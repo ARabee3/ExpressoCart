@@ -6,6 +6,7 @@ import { AuthState } from '../services/auth-state';
 import { Router } from '@angular/router';
 
 let isRefreshing = false;
+// null = not started, '' = failed (sentinel), any string = new token
 let refreshTokens = new BehaviorSubject<string | null>(null);
 
 export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
@@ -27,9 +28,12 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
         // ── If already refreshing, WAIT for new token then retry
         if (isRefreshing) {
           return refreshTokens.pipe(
+            // pass through both success tokens AND the failure sentinel ('')
             filter((token) => token !== null),
             take(1),
             switchMap((token) => {
+              // Empty string is a failure sentinel — propagate as error
+              if (!token) return throwError(() => error);
               return next(
                 req.clone({
                   setHeaders: { Authorization: `Bearer ${token}` },
@@ -59,6 +63,9 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
 
           catchError((refreshErr) => {
             isRefreshing = false;
+            // Emit empty string sentinel so queued requests unblock with an error
+            refreshTokens.next('');
+            // Reset back to null for next cycle
             refreshTokens.next(null);
             authState.clear();
             router.navigate(['/auth/login']);

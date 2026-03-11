@@ -14,23 +14,28 @@ export class ApiService {
     params?:
       | HttpParams
       | { [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean> },
+    headers?: HttpHeaders,
   ): Observable<T> {
-    return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params });
+    return this.http.get<T>(`${this.baseUrl}/${endpoint}`, {
+      params,
+      headers,
+      withCredentials: true,
+    });
   }
 
   post<T>(endpoint: string, body: any): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body);
+    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body, { withCredentials: true });
   }
 
   put<T>(endpoint: string, body: any): Observable<T> {
-    return this.http.put<T>(`${this.baseUrl}/${endpoint}`, body);
+    return this.http.put<T>(`${this.baseUrl}/${endpoint}`, body, { withCredentials: true });
   }
 
   patch<T>(endpoint: string, body: any): Observable<T> {
-    return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, body);
+    return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, body, { withCredentials: true });
   }
 
   delete<T>(endpoint: string): Observable<T> {
-    return this.http.delete<T>(`${this.baseUrl}/${endpoint}`);
+    return this.http.delete<T>(`${this.baseUrl}/${endpoint}`, { withCredentials: true });
   }
 }
