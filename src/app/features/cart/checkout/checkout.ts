@@ -43,7 +43,7 @@ export class Checkout implements OnInit {
   selectedPayment = '';
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       const orderId = params['orderId'];
       const status = params['payment_intent_status'] || params['status'];
       const success = params['success'];
@@ -54,7 +54,7 @@ export class Checkout implements OnInit {
     });
   }
 
-  onShippingNext(event: { address: any, formatted: string }) {
+  onShippingNext(event: { address: any; formatted: string }) {
     this.resolvedAddressObj = event.address;
     this.resolvedAddressFormatted = event.formatted;
     this.currentStep = 2;
@@ -79,7 +79,7 @@ export class Checkout implements OnInit {
     const orderData = {
       cartId: cartId,
       shippingAddress: this.resolvedAddressObj,
-      paymentMethod: this.selectedPayment
+      paymentMethod: this.selectedPayment,
     };
 
     this.orderService.createOrder(orderData).subscribe({
@@ -91,25 +91,29 @@ export class Checkout implements OnInit {
           // For Cash flow, order is successfully placed and marked as Processing by backend
           this.handleSuccess(orderId);
         } else if (this.selectedPayment === 'Card') {
+          // If the order is fully covered by a coupon, skip Stripe (amount = 0 is rejected)
+          if (res.data.finalPrice === 0) {
+            this.handleSuccess(orderId);
+            return;
+          }
           // For Card flow, need to generate a payment intent
           this.orderService.payCard(orderId).subscribe({
             next: (payRes) => {
               this.isPlacingOrder.set(false);
               this.activeClientSecret.set(payRes.clientSecret);
             },
-            error: (err) => this.handleError(err)
+            error: (err) => this.handleError(err),
           });
         }
       },
-      error: (err) => this.handleError(err)
+      error: (err) => this.handleError(err),
     });
   }
-
-
 
   handleSuccess(orderId: string) {
     this.isPlacingOrder.set(false);
     this.activeClientSecret.set(null);
+    this.cartService.clearLocalCart();
     this.router.navigate(['/checkout/success'], { queryParams: { orderId } });
   }
 
@@ -153,14 +157,14 @@ export class Checkout implements OnInit {
   cancelPendingPayment() {
     this.activeClientSecret.set(null);
     if (this.orderId && this.selectedPayment === 'Card') {
-  //if he cancel payment then cancel the order
+      //if he cancel payment then cancel the order
       this.orderService.cancelOrder(this.orderId).subscribe({
         next: () => {
           this.toastService.success('Order payment cancelled successfully.');
         },
         error: () => {
           this.toastService.error('Failed to cancel the pending order.');
-        }
+        },
       });
     }
   }
