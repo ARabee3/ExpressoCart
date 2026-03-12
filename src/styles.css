@@ -1,19 +1,53 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Colors from your design template */
-  --color-brand-primary: #000000; /* Main black UI */
-  --color-brand-secondary: #f0f0f0; /* Light grey backgrounds */
-  --color-brand-accent: #00466a; /* Your email accent color for links */
+  /* ─── Base palette (Default theme) ───────────────────────────────────────── */
+  --color-brand-primary: #000000; /* Main text / icon color */
+  --color-brand-secondary: #f0f0f0; /* Page / section background */
+  --color-brand-accent: #00466a; /* Accent: buttons, links, badges */
+  --color-brand-footer: #111827; /* Always-dark footer */
+  --color-brand-surface: #ffffff; /* Elevated surfaces: cards, dropdowns */
 
   /* Modern font stack for an e-commerce feel */
   --font-heading: 'Integral CF', 'Helvetica', sans-serif;
   --font-body: 'Satoshi', 'Helvetica', sans-serif;
 }
 
+/* ─── Theme overrides ──────────────────────────────────────────────────────── */
+/* Default theme: no override needed — @theme values are the default */
+
+/* ─── Dark (Vercel / Linear-inspired) ────────────────────────────────────── */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-brand-primary: #fafafa; /* Zinc-50  – crisp white text */
+  --color-brand-secondary: #09090b; /* Zinc-950 – deep dark background */
+  --color-brand-accent: #6366f1; /* Indigo-500 – vibrant modern accent */
+  --color-brand-footer: #020202; /* True-black footer */
+  --color-brand-surface: #18181b; /* Zinc-900 – elevated cards & dropdowns */
+}
+
+/* ─── Light (Stripe / Apple-inspired) ────────────────────────────────────── */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-brand-primary: #09090b; /* Zinc-950 – crisp dark text */
+  --color-brand-secondary: #f4f4f5; /* Zinc-100 – warm off-white */
+  --color-brand-accent: #6366f1; /* Indigo-500 – vibrant modern accent */
+  --color-brand-footer: #18181b; /* Zinc-900 – premium dark footer */
+  --color-brand-surface: #ffffff; /* Pure white surfaces */
+}
+
+:root[data-theme='creamy'] {
+  --color-brand-primary: #3d2b1f;
+  --color-brand-secondary: #fdf6e3;
+  --color-brand-accent: #7c5c1e;
+  --color-brand-footer: #2c1a0e;
+  --color-brand-surface: #fffbf3; /* Warm parchment surfaces */
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-brand-secondary);
+  overflow-x: hidden;
 }
 
 h1,
@@ -51,4 +85,15 @@ h3 {
 
 .animate-page-enter {
   animation: page-fade-in 0.5s ease-out forwards;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

@@ -6,8 +6,15 @@ export interface ShippingAddress {
   city: string;
   state?: string;
 }
+export interface PopulatedProduct {
+  _id: string;
+  name: string;
+  price: number;
+  images: string[];
+  sellerId?: { _id: string; name: string; storeName: string };
+}
 export interface OrderItem {
-  productId: string;
+  productId: PopulatedProduct | string;
   productTitle: string;
   productImg: string;
   price: number;
