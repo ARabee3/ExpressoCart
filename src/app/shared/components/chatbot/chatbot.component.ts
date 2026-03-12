@@ -4,16 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { ChatbotService } from '../../../core/services/chatbot.service';
 import { ScrollToBottomDirective } from '../../directives/scroll-to-bottom.directive';
 import { MarkdownModule } from 'ngx-markdown';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chatbot',
-  imports: [CommonModule, FormsModule, ScrollToBottomDirective, MarkdownModule, RouterLink],
+  imports: [CommonModule, FormsModule, ScrollToBottomDirective, MarkdownModule],
   templateUrl: './chatbot.component.html',
   styleUrl: './chatbot.component.scss',
 })
 export class ChatbotComponent {
   chatService = inject(ChatbotService);
+  private router = inject(Router);
 
   isExpanded = signal<boolean>(false);
   userInput = '';
@@ -61,5 +62,10 @@ export class ChatbotComponent {
 
   cancelClear() {
     this.isConfirmingClear.set(false);
+  }
+
+  navigateToProduct(productId: string) {
+    this.isExpanded.set(false);
+    this.router.navigate(['/products', productId]);
   }
 }
