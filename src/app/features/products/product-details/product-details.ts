@@ -97,7 +97,10 @@ export class ProductDetails implements OnInit {
             (order) =>
               (order.status === 'Delivered' || order.status === 'Shipped') &&
               order.orderItems.some((item) => {
-                const id = typeof item.productId === 'object' ? item.productId._id : item.productId;
+                const id =
+                  item.productId && typeof item.productId === 'object'
+                    ? item.productId._id
+                    : item.productId;
                 return id === productId;
               }),
           );
