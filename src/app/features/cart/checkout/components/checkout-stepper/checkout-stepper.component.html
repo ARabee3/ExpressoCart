@@ -1,8 +1,8 @@
 <div
-    class="flex items-center bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.06)] px-6 py-4 mb-8 overflow-x-auto gap-0">
+    class="flex items-center bg-brand-surface rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.06)] px-6 py-4 mb-8 overflow-x-auto gap-0">
     <!-- step 1 -->
     <div class="flex items-center gap-2.5 shrink-0">
-        <div [ngClass]="currentStep > 1 ? 'bg-green-600 border-green-600 text-white' : currentStep === 1 ? 'bg-brand-primary text-white border-brand-primary' : 'border-gray-200 text-gray-400'"
+        <div [ngClass]="currentStep > 1 ? 'bg-green-600 border-green-600 text-white' : currentStep === 1 ? 'bg-brand-primary text-white border-brand-primary' : 'border-brand-primary/10 text-brand-primary/40'"
             class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-[0.8rem] font-bold transition-all duration-300">
             @if (currentStep > 1) {
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -13,19 +13,19 @@
             } @else { 1 }
         </div>
         <span
-            [ngClass]="currentStep === 1 ? 'text-[#1a1a2e] font-semibold' : currentStep > 1 ? 'text-green-600' : 'text-gray-400'"
+            [ngClass]="currentStep === 1 ? 'text-brand-primary font-semibold' : currentStep > 1 ? 'text-green-600' : 'text-brand-primary/40'"
             class="text-[0.85rem] font-medium whitespace-nowrap transition-colors duration-300">
             Shipping
         </span>
     </div>
 
     <!-- divider 1 -->
-    <div [ngClass]="currentStep > 1 ? 'bg-green-600' : 'bg-gray-200'"
+    <div [ngClass]="currentStep > 1 ? 'bg-green-600' : 'bg-brand-primary/20'"
         class="flex-1 h-0.5 mx-3 min-w-[24px] transition-colors duration-300"></div>
 
     <!-- step 2 -->
     <div class="flex items-center gap-2.5 shrink-0">
-        <div [ngClass]="currentStep > 2 ? 'bg-green-600 border-green-600 text-white' : currentStep === 2 ? 'bg-brand-primary text-white border-brand-primary' : 'border-gray-200 text-gray-400'"
+        <div [ngClass]="currentStep > 2 ? 'bg-green-600 border-green-600 text-white' : currentStep === 2 ? 'bg-brand-primary text-white border-brand-primary' : 'border-brand-primary/10 text-brand-primary/40'"
             class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-[0.8rem] font-bold transition-all duration-300">
             @if (currentStep > 2) {
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -36,23 +36,23 @@
             } @else { 2 }
         </div>
         <span
-            [ngClass]="currentStep === 2 ? 'text-[#1a1a2e] font-semibold' : currentStep > 2 ? 'text-green-600' : 'text-gray-400'"
+            [ngClass]="currentStep === 2 ? 'text-brand-primary font-semibold' : currentStep > 2 ? 'text-green-600' : 'text-brand-primary/40'"
             class="text-[0.85rem] font-medium whitespace-nowrap transition-colors duration-300">
             Payment
         </span>
     </div>
 
     <!-- divider 2 -->
-    <div [ngClass]="currentStep > 2 ? 'bg-green-600' : 'bg-gray-200'"
+    <div [ngClass]="currentStep > 2 ? 'bg-green-600' : 'bg-brand-primary/20'"
         class="flex-1 h-0.5 mx-3 min-w-[24px] transition-colors duration-300"></div>
 
     <!-- step 3 -->
     <div class="flex items-center gap-2.5 shrink-0">
-        <div [ngClass]="currentStep === 3 ? 'bg-brand-primary text-white border-brand-primary' : 'border-gray-200 text-gray-400'"
+        <div [ngClass]="currentStep === 3 ? 'bg-brand-primary text-white border-brand-primary' : 'border-brand-primary/10 text-brand-primary/40'"
             class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-[0.8rem] font-bold transition-all duration-300">
             3
         </div>
-        <span [ngClass]="currentStep === 3 ? 'text-[#1a1a2e] font-semibold' : 'text-gray-400'"
+        <span [ngClass]="currentStep === 3 ? 'text-brand-primary font-semibold' : 'text-brand-primary/40'"
             class="text-[0.85rem] font-medium whitespace-nowrap transition-colors duration-300">
             Review
         </span>

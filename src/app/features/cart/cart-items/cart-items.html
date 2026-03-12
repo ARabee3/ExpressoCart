@@ -1,8 +1,8 @@
 @if (items().length === 0) {
 <!-- Empty State -->
 <div class="flex flex-col items-center justify-center py-20 text-center">
-  <div class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-    <svg class="size-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+  <div class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-brand-primary/10">
+    <svg class="size-10 text-brand-primary/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
       <path stroke-linecap="round" stroke-linejoin="round"
         d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
     </svg>
@@ -20,7 +20,7 @@
 <div class="divide-y divide-gray-100">
   @for (item of items(); track item._id) {
   <div
-    class="grid grid-cols-[4.5rem_1fr_auto] md:flex md:items-center gap-3 md:gap-4 py-5 group border-b border-gray-100 last:border-0">
+    class="grid grid-cols-[4.5rem_1fr_auto] md:flex md:items-center gap-3 md:gap-4 py-5 group border-b border-brand-primary/5 last:border-0">
     <!-- Product Image -->
     <a [routerLink]="['/products', item.productId._id]"
       class="shrink-0 w-18 h-18 md:w-20 md:h-20 rounded-xl overflow-hidden bg-brand-secondary block">
@@ -57,9 +57,9 @@
     <div
       class="col-start-2 col-span-2 md:col-start-auto md:col-span-1 flex items-center justify-between md:justify-end gap-2 md:gap-8 mt-2 md:mt-0">
       <!-- quantity controls -->
-      <div class="flex items-center border border-gray-200 rounded-full bg-gray-50 overflow-hidden h-8 md:h-9 shrink-0">
+      <div class="flex items-center border border-brand-primary/10 rounded-full bg-brand-primary/5 overflow-hidden h-8 md:h-9 shrink-0">
         <button (click)="onDecrement(item._id, item.quantity)" [disabled]="item.quantity <= 1"
-          class="w-8 md:w-9 h-full flex items-center justify-center text-brand-primary/60 hover:bg-gray-100 hover:text-brand-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          class="w-8 md:w-9 h-full flex items-center justify-center text-brand-primary/60 hover:bg-brand-primary/10 hover:text-brand-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="Decrease quantity">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
             stroke="currentColor" class="size-3">
@@ -70,7 +70,7 @@
           {{ item.quantity }}
         </span>
         <button (click)="onIncrement(item._id, item.quantity)" [disabled]="item.quantity >= item.productId.stock"
-          class="w-8 md:w-9 h-full flex items-center justify-center text-brand-primary/60 hover:bg-gray-100 hover:text-brand-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          class="w-8 md:w-9 h-full flex items-center justify-center text-brand-primary/60 hover:bg-brand-primary/10 hover:text-brand-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           [title]="item.quantity >= item.productId.stock ? 'Max stock reached' : 'Increase quantity'"
           aria-label="Increase quantity">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
