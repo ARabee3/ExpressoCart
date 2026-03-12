@@ -46,7 +46,7 @@ export class AdminSellers implements OnInit {
     { value: 'approved', label: 'Active' },
     { value: 'suspended', label: 'Suspended' },
   ] as const;
-  
+
   sortOptions = [
     { value: 'status', label: 'Pending First' },
     { value: 'newest', label: 'Newest First' },
@@ -54,15 +54,16 @@ export class AdminSellers implements OnInit {
   ] as const;
 
   get currentStatusLabel() {
-    return this.statusOptions.find(o => o.value === this.statusFilter())?.label || 'All Status';
+    return this.statusOptions.find((o) => o.value === this.statusFilter())?.label || 'All Status';
   }
   get currentSortLabel() {
-    return this.sortOptions.find(o => o.value === this.sortField())?.label || 'Pending First';
+    return this.sortOptions.find((o) => o.value === this.sortField())?.label || 'Pending First';
   }
   confirmingAction = signal<{ seller: User; action: 'approve' | 'suspend' | 'reactivate' } | null>(
     null,
   );
   viewingSeller = signal<User | null>(null);
+  panelVisible = signal(false);
 
   // Derived seller status helper
   getSellerStatus(seller: User): 'pending' | 'approved' | 'suspended' {
@@ -188,6 +189,36 @@ export class AdminSellers implements OnInit {
     this.currentPage.set(1);
   }
 
+  // --- Custom dropdown handlers ---
+
+  toggleStatusDropdown() {
+    this.isStatusDropdownOpen.update((v) => !v);
+    if (this.isStatusDropdownOpen()) this.isSortDropdownOpen.set(false);
+  }
+
+  closeStatusDropdown() {
+    this.isStatusDropdownOpen.set(false);
+  }
+
+  setStatusFilter(value: SellerStatus) {
+    this.onStatusFilterChange(value);
+    this.isStatusDropdownOpen.set(false);
+  }
+
+  toggleSortDropdown() {
+    this.isSortDropdownOpen.update((v) => !v);
+    if (this.isSortDropdownOpen()) this.isStatusDropdownOpen.set(false);
+  }
+
+  closeSortDropdown() {
+    this.isSortDropdownOpen.set(false);
+  }
+
+  setSortField(value: 'status' | 'name' | 'newest') {
+    this.onSortChange(value);
+    this.isSortDropdownOpen.set(false);
+  }
+
   // Gradient avatar
   getGradient(name: string): string {
     const idx = (name.charCodeAt(0) || 0) % GRADIENTS.length;
@@ -223,10 +254,14 @@ export class AdminSellers implements OnInit {
 
   viewSeller(seller: User) {
     this.viewingSeller.set(seller);
+    // Defer one tick so the @if renders the element before the CSS transition starts
+    setTimeout(() => this.panelVisible.set(true), 10);
   }
 
   closeSellerPanel() {
-    this.viewingSeller.set(null);
+    this.panelVisible.set(false);
+    // Wait for the exit transition (300ms) before removing the element from DOM
+    setTimeout(() => this.viewingSeller.set(null), 300);
   }
 
   getActionLabel(action: string): string {
