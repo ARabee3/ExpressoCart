@@ -1,5 +1,8 @@
 <!-- Top Navbar -->
-<nav class="sticky top-0 z-50 bg-brand-secondary/95 backdrop-blur-sm border-b border-black/5">
+<nav
+  class="sticky top-0 z-50 bg-brand-secondary/95 backdrop-blur-sm border-b border-black/5 transition-transform duration-300 ease-in-out"
+  [style.transform]="navHidden() ? 'translateY(-100%)' : 'translateY(0)'"
+>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 md:h-18">
       <!-- Left: Brand -->
@@ -16,7 +19,7 @@
       </a>
 
       <!-- Center: Desktop Nav Links -->
-      <div class="hidden md:flex items-center gap-8">
+      <div class="hidden lg:flex items-center gap-4 xl:gap-6">
         @for (link of navLinks; track link.route) {
           <a
             [routerLink]="link.route"
@@ -31,13 +34,16 @@
 
       <!-- Right: Icons -->
       <div class="flex items-center gap-2 md:gap-4">
-        <!-- Search Inline -->
-        <div class="flex items-center relative h-10 w-auto justify-end">
+        <!-- Search Inline (desktop only) -->
+        <div
+          class="relative h-10 hidden lg:flex items-center transition-[width] duration-300 ease-in-out shrink-0"
+          [class]="isSearchOpen() ? 'w-55 lg:w-60 xl:w-75' : 'w-10'"
+        >
           <div
             class="flex items-center bg-brand-secondary/90 border border-black/10 rounded-full overflow-hidden transition-all duration-300 ease-in-out h-full"
             [class]="
               isSearchOpen()
-                ? 'w-[200px] md:w-[300px] opacity-100 pr-2 pl-3'
+                ? 'flex-1 opacity-100 pr-2 pl-3'
                 : 'w-0 opacity-0 border-transparent px-0 pointer-events-none'
             "
           >
@@ -179,7 +185,7 @@
           @if (userMenuOpen() || userMenuClosing()) {
             <div
               [class]="
-                'absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-black/5 py-1.5 z-50 ' +
+                'absolute right-0 top-full mt-2 w-56 bg-brand-surface rounded-xl shadow-lg border border-brand-primary/10 py-1.5 z-50 ' +
                 (userMenuClosing() ? 'user-menu-goo-out' : 'user-menu-goo')
               "
             >
@@ -187,7 +193,7 @@
                 <a
                   routerLink="/profile"
                   (click)="closeUserMenu()"
-                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-brand-primary hover:bg-brand-secondary transition-colors"
+                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-brand-primary hover:bg-brand-primary/5 transition-colors"
                 >
                   <svg
                     class="size-4 text-brand-accent"
@@ -208,7 +214,7 @@
                 <a
                   routerLink="/orders"
                   (click)="closeUserMenu()"
-                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-brand-primary hover:bg-brand-secondary transition-colors"
+                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-brand-primary hover:bg-brand-primary/5 transition-colors"
                 >
                   <svg
                     class="size-4 text-brand-accent"
@@ -225,6 +231,35 @@
                   </svg>
                   My Orders
                 </a>
+                <div class="my-1 border-t border-black/5"></div>
+                <!-- Theme Picker -->
+                <div class="px-3 pt-2 pb-1.5">
+                  <p
+                    class="text-[10px] font-semibold uppercase tracking-wider text-brand-primary/40 mb-2"
+                  >
+                    Theme
+                  </p>
+                  <div class="grid grid-cols-4 gap-1.5">
+                    @for (theme of allThemes; track theme) {
+                      <button
+                        (click)="setTheme(theme)"
+                        [attr.aria-label]="'Switch to ' + themeMeta[theme].label + ' theme'"
+                        class="flex flex-col items-center gap-1 rounded-lg p-1.5 transition-all hover:bg-brand-primary/5"
+                        [class.ring-2]="currentTheme() === theme"
+                        [class.ring-brand-accent]="currentTheme() === theme"
+                        [class.ring-offset-1]="currentTheme() === theme"
+                      >
+                        <span
+                          class="w-6 h-6 rounded-full border border-black/10 block shrink-0"
+                          [style.background]="themeMeta[theme].bg"
+                        ></span>
+                        <span class="text-[9px] font-medium text-brand-primary/60 leading-none">{{
+                          themeMeta[theme].label
+                        }}</span>
+                      </button>
+                    }
+                  </div>
+                </div>
                 <div class="my-1 border-t border-black/5"></div>
                 <button
                   (click)="logout()"
@@ -249,7 +284,7 @@
                 <a
                   routerLink="/auth/login"
                   (click)="closeUserMenu()"
-                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-brand-primary hover:bg-brand-secondary transition-colors"
+                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-brand-primary hover:bg-brand-primary/5 transition-colors"
                 >
                   <svg
                     class="size-4 text-brand-accent"
@@ -282,7 +317,7 @@
                 <a
                   routerLink="/auth/register"
                   (click)="closeUserMenu()"
-                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-brand-primary hover:bg-brand-secondary transition-colors"
+                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-brand-primary hover:bg-brand-primary/5 transition-colors"
                 >
                   <svg
                     class="size-4 text-brand-accent"
@@ -323,7 +358,7 @@
 
         <!-- Mobile Menu Toggle -->
         <button
-          class="md:hidden p-2 text-brand-accent hover:text-brand-primary transition-colors"
+          class="lg:hidden p-2 text-brand-accent hover:text-brand-primary transition-colors"
           aria-label="Toggle menu"
           (click)="toggleMobileMenu()"
         >
@@ -357,10 +392,92 @@
   @if (mobileMenuOpen() || mobileMenuClosing()) {
     <div
       [class]="
-        'md:hidden border-t border-black/5 bg-brand-secondary ' +
+        'lg:hidden border-t border-brand-primary/10 bg-brand-secondary ' +
         (mobileMenuClosing() ? 'mobile-menu-goo-out' : 'mobile-menu-goo')
       "
     >
+      <!-- Mobile Search -->
+      <div class="px-4 pt-3 pb-2">
+        <div
+          class="flex items-center h-10 bg-brand-primary/5 border border-brand-primary/10 rounded-full px-3 gap-2"
+        >
+          <svg
+            class="w-4 h-4 text-brand-accent shrink-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" stroke-linecap="round" />
+          </svg>
+          <input
+            type="text"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="onSearchChange($event)"
+            placeholder="Search products..."
+            class="flex-1 bg-transparent border-none outline-none text-sm text-brand-primary placeholder:text-brand-primary/50 focus:ring-0"
+          />
+          @if (searchQuery()) {
+            <button
+              (click)="closeSearch()"
+              class="shrink-0 p-0.5 text-brand-accent hover:text-brand-primary transition-colors"
+              aria-label="Clear search"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          }
+        </div>
+
+        <!-- Inline search results -->
+        @if (isSearching()) {
+          <div class="mt-2 flex justify-center py-3">
+            <app-spinner />
+          </div>
+        } @else if (searchQuery() && searchResults().length === 0) {
+          <p class="mt-2 text-center text-xs text-brand-primary/50 py-2">
+            No results for "{{ searchQuery() }}"
+          </p>
+        } @else if (searchResults().length > 0) {
+          <div
+            class="mt-2 rounded-xl border border-brand-primary/10 overflow-hidden max-h-60 overflow-y-auto"
+          >
+            @for (product of searchResults(); track product._id) {
+              <a
+                [routerLink]="['/products', product._id]"
+                (click)="closeSearch(); toggleMobileMenu()"
+                class="flex items-center gap-3 px-3 py-2.5 hover:bg-brand-primary/5 transition-colors border-b border-brand-primary/5 last:border-b-0"
+              >
+                <div class="w-10 h-10 shrink-0 rounded-lg overflow-hidden bg-brand-primary/8">
+                  <img
+                    [src]="product.images[0]"
+                    [alt]="product.name"
+                    (error)="onImageError($event, product.name)"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-brand-primary truncate">{{ product.name }}</p>
+                  <p class="text-xs text-brand-primary/50">{{ product.category }}</p>
+                </div>
+                <span class="text-sm font-bold text-brand-accent shrink-0">{{
+                  product.price | currency
+                }}</span>
+              </a>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="border-t border-brand-primary/10 mx-4"></div>
+
       <div class="px-4 py-3 space-y-1">
         @for (link of navLinks; track link.route) {
           <a
@@ -368,11 +485,39 @@
             routerLinkActive="text-brand-accent font-semibold"
             [routerLinkActiveOptions]="{ exact: link.route === '/' }"
             (click)="toggleMobileMenu()"
-            class="block px-3 py-2.5 text-sm font-medium text-brand-primary/70 hover:text-brand-primary hover:bg-black/5 rounded-lg transition-colors"
+            class="block px-3 py-2.5 text-sm font-medium text-brand-primary/70 hover:text-brand-primary hover:bg-brand-primary/5 rounded-lg transition-colors"
           >
             {{ link.label }}
           </a>
         }
+      </div>
+
+      <!-- Mobile Theme Picker -->
+      <div class="border-t border-brand-primary/10 mx-4"></div>
+      <div class="px-4 py-3">
+        <p class="text-[10px] font-semibold uppercase tracking-wider text-brand-primary/40 mb-2.5">
+          Theme
+        </p>
+        <div class="grid grid-cols-4 gap-2">
+          @for (theme of allThemes; track theme) {
+            <button
+              (click)="setTheme(theme)"
+              [attr.aria-label]="'Switch to ' + themeMeta[theme].label + ' theme'"
+              class="flex flex-col items-center gap-1.5 rounded-xl p-2 transition-all hover:bg-brand-primary/5"
+              [class.ring-2]="currentTheme() === theme"
+              [class.ring-brand-accent]="currentTheme() === theme"
+              [class.ring-offset-1]="currentTheme() === theme"
+            >
+              <span
+                class="w-8 h-8 rounded-full border border-black/10 block shrink-0"
+                [style.background]="themeMeta[theme].bg"
+              ></span>
+              <span class="text-[10px] font-medium text-brand-primary/60 leading-none">{{
+                themeMeta[theme].label
+              }}</span>
+            </button>
+          }
+        </div>
       </div>
     </div>
   }
@@ -386,7 +531,7 @@
   <div class="fixed left-0 right-0 z-50 shadow-2xl search-results-enter" style="top: 72px">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div
-        class="bg-white rounded-b-xl border border-t-0 border-gray-100 max-h-[60vh] overflow-y-auto"
+        class="bg-brand-surface rounded-b-xl border border-t-0 border-brand-primary/10 max-h-[60vh] overflow-y-auto"
       >
         @if (isSearching()) {
           <div class="flex justify-center items-center py-8">
@@ -395,7 +540,7 @@
         } @else if (searchQuery() && searchResults().length === 0) {
           <div class="text-center py-8 px-4">
             <svg
-              class="mx-auto h-12 w-12 text-gray-300 mb-3"
+              class="mx-auto h-12 w-12 text-brand-primary/20 mb-3"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -407,20 +552,20 @@
                 d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 class="text-sm font-semibold text-gray-900">No results found</h3>
-            <p class="mt-1 text-xs text-gray-500">
+            <h3 class="text-sm font-semibold text-brand-primary">No results found</h3>
+            <p class="mt-1 text-xs text-brand-primary/50">
               We couldn't find anything matching "{{ searchQuery() }}"
             </p>
           </div>
         } @else if (searchResults().length > 0) {
-          <div class="divide-y divide-gray-50">
+          <div class="divide-y divide-brand-primary/5">
             @for (product of searchResults(); track product._id) {
               <a
                 [routerLink]="['/products', product._id]"
                 (click)="closeSearch()"
-                class="flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors group"
+                class="flex items-center gap-4 px-4 py-3 hover:bg-brand-primary/5 transition-colors group"
               >
-                <div class="w-14 h-14 shrink-0 rounded-lg overflow-hidden bg-gray-50">
+                <div class="w-14 h-14 shrink-0 rounded-lg overflow-hidden bg-brand-primary/5">
                   <img
                     [src]="product.images[0]"
                     [alt]="product.name"
@@ -429,8 +574,10 @@
                   />
                 </div>
                 <div class="flex-1 min-w-0">
-                  <h4 class="text-sm font-semibold text-gray-900 truncate">{{ product.name }}</h4>
-                  <p class="text-xs text-gray-500">{{ product.category }}</p>
+                  <h4 class="text-sm font-semibold text-brand-primary truncate">
+                    {{ product.name }}
+                  </h4>
+                  <p class="text-xs text-brand-primary/50">{{ product.category }}</p>
                 </div>
                 <span class="text-sm font-bold text-brand-accent shrink-0">{{
                   product.price | currency

@@ -15,7 +15,7 @@
   } @else if (hasError()) {
     <!-- Error State -->
     <div
-      class="flex flex-col items-center justify-center py-24 text-center bg-white rounded-2xl border border-dashed border-black/10"
+      class="flex flex-col items-center justify-center py-24 text-center bg-brand-surface rounded-2xl border border-dashed border-black/10"
     >
       <div class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-red-50">
         <svg
@@ -61,16 +61,16 @@
   } @else if (categories().length === 0) {
     <!-- Empty State -->
     <div
-      class="flex flex-col items-center justify-center py-24 text-center bg-white rounded-2xl border border-dashed border-black/10"
+      class="flex flex-col items-center justify-center py-24 text-center bg-brand-surface rounded-2xl border border-dashed border-black/10"
     >
-      <div class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+      <div class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-brand-primary/10">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="size-10 text-gray-400"
+          class="size-10 text-brand-primary/40"
         >
           <path
             stroke-linecap="round"
@@ -104,7 +104,7 @@
           ></div>
           <!-- Arrow badge top-right -->
           <div
-            class="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-1 group-hover:translate-x-0"
+            class="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-brand-surface/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-1 group-hover:translate-x-0"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

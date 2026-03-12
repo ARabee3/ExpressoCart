@@ -54,11 +54,43 @@ export class AdminUsers implements OnInit {
   roleFilter = signal<UserRole | ''>('');
   statusFilter = signal<'all' | 'active' | 'deleted'>('all');
   sortField = signal<'newest' | 'name' | 'role'>('newest');
+  isRoleDropdownOpen = signal(false);
+  isStatusDropdownOpen = signal(false);
+  isSortDropdownOpen = signal(false);
+
+  roleOptions = [
+    { value: '', label: 'All Roles' },
+    { value: 'Admin', label: 'Admin' },
+    { value: 'Seller', label: 'Seller' },
+    { value: 'Customer', label: 'Customer' },
+  ];
+  statusOptions = [
+    { value: 'all', label: 'All Status' },
+    { value: 'active', label: 'Active Only' },
+    { value: 'deleted', label: 'Deleted Only' },
+  ];
+  sortOptions = [
+    { value: 'newest', label: 'Newest First' },
+    { value: 'name', label: 'Name A → Z' },
+    { value: 'role', label: 'Group by Role' },
+  ];
+
+  get currentRoleLabel() {
+    return this.roleOptions.find((o) => o.value === this.roleFilter())?.label || 'All Roles';
+  }
+  get currentStatusLabel() {
+    return this.statusOptions.find((o) => o.value === this.statusFilter())?.label || 'All Status';
+  }
+  get currentSortLabel() {
+    return this.sortOptions.find((o) => o.value === this.sortField())?.label || 'Newest First';
+  }
+
   deletingUser = signal<User | null>(null);
   restoringUser = signal<User | null>(null);
   viewingUser = signal<User | null>(null);
   changingRole = signal<User | null>(null);
   newRole = signal<UserRole>('Customer');
+  isRoleUpdateDropdownOpen = signal(false);
 
   // Debounced search — triggers loading all users for client-side search
   private searchSubject$ = new Subject<string>();
@@ -286,5 +318,39 @@ export class AdminUsers implements OnInit {
       this.admin.restoreUser(user._id);
       this.restoringUser.set(null);
     }
+  }
+
+  // Dropdown helpers
+  toggleRoleDropdown() {
+    this.isRoleDropdownOpen.update((v) => !v);
+  }
+  closeRoleDropdown() {
+    this.isRoleDropdownOpen.set(false);
+  }
+  setRoleFilter(value: UserRole | '') {
+    this.onRoleFilterChange(value);
+    this.closeRoleDropdown();
+  }
+
+  toggleStatusDropdown() {
+    this.isStatusDropdownOpen.update((v) => !v);
+  }
+  closeStatusDropdown() {
+    this.isStatusDropdownOpen.set(false);
+  }
+  setStatusFilter(value: 'all' | 'active' | 'deleted') {
+    this.onStatusFilterChange(value);
+    this.closeStatusDropdown();
+  }
+
+  toggleSortDropdown() {
+    this.isSortDropdownOpen.update((v) => !v);
+  }
+  closeSortDropdown() {
+    this.isSortDropdownOpen.set(false);
+  }
+  setSortField(value: 'newest' | 'name' | 'role') {
+    this.onSortChange(value);
+    this.closeSortDropdown();
   }
 }

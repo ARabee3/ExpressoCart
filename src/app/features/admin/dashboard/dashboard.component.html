@@ -1,23 +1,23 @@
 <div class="mb-6 lg:mb-8">
   <h1 class="text-2xl font-black tracking-tight">Dashboard</h1>
-  <p class="text-sm text-gray-500 mt-1">Welcome back. Here's what's happening today.</p>
+  <p class="text-sm text-brand-primary/50 mt-1">Welcome back. Here's what's happening today.</p>
 </div>
 
 @if (admin.stats(); as data) {
   <!-- Stats Cards -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
-    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+    <div class="bg-brand-surface p-6 rounded-2xl border border-brand-primary/10 shadow-sm">
       <div class="flex items-center justify-between mb-2">
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Revenue</p>
+        <p class="text-xs font-bold text-brand-primary/40 uppercase tracking-wider">Total Revenue</p>
         <span class="text-lg">💰</span>
       </div>
       <h3 class="text-3xl font-black">${{ data.totalSales }}</h3>
       <p class="text-xs text-green-600 font-semibold mt-2">All time</p>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+    <div class="bg-brand-surface p-6 rounded-2xl border border-brand-primary/10 shadow-sm">
       <div class="flex items-center justify-between mb-2">
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Users</p>
+        <p class="text-xs font-bold text-brand-primary/40 uppercase tracking-wider">Total Users</p>
         <span class="text-lg">👥</span>
       </div>
       <h3 class="text-3xl font-black">{{ data.totalUsers }}</h3>
@@ -26,18 +26,18 @@
       </p>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+    <div class="bg-brand-surface p-6 rounded-2xl border border-brand-primary/10 shadow-sm">
       <div class="flex items-center justify-between mb-2">
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Orders</p>
+        <p class="text-xs font-bold text-brand-primary/40 uppercase tracking-wider">Total Orders</p>
         <span class="text-lg">📦</span>
       </div>
       <h3 class="text-3xl font-black">{{ data.totalOrders }}</h3>
-      <p class="text-xs text-gray-500 font-semibold mt-2">All statuses</p>
+      <p class="text-xs text-brand-primary/50 font-semibold mt-2">All statuses</p>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+    <div class="bg-brand-surface p-6 rounded-2xl border border-brand-primary/10 shadow-sm">
       <div class="flex items-center justify-between mb-2">
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Paid Orders</p>
+        <p class="text-xs font-bold text-brand-primary/40 uppercase tracking-wider">Paid Orders</p>
         <span class="text-lg">✅</span>
       </div>
       <h3 class="text-3xl font-black">{{ data.paidOrders }}</h3>
@@ -55,42 +55,42 @@
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
     <a
       routerLink="../users"
-      class="bg-white p-3 lg:p-4 rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
+      class="bg-brand-surface p-3 lg:p-4 rounded-2xl border border-brand-primary/10 shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
     >
       <span class="text-xl">👥</span>
       <div>
         <p class="text-sm font-bold group-hover:text-black">Users</p>
-        <p class="text-xs text-gray-400">Manage accounts</p>
+        <p class="text-xs text-brand-primary/40">Manage accounts</p>
       </div>
     </a>
     <a
       routerLink="../categories"
-      class="bg-white p-4 rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
+      class="bg-brand-surface p-4 rounded-2xl border border-brand-primary/10 shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
     >
       <span class="text-xl">🛍️</span>
       <div>
         <p class="text-sm font-bold group-hover:text-black">Categories</p>
-        <p class="text-xs text-gray-400">Organize products</p>
+        <p class="text-xs text-brand-primary/40">Organize products</p>
       </div>
     </a>
     <a
       routerLink="../coupon"
-      class="bg-white p-4 rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
+      class="bg-brand-surface p-4 rounded-2xl border border-brand-primary/10 shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
     >
       <span class="text-xl">🏷️</span>
       <div>
         <p class="text-sm font-bold group-hover:text-black">Coupons</p>
-        <p class="text-xs text-gray-400">Discount codes</p>
+        <p class="text-xs text-brand-primary/40">Discount codes</p>
       </div>
     </a>
     <a
       routerLink="../orders"
-      class="bg-white p-4 rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
+      class="bg-brand-surface p-4 rounded-2xl border border-brand-primary/10 shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group"
     >
       <span class="text-xl">📋</span>
       <div>
         <p class="text-sm font-bold group-hover:text-black">Orders</p>
-        <p class="text-xs text-gray-400">Track & manage</p>
+        <p class="text-xs text-brand-primary/40">Track & manage</p>
       </div>
     </a>
   </div>
@@ -98,29 +98,29 @@
   <!-- Loading skeleton for stats -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
     @for (_ of [1, 2, 3, 4]; track $index) {
-      <div class="bg-white p-6 rounded-2xl border shadow-sm animate-pulse">
-        <div class="h-3 bg-gray-200 rounded w-24 mb-4"></div>
-        <div class="h-8 bg-gray-200 rounded w-16"></div>
+      <div class="bg-brand-surface p-6 rounded-2xl border border-brand-primary/10 shadow-sm animate-pulse">
+        <div class="h-3 bg-brand-primary/20 rounded w-24 mb-4"></div>
+        <div class="h-8 bg-brand-primary/20 rounded w-16"></div>
       </div>
     }
   </div>
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
     @for (_ of [1, 2, 3, 4]; track $index) {
-      <div class="bg-white p-4 rounded-2xl border shadow-sm animate-pulse">
-        <div class="h-3 bg-gray-200 rounded w-20 mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-16"></div>
+      <div class="bg-brand-surface p-4 rounded-2xl border border-brand-primary/10 shadow-sm animate-pulse">
+        <div class="h-3 bg-brand-primary/20 rounded w-20 mb-2"></div>
+        <div class="h-3 bg-brand-primary/20 rounded w-16"></div>
       </div>
     }
   </div>
 }
 
 <!-- Recent Orders -->
-<div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+<div class="bg-brand-surface rounded-2xl border border-brand-primary/10 shadow-sm overflow-hidden">
   <div class="px-6 py-4 border-b flex items-center justify-between">
     <h2 class="font-bold text-sm uppercase tracking-tight">Recent Orders</h2>
     <a
       routerLink="../orders"
-      class="text-xs font-semibold text-gray-400 hover:text-black transition-colors"
+      class="text-xs font-semibold text-brand-primary/40 hover:text-black transition-colors"
     >
       View all →
     </a>
@@ -130,42 +130,42 @@
     @if (orders.length > 0) {
       <div class="overflow-x-auto">
     <table class="w-full text-sm min-w-[640px]">
-        <thead class="bg-gray-50 border-b">
+        <thead class="bg-brand-primary/5 border-b">
           <tr>
             <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              class="text-left px-6 py-3 text-xs font-bold text-brand-primary/40 uppercase tracking-wider"
             >
               Order ID
             </th>
             <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              class="text-left px-6 py-3 text-xs font-bold text-brand-primary/40 uppercase tracking-wider"
             >
               Date
             </th>
             <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              class="text-left px-6 py-3 text-xs font-bold text-brand-primary/40 uppercase tracking-wider"
             >
               Status
             </th>
             <th
-              class="text-left px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              class="text-left px-6 py-3 text-xs font-bold text-brand-primary/40 uppercase tracking-wider"
             >
               Payment
             </th>
             <th
-              class="text-right px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider"
+              class="text-right px-6 py-3 text-xs font-bold text-brand-primary/40 uppercase tracking-wider"
             >
               Total
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-100">
+        <tbody class="divide-y divide-brand-primary/5">
           @for (order of orders; track order._id) {
-            <tr class="hover:bg-gray-50 transition-colors">
+            <tr class="hover:bg-brand-primary/5 transition-colors">
               <td class="px-6 py-4">
-                <span class="font-mono text-xs text-gray-500">{{ order._id.slice(0, 10) }}...</span>
+                <span class="font-mono text-xs text-brand-primary/50">{{ order._id.slice(0, 10) }}...</span>
               </td>
-              <td class="px-6 py-4 text-gray-500 text-xs">
+              <td class="px-6 py-4 text-brand-primary/50 text-xs">
                 {{ order.createdAt | date: 'MMM d, y' }}
               </td>
               <td class="px-6 py-4">
@@ -178,7 +178,7 @@
               </td>
               <td class="px-6 py-4">
                 <div class="flex items-center gap-2">
-                  <span class="text-xs text-gray-500">{{ order.paymentMethod }}</span>
+                  <span class="text-xs text-brand-primary/50">{{ order.paymentMethod }}</span>
                   @if (order.isPaid) {
                     <span class="w-1.5 h-1.5 rounded-full bg-green-500" title="Paid"></span>
                   } @else {
@@ -199,19 +199,19 @@
     </div>
     } @else {
       <div class="p-12 text-center">
-        <p class="text-gray-400 text-sm">No orders yet.</p>
+        <p class="text-brand-primary/40 text-sm">No orders yet.</p>
       </div>
     }
   } @else {
     <!-- Loading skeleton for orders -->
-    <div class="divide-y divide-gray-100">
+    <div class="divide-y divide-brand-primary/5">
       @for (_ of [1, 2, 3, 4, 5]; track $index) {
         <div class="flex items-center gap-6 px-6 py-4 animate-pulse">
-          <div class="h-3 bg-gray-200 rounded w-24"></div>
-          <div class="h-3 bg-gray-200 rounded w-20"></div>
-          <div class="h-5 bg-gray-200 rounded-full w-16"></div>
-          <div class="h-3 bg-gray-200 rounded w-12"></div>
-          <div class="h-4 bg-gray-200 rounded w-16 ml-auto"></div>
+          <div class="h-3 bg-brand-primary/20 rounded w-24"></div>
+          <div class="h-3 bg-brand-primary/20 rounded w-20"></div>
+          <div class="h-5 bg-brand-primary/20 rounded-full w-16"></div>
+          <div class="h-3 bg-brand-primary/20 rounded w-12"></div>
+          <div class="h-4 bg-brand-primary/20 rounded w-16 ml-auto"></div>
         </div>
       }
     </div>

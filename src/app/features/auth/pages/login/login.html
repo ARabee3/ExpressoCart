@@ -1,13 +1,13 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-  <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
-    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Welcome Back</h2>
+<div class="min-h-screen flex items-center justify-center bg-brand-primary/10 px-4">
+  <div class="w-full max-w-md bg-brand-surface p-8 rounded-2xl shadow-lg">
+    <h2 class="text-2xl font-bold text-center text-brand-primary/95 mb-6">Welcome Back</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
       <div>
         <input
           type="email"
           placeholder="Email"
           formControlName="email"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-gray-500"
+          class="w-full px-4 py-2 border border-brand-primary/20 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-brand-primary/50"
         />
 
         <div *ngIf="loginForm.get('email')?.touched">
@@ -34,7 +34,7 @@
           type="password"
           placeholder="Password"
           formControlName="password"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-gray-500"
+          class="w-full px-4 py-2 border border-brand-primary/20 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-brand-primary/50"
         />
 
         <div *ngIf="loginForm.get('password')?.touched">
@@ -60,7 +60,7 @@
         <a routerLink="/auth/forgot-password" class="text-brand-accent hover:underline">
           Forgot Password?
         </a>
-        <p class="text-center text-sm text-gray-600">
+        <p class="text-center text-sm text-brand-primary/60">
           Don't have an account?
           <a routerLink="/auth/register" class="text-brand-accent hover:underline"> Register </a>
         </p>

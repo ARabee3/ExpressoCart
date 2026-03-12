@@ -44,9 +44,24 @@ export class AdminOrders implements OnInit {
 
   // UI state
   statusFilter = signal<OrderStatus | ''>('');
+  isStatusDropdownOpen = signal(false);
+
+  statusOptions = [
+    { value: '', label: 'All Statuses' },
+    { value: 'Pending', label: 'Pending' },
+    { value: 'Processing', label: 'Processing' },
+    { value: 'Shipped', label: 'Shipped' },
+    { value: 'Delivered', label: 'Delivered' },
+    { value: 'Cancelled', label: 'Cancelled' },
+  ] as const;
+
+  get currentStatusLabel() {
+    return this.statusOptions.find((o) => o.value === this.statusFilter())?.label || 'All Statuses';
+  }
   viewingOrder = signal<Order | null>(null);
   updatingStatus = signal<Order | null>(null);
   newStatus = signal<OrderStatus>('Processing');
+  isStatusUpdateDropdownOpen = signal(false);
   deletingOrder = signal<Order | null>(null);
   currentPage = signal(1);
   readonly perPage = 10;
@@ -146,5 +161,19 @@ export class AdminOrders implements OnInit {
         this.closeOrderPanel();
       }
     }
+  }
+
+  toggleStatusDropdown() {
+    this.isStatusDropdownOpen.update((v) => !v);
+  }
+
+  closeStatusDropdown() {
+    this.isStatusDropdownOpen.set(false);
+  }
+
+  setStatusFilter(value: OrderStatus | '') {
+    this.statusFilter.set(value);
+    this.onFilterChange();
+    this.closeStatusDropdown();
   }
 }

@@ -17,6 +17,7 @@ import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { ProductService } from '../../../core/services/product.service';
 import { AuthState } from '../../../core/services/auth-state';
+import { ThemeService, Theme, ALL_THEMES, THEME_META } from '../../../core/services/theme.service';
 import { Product } from '../../../core/models/cart.model';
 import { Spinner } from '../spinner/spinner';
 
@@ -32,6 +33,7 @@ export class Navbar {
   private readonly wishlistService = inject(WishlistService);
   private readonly productService = inject(ProductService);
   private readonly authState = inject(AuthState);
+  private readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
   private readonly elementRef = inject(ElementRef);
 
@@ -41,11 +43,18 @@ export class Navbar {
   protected readonly userMenuOpen = signal(false);
   protected readonly userMenuClosing = signal(false);
 
+  protected readonly currentTheme = this.themeService.currentTheme;
+  protected readonly allThemes = ALL_THEMES;
+  protected readonly themeMeta = THEME_META;
+
   protected readonly isSearchOpen = signal(false);
   protected readonly searchQuery = signal('');
   protected readonly searchResults = signal<Product[]>([]);
   protected readonly isSearching = signal(false);
   private searchSubject = new Subject<string>();
+
+  protected readonly navHidden = signal(false);
+  private lastScrollY = 0;
 
   protected readonly wishlistCount = computed(() => this.wishlistService.count());
   protected readonly cartItemCount = computed(() => {
@@ -128,6 +137,23 @@ export class Navbar {
         this.closeUserMenu();
       }
     }
+  }
+
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    const currentY = window.scrollY;
+    const diff = currentY - this.lastScrollY;
+    // Hide when scrolling down past 80px from top; show immediately on any upward scroll
+    if (diff > 0 && currentY > 80) {
+      this.navHidden.set(true);
+    } else if (diff < 0) {
+      this.navHidden.set(false);
+    }
+    this.lastScrollY = currentY;
+  }
+
+  protected setTheme(theme: Theme): void {
+    this.themeService.setTheme(theme);
   }
 
   toggleSearch() {

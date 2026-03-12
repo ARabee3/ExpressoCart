@@ -34,37 +34,37 @@
 <!-- Page Header -->
 <div class="mb-8">
   <h1 class="text-2xl font-black tracking-tight">Dashboard</h1>
-  <p class="text-sm text-gray-500 mt-1">Here's an overview of your store performance.</p>
+  <p class="text-sm text-brand-primary/50 mt-1">Here's an overview of your store performance.</p>
 </div>
 
 <!-- Stats Cards -->
 @if (loading()) {
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     @for (_ of [1, 2, 3]; track $index) {
-      <div class="bg-white p-6 rounded-2xl border shadow-sm animate-pulse">
-        <div class="h-3 bg-gray-200 rounded w-24 mb-4"></div>
-        <div class="h-8 bg-gray-200 rounded w-16"></div>
+      <div class="bg-brand-surface p-6 rounded-2xl border border-brand-primary/10 shadow-sm animate-pulse">
+        <div class="h-3 bg-brand-primary/20 rounded w-24 mb-4"></div>
+        <div class="h-8 bg-brand-primary/20 rounded w-16"></div>
       </div>
     }
   </div>
 } @else {
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-2xl border shadow-sm">
-      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Products</p>
+    <div class="bg-brand-surface p-6 rounded-2xl border border-brand-primary/10 shadow-sm">
+      <p class="text-xs font-bold text-brand-primary/40 uppercase tracking-wider mb-2">Total Products</p>
       <h3 class="text-3xl font-black">{{ totalProducts() }}</h3>
       <p class="text-xs text-brand-accent font-semibold mt-2">In your store</p>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl border shadow-sm">
-      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Recent Products</p>
+    <div class="bg-brand-surface p-6 rounded-2xl border border-brand-primary/10 shadow-sm">
+      <p class="text-xs font-bold text-brand-primary/40 uppercase tracking-wider mb-2">Recent Products</p>
       <h3 class="text-3xl font-black">{{ recentProducts().length }}</h3>
       <p class="text-xs text-blue-600 font-semibold mt-2">Shown below</p>
     </div>
 
     <div
-      class="bg-white p-6 rounded-2xl border shadow-sm border-dashed flex flex-col items-center justify-center text-center"
+      class="bg-brand-surface p-6 rounded-2xl border border-brand-primary/10 shadow-sm border-dashed flex flex-col items-center justify-center text-center"
     >
-      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Quick Action</p>
+      <p class="text-xs font-bold text-brand-primary/40 uppercase tracking-wider mb-2">Quick Action</p>
       <a
         routerLink="../products"
         class="mt-1 inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-brand-accent text-white rounded-xl hover:bg-brand-accent/90 transition-colors"
@@ -76,7 +76,7 @@
 }
 
 <!-- Recent Products Table -->
-<div class="bg-white rounded-2xl border shadow-sm p-6">
+<div class="bg-brand-surface rounded-2xl border border-brand-primary/10 shadow-sm p-6">
   <div class="flex items-center justify-between mb-5">
     <h2 class="font-bold text-sm uppercase tracking-tight">Recent Products</h2>
     <a routerLink="../products" class="text-xs text-brand-accent font-semibold hover:underline">
@@ -87,18 +87,18 @@
   @if (loading()) {
     <div class="space-y-3">
       @for (_ of [1, 2, 3]; track $index) {
-        <div class="h-12 bg-gray-100 rounded-xl animate-pulse"></div>
+        <div class="h-12 bg-brand-primary/10 rounded-xl animate-pulse"></div>
       }
     </div>
   } @else if (recentProducts().length === 0) {
     <div class="flex flex-col items-center justify-center py-12 text-center">
       <div
-        class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-3 text-2xl"
+        class="w-14 h-14 rounded-full bg-brand-primary/10 flex items-center justify-center mb-3 text-2xl"
       >
         📦
       </div>
-      <p class="text-sm font-medium text-gray-500">No products yet</p>
-      <p class="text-xs text-gray-400 mt-1">Add your first product to start selling</p>
+      <p class="text-sm font-medium text-brand-primary/50">No products yet</p>
+      <p class="text-xs text-brand-primary/40 mt-1">Add your first product to start selling</p>
       <a
         routerLink="../products"
         class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-brand-accent text-white rounded-xl hover:bg-brand-accent/90 transition-colors"
@@ -111,7 +111,7 @@
       <table class="w-full text-sm">
         <thead>
           <tr
-            class="text-left text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100"
+            class="text-left text-xs font-bold text-brand-primary/40 uppercase tracking-wider border-b border-brand-primary/5"
           >
             <th class="pb-3 pr-4">Product</th>
             <th class="pb-3 pr-4">Price</th>
@@ -119,30 +119,30 @@
             <th class="pb-3">Category</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-50">
+        <tbody class="divide-y divide-brand-primary/5">
           @for (product of recentProducts(); track product._id) {
-            <tr class="hover:bg-gray-50/50 transition-colors">
+            <tr class="hover:bg-brand-primary/5/50 transition-colors">
               <td class="py-3 pr-4">
                 <div class="flex items-center gap-3">
                   @if (product.images?.[0]) {
                     <img
                       [src]="product.images[0]"
                       [alt]="product.name"
-                      class="w-9 h-9 rounded-lg object-cover bg-gray-100 border"
+                      class="w-9 h-9 rounded-lg object-cover bg-brand-primary/10 border border-brand-primary/10"
                     />
                   } @else {
                     <div
-                      class="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center text-base border"
+                      class="w-9 h-9 rounded-lg bg-brand-primary/10 flex items-center justify-center text-base border border-brand-primary/10"
                     >
                       📦
                     </div>
                   }
-                  <span class="font-medium text-gray-800 truncate max-w-40">{{
+                  <span class="font-medium text-brand-primary/95 truncate max-w-40">{{
                     product.name
                   }}</span>
                 </div>
               </td>
-              <td class="py-3 pr-4 font-semibold text-gray-700">${{ product.price }}</td>
+              <td class="py-3 pr-4 font-semibold text-brand-primary/80">${{ product.price }}</td>
               <td class="py-3 pr-4">
                 <span
                   class="px-2 py-0.5 rounded-full text-xs font-semibold"
@@ -153,7 +153,7 @@
                   {{ product.stock > 0 ? product.stock + ' in stock' : 'Out of stock' }}
                 </span>
               </td>
-              <td class="py-3 text-gray-500">{{ product.category?.name ?? '—' }}</td>
+              <td class="py-3 text-brand-primary/50">{{ product.category?.name ?? '—' }}</td>
             </tr>
           }
         </tbody>

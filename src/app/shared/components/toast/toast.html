@@ -6,7 +6,7 @@
   >
     @for (t of toast.toasts(); track t.id) {
       <div
-        class="toast-enter flex items-start gap-3 bg-white shadow-xl rounded-xl border-l-4 px-4 py-3 w-80 pointer-events-auto"
+        class="toast-enter flex items-start gap-3 bg-brand-surface shadow-xl rounded-xl border-l-4 px-4 py-3 w-80 pointer-events-auto"
         [ngClass]="borderFor(t.type)"
         role="alert"
       >
@@ -16,11 +16,11 @@
           >{{ iconFor(t.type) }}</span
         >
 
-        <p class="text-sm font-medium text-gray-800 flex-1 leading-snug">{{ t.message }}</p>
+        <p class="text-sm font-medium text-brand-primary/95 flex-1 leading-snug">{{ t.message }}</p>
 
         <button
           (click)="toast.dismiss(t.id)"
-          class="text-gray-300 hover:text-gray-600 transition-colors ml-1 text-base leading-none shrink-0"
+          class="text-gray-300 hover:text-brand-primary/60 transition-colors ml-1 text-base leading-none shrink-0"
           aria-label="Dismiss"
         >
           ✕

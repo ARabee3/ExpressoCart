@@ -12,7 +12,7 @@
   <!-- Minimized Icon -->
   @if (!isExpanded()) {
     <button
-      class="w-[60px] h-[60px] cursor-pointer rounded-full bg-brand-primary text-white border-none flex items-center justify-center shadow-[0_10px_25px_-5px_rgba(99,102,241,0.4)] transition-all duration-300 hover:scale-110 hover:rotate-5 relative"
+      class="w-[60px] h-[60px] cursor-pointer rounded-full bg-brand-primary text-brand-surface border-none flex items-center justify-center shadow-[0_10px_25px_-5px_rgba(99,102,241,0.4)] transition-all duration-300 hover:scale-110 hover:rotate-5 relative"
       (click)="toggleChat()"
       aria-label="Open Chat"
     >
@@ -29,7 +29,7 @@
       </svg>
       @if (newMessagesCount() > 0) {
         <span
-          class="absolute -top-1 -right-1 bg-red-500 text-white text-[12px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white"
+          class="absolute -top-1 -right-1 bg-red-500 text-brand-surface text-[12px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white"
           >{{ newMessagesCount() }}</span
         >
       }
@@ -39,11 +39,15 @@
   <!-- Expanded Chat Window -->
   @if (isExpanded()) {
     <div
-      class="w-full h-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden border border-white/30 dark:border-white/10 animate-slide-up"
+      class="w-full h-full bg-brand-surface/95 dark:bg-slate-900/90 backdrop-blur-md rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden border border-white/30 dark:border-white/10 animate-slide-up"
     >
-      <div class="p-5 bg-brand-primary text-white flex justify-between items-center shrink-0">
+      <div
+        class="p-5 bg-brand-primary text-brand-surface flex justify-between items-center shrink-0"
+      >
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-white/20 rounded-[12px] flex items-center justify-center p-2">
+          <div
+            class="w-10 h-10 bg-brand-surface/20 rounded-[12px] flex items-center justify-center p-2"
+          >
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -66,7 +70,7 @@
         </div>
         <div class="flex gap-2">
           <button
-            class="bg-white/10 border-none text-white p-2 rounded-[10px] cursor-pointer transition-all hover:bg-white/20"
+            class="bg-brand-surface/10 border-none text-brand-surface p-2 rounded-[10px] cursor-pointer transition-all hover:bg-brand-surface/20"
             (click)="triggerClearHistory()"
             title="Clear Chat"
           >
@@ -86,7 +90,7 @@
             </svg>
           </button>
           <button
-            class="bg-white/10 border-none text-white p-2 rounded-[10px] cursor-pointer transition-all hover:bg-white/20 flex items-center justify-center"
+            class="bg-brand-surface/10 border-none text-brand-surface p-2 rounded-[10px] cursor-pointer transition-all hover:bg-brand-surface/20 flex items-center justify-center"
             (click)="toggleChat()"
             aria-label="Close Chat"
           >
@@ -120,9 +124,9 @@
             <div
               class="max-w-[80%] px-4 py-3 rounded-[16px] text-[0.925rem] leading-relaxed shadow-sm"
               [class.bg-brand-accent]="msg.role === 'user'"
-              [class.text-white]="msg.role === 'user'"
+              [class.text-brand-surface]="msg.role === 'user'"
               [class.rounded-br-sm]="msg.role === 'user'"
-              [class.bg-white]="msg.role === 'model'"
+              [class.bg-brand-surface]="msg.role === 'model'"
               [class.dark:bg-slate-800]="msg.role === 'model'"
               [class.text-slate-900]="msg.role === 'model'"
               [class.dark:text-slate-100]="msg.role === 'model'"
@@ -169,7 +173,7 @@
         @if (chatService.isLoading()) {
           <div class="flex justify-start w-full">
             <div
-              class="bg-white dark:bg-slate-800 px-4 py-3 rounded-[16px] rounded-bl-sm border border-slate-200 dark:border-slate-700 flex gap-1 items-center"
+              class="bg-brand-surface dark:bg-slate-800 px-4 py-3 rounded-[16px] rounded-bl-sm border border-slate-200 dark:border-slate-700 flex gap-1 items-center"
             >
               <span
                 class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-typing-bounce [-webkit-animation-delay:-0.32s]"
@@ -184,12 +188,12 @@
       </div>
 
       <div
-        class="p-5 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 shrink-0"
+        class="p-5 bg-brand-surface dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 shrink-0"
       >
         <div class="flex gap-2 overflow-x-auto pb-3 mb-3 scrollbar-none">
           @for (suggestion of suggestions; track suggestion) {
             <button
-              class="shrink-0 whitespace-nowrap px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 rounded-full text-[0.8rem] cursor-pointer transition-all hover:bg-slate-200 hover:text-slate-900 dark:hover:bg-slate-700 dark:hover:text-white"
+              class="shrink-0 whitespace-nowrap px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 rounded-full text-[0.8rem] cursor-pointer transition-all hover:bg-slate-200 hover:text-slate-900 dark:hover:bg-slate-700 dark:hover:text-brand-surface"
               (click)="sendQuickMessage(suggestion)"
             >
               {{ suggestion }}
@@ -204,12 +208,12 @@
             placeholder="Type your message..."
             autocomplete="off"
             [disabled]="chatService.isLoading()"
-            class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-[12px] text-sm outline-none transition-all focus:border-brand-accent dark:text-white disabled:opacity-50"
+            class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-[12px] text-sm outline-none transition-all focus:border-brand-accent dark:text-brand-surface disabled:opacity-50"
           />
           <button
             type="submit"
             [disabled]="!userInput.trim() || chatService.isLoading()"
-            class="w-11 h-11 bg-brand-accent text-white border-none rounded-[12px] flex items-center justify-center cursor-pointer transition-all shadow-sm disabled:bg-slate-300 disabled:cursor-not-allowed hover:enabled:opacity-90 hover:enabled:-translate-y-0.5"
+            class="w-11 h-11 bg-brand-accent text-brand-surface border-none rounded-[12px] flex items-center justify-center cursor-pointer transition-all shadow-sm disabled:bg-slate-300 disabled:cursor-not-allowed hover:enabled:opacity-90 hover:enabled:-translate-y-0.5"
           >
             <svg
               viewBox="0 0 24 24"
@@ -232,7 +236,7 @@
           class="absolute inset-0 z-[60] bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-6 animate-slide-up"
         >
           <div
-            class="bg-white dark:bg-slate-900 rounded-[2rem] p-6 w-full max-w-[280px] shadow-2xl border border-white/20 dark:border-white/5 text-center flex flex-col items-center gap-5"
+            class="bg-brand-surface dark:bg-slate-900 rounded-[2rem] p-6 w-full max-w-[280px] shadow-2xl border border-white/20 dark:border-white/5 text-center flex flex-col items-center gap-5"
           >
             <div
               class="w-14 h-14 bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center shadow-inner"
@@ -252,7 +256,7 @@
               </svg>
             </div>
             <div class="space-y-1.5 px-1">
-              <h4 class="text-slate-900 dark:text-white font-bold text-xl tracking-tight">
+              <h4 class="text-slate-900 dark:text-brand-surface font-bold text-xl tracking-tight">
                 Clear chat history?
               </h4>
               <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
@@ -262,7 +266,7 @@
             <div class="flex flex-col w-full gap-2.5 pt-1">
               <button
                 (click)="confirmClear()"
-                class="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-semibold transition-all shadow-lg active:scale-95 shadow-red-200 dark:shadow-none"
+                class="w-full py-3 bg-red-600 hover:bg-red-700 text-brand-surface rounded-2xl font-semibold transition-all shadow-lg active:scale-95 shadow-red-200 dark:shadow-none"
               >
                 Yes, clear chat
               </button>

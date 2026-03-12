@@ -10,14 +10,14 @@
   @if (wishlistService.count() === 0) {
     <!-- Empty State -->
     <div class="flex flex-col items-center justify-center py-24 text-center">
-      <div class="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gray-100">
+      <div class="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-brand-primary/10">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="size-12 text-gray-400"
+          class="size-12 text-brand-primary/40"
         >
           <path
             stroke-linecap="round"
@@ -26,8 +26,8 @@
           />
         </svg>
       </div>
-      <h2 class="text-xl font-bold text-gray-900 mb-2">Your wishlist is empty</h2>
-      <p class="text-gray-500 text-sm mb-8 max-w-sm">
+      <h2 class="text-xl font-bold text-brand-primary mb-2">Your wishlist is empty</h2>
+      <p class="text-brand-primary/50 text-sm mb-8 max-w-sm">
         Browse our collection and click the heart icon on any product to save it here.
       </p>
       <a
@@ -45,7 +45,7 @@
           <!-- Remove button -->
           <button
             (click)="removeFromWishlist(product)"
-            class="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-red-400 shadow-md backdrop-blur-sm transition-all hover:bg-red-500 hover:text-white"
+            class="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-brand-surface/90 text-red-400 shadow-md backdrop-blur-sm transition-all hover:bg-red-500 hover:text-white"
             aria-label="Remove from wishlist"
           >
             <svg
@@ -73,7 +73,7 @@
     <div class="mt-10 flex justify-end">
       <button
         (click)="clearAll()"
-        class="text-sm text-gray-400 hover:text-red-500 transition-colors underline-offset-2 hover:underline"
+        class="text-sm text-brand-primary/40 hover:text-red-500 transition-colors underline-offset-2 hover:underline"
       >
         Clear wishlist
       </button>

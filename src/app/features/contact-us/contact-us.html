@@ -31,10 +31,10 @@
 
       <!-- Info Cards -->
       <div
-        class="bg-[#f0ebfc] rounded-3xl p-8 flex items-start gap-5 transition-transform hover:-translate-y-1"
+        class="bg-brand-primary/5 rounded-3xl p-8 flex items-start gap-5 transition-transform hover:-translate-y-1"
       >
         <div
-          class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-sm"
+          class="w-14 h-14 bg-brand-surface rounded-2xl flex items-center justify-center shrink-0 shadow-sm"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-7 h-7 text-[#0a332c]"
+            class="w-7 h-7 text-brand-primary"
           >
             <path
               stroke-linecap="round"
@@ -65,10 +65,10 @@
       </div>
 
       <div
-        class="bg-[#eaf4f4] rounded-3xl p-8 flex items-start gap-5 transition-transform hover:-translate-y-1"
+        class="bg-brand-primary/5 rounded-3xl p-8 flex items-start gap-5 transition-transform hover:-translate-y-1"
       >
         <div
-          class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-sm"
+          class="w-14 h-14 bg-brand-surface rounded-2xl flex items-center justify-center shrink-0 shadow-sm"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +76,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-7 h-7 text-[#0a332c]"
+            class="w-7 h-7 text-brand-primary"
           >
             <path
               stroke-linecap="round"
@@ -94,10 +94,10 @@
       </div>
 
       <div
-        class="bg-[#fdf2e3] rounded-3xl p-8 flex items-start gap-5 transition-transform hover:-translate-y-1"
+        class="bg-brand-primary/5 rounded-3xl p-8 flex items-start gap-5 transition-transform hover:-translate-y-1"
       >
         <div
-          class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-sm"
+          class="w-14 h-14 bg-brand-surface rounded-2xl flex items-center justify-center shrink-0 shadow-sm"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +105,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-7 h-7 text-[#0a332c]"
+            class="w-7 h-7 text-brand-primary"
           >
             <path
               stroke-linecap="round"
@@ -125,7 +125,7 @@
 
     <!-- Contact Form -->
     <div
-      class="bg-white rounded-3xl p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] animate-fade-in-up border border-gray-100"
+      class="bg-brand-surface rounded-3xl p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] animate-fade-in-up border border-brand-primary/5"
       style="animation-delay: 0.2s"
     >
       <h3 class="text-2xl font-bold text-brand-primary mb-8 font-heading">Send us a message</h3>
@@ -138,7 +138,7 @@
             id="name"
             formControlName="name"
             [ngClass]="{ 'border-red-500': submitted && contactForm.get('name')?.errors }"
-            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm focus:bg-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-colors"
+            class="w-full rounded-xl border border-brand-primary/10 bg-brand-primary/5 px-4 py-3.5 text-sm focus:bg-brand-surface focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-colors"
             placeholder="John Doe"
           />
           @if (submitted && contactForm.get('name')?.errors?.['required']) {
@@ -153,7 +153,7 @@
             id="email"
             formControlName="email"
             [ngClass]="{ 'border-red-500': submitted && contactForm.get('email')?.errors }"
-            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm focus:bg-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-colors"
+            class="w-full rounded-xl border border-brand-primary/10 bg-brand-primary/5 px-4 py-3.5 text-sm focus:bg-brand-surface focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-colors"
             placeholder="john@example.com"
           />
           @if (submitted && contactForm.get('email')?.errors?.['required']) {
@@ -171,7 +171,7 @@
             id="subject"
             formControlName="subject"
             [ngClass]="{ 'border-red-500': submitted && contactForm.get('subject')?.errors }"
-            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm focus:bg-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-colors"
+            class="w-full rounded-xl border border-brand-primary/10 bg-brand-primary/5 px-4 py-3.5 text-sm focus:bg-brand-surface focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-colors"
             placeholder="How can we help?"
           />
           @if (submitted && contactForm.get('subject')?.errors?.['required']) {
@@ -186,7 +186,7 @@
             formControlName="message"
             rows="5"
             [ngClass]="{ 'border-red-500': submitted && contactForm.get('message')?.errors }"
-            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm focus:bg-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-colors resize-none"
+            class="w-full rounded-xl border border-brand-primary/10 bg-brand-primary/5 px-4 py-3.5 text-sm focus:bg-brand-surface focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary transition-colors resize-none"
             placeholder="Tell us more about your inquiry..."
           ></textarea>
           @if (submitted && contactForm.get('message')?.errors?.['required']) {
@@ -196,7 +196,7 @@
 
         <button
           type="submit"
-          class="mt-4 w-full rounded-xl bg-brand-primary px-8 py-4 text-sm font-medium text-white shadow-sm hover:bg-brand-primary/90 transition-all duration-200 flex justify-center items-center gap-2"
+          class="mt-4 w-full rounded-xl bg-brand-primary  text-brand-surface shadow-sm hover:bg-brand-primary/90 transition-all duration-200 flex justify-center items-center gap-2"
         >
           Send Message
           <svg

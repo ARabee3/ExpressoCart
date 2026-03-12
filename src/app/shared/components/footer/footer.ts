@@ -11,6 +11,10 @@ import { RouterLink } from '@angular/router';
 export class Footer {
   protected readonly currentYear = new Date().getFullYear();
 
+  protected scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   protected readonly quickLinks = [
     { label: 'Home', route: '/' },
     { label: 'Products', route: '/products' },

@@ -96,7 +96,10 @@ export class ProductDetails implements OnInit {
           const purchased = res.data.some(
             (order) =>
               (order.status === 'Delivered' || order.status === 'Shipped') &&
-              order.orderItems.some((item) => item.productId === productId),
+              order.orderItems.some((item) => {
+                const id = typeof item.productId === 'object' ? item.productId._id : item.productId;
+                return id === productId;
+              }),
           );
           this.hasPurchasedProduct.set(purchased);
         }
