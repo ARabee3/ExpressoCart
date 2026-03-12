@@ -16,7 +16,10 @@ import { RouterLink } from '@angular/router';
       <div class="relative z-10 max-w-md w-full">
         <!-- Animated Icon Container -->
         <div class="relative mx-auto w-28 h-28 mb-8">
-          <div class="absolute inset-0 bg-red-500/20 rounded-full animate-ping" style="animation-duration: 3s;"></div>
+          <div
+            class="absolute inset-0 bg-red-500/20 rounded-full animate-ping"
+            style="animation-duration: 3s;"
+          ></div>
           <div class="absolute inset-2 bg-red-500/20 rounded-full animate-pulse"></div>
           <div
             class="absolute inset-4 bg-brand-surface border border-red-100 shadow-xl rounded-full flex items-center justify-center"
