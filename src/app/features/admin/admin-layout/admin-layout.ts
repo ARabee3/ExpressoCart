@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ThemeService, ALL_THEMES, THEME_META, Theme } from '../../../core/services/theme.service';
 import { AuthState } from '../../../core/services/auth-state';
 import { AuthApi } from '../../../core/services/auth-api';
 
@@ -13,6 +14,15 @@ export class AdminLayout {
   private authState = inject(AuthState);
   private authApi = inject(AuthApi);
   private router = inject(Router);
+
+  private themeService = inject(ThemeService);
+  allThemes = ALL_THEMES;
+  themeMeta = THEME_META;
+  currentTheme = this.themeService.currentTheme;
+
+  setTheme(theme: Theme) {
+    this.themeService.setTheme(theme);
+  }
 
   sidebarOpen = signal(false);
 
@@ -51,7 +61,7 @@ export class AdminLayout {
     //     this.authState.clear();
     //     this.router.navigate(['/']);
     //  },
-   // });
+    // });
     this.authState.clear();
     this.router.navigate(['/auth/login']);
   }

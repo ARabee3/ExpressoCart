@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import {
@@ -21,6 +29,7 @@ export class Coupon implements OnInit {
   showForm = signal(false);
   editingCoupon = signal<CouponModel | null>(null);
   deletingCoupon = signal<CouponModel | null>(null);
+  isDiscountTypeDropdownOpen = signal(false);
 
   // today in YYYY-MM-DD for the date input min attribute
   readonly today = new Date().toISOString().split('T')[0];

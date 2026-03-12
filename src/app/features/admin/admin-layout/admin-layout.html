@@ -1,4 +1,4 @@
-<div class="flex h-screen bg-gray-100">
+<div class="flex h-screen bg-brand-primary/5 flex-col lg:flex-row">
   <!-- Mobile Backdrop -->
   @if (sidebarOpen()) {
     <div class="fixed inset-0 bg-black/40 z-40 lg:hidden" (click)="closeSidebar()"></div>
@@ -6,97 +6,97 @@
 
   <!-- Sidebar -->
   <aside
-    class="fixed inset-y-0 left-0 z-50 w-64 bg-black text-white flex flex-col transition-transform duration-200 lg:static lg:translate-x-0"
+    class="fixed inset-y-0 left-0 z-50 w-64 bg-zinc-950 border-r border-white/5 text-white flex flex-col transition-transform duration-200 lg:static lg:translate-x-0 shadow-2xl"
     [class.-translate-x-full]="!sidebarOpen()"
     [class.translate-x-0]="sidebarOpen()"
   >
-    <div class="px-6 py-5 border-b border-white/10">
-      <h1 class="text-xl font-black tracking-tighter italic">EXPRESSO.</h1>
-      <p class="text-xs text-gray-400 mt-0.5">Admin Panel</p>
+    <div class="px-6 py-5 border-b border-white/5">
+      <h1 class="text-xl font-black tracking-tighter italic text-white">EXPRESSO.</h1>
+      <p class="text-xs text-zinc-400 mt-0.5">Admin Panel</p>
     </div>
 
     <nav class="flex-1 px-4 py-6 flex flex-col gap-1">
-      <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-2">Main</p>
+      <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-2">Main</p>
 
       <a
         routerLink="dashboard"
-        routerLinkActive="bg-white/10 text-white"
+        routerLinkActive="bg-white/10 text-white font-medium shadow-sm"
         (click)="closeSidebar()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
       >
         <span>📊</span> Dashboard
       </a>
 
       <a
         routerLink="orders"
-        routerLinkActive="bg-white/10 text-white"
+        routerLinkActive="bg-white/10 text-white font-medium shadow-sm"
         (click)="closeSidebar()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
       >
         <span>📦</span> Orders
       </a>
 
       <a
         routerLink="categories"
-        routerLinkActive="bg-white/10 text-white"
+        routerLinkActive="bg-white/10 text-white font-medium shadow-sm"
         (click)="closeSidebar()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
       >
         <span>🛍️</span> Categories
       </a>
 
       <a
         routerLink="users"
-        routerLinkActive="bg-white/10 text-white"
+        routerLinkActive="bg-white/10 text-white font-medium shadow-sm"
         (click)="closeSidebar()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
       >
         <span>👥</span> Users
       </a>
 
       <a
         routerLink="coupon"
-        routerLinkActive="bg-white/10 text-white"
+        routerLinkActive="bg-white/10 text-white font-medium shadow-sm"
         (click)="closeSidebar()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
       >
         <span>🏪</span> Coupons
       </a>
 
       <a
         routerLink="sellers"
-        routerLinkActive="bg-white/10 text-white"
+        routerLinkActive="bg-white/10 text-white font-medium shadow-sm"
         (click)="closeSidebar()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
       >
         <span>🧑‍💼</span> Sellers
       </a>
     </nav>
 
-    <div class="px-4 py-4 border-t border-white/10">
+    <div class="px-4 py-4 border-t border-white/5">
       <div class="flex items-center gap-3 px-3 py-2.5 rounded-lg">
         <div
-          class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold"
+          class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white shadow-sm"
         >
           {{ initial() }}
         </div>
         <div class="flex-1 min-w-0">
-          <p class="text-sm font-semibold truncate">{{ displayName() }}</p>
-          <p class="text-xs text-gray-400 truncate">{{ email() }}</p>
+          <p class="text-sm font-semibold truncate text-white">{{ displayName() }}</p>
+          <p class="text-xs text-zinc-400 truncate">{{ email() }}</p>
         </div>
       </div>
     </div>
   </aside>
 
-  <div class="flex-1 flex flex-col overflow-hidden">
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
     <header
-      class="h-14 lg:h-16 bg-white border-b px-4 lg:px-8 flex items-center justify-between shrink-0"
+      class="h-14 lg:h-16 bg-brand-surface border-b border-brand-primary/5 shadow-sm px-4 lg:px-8 flex items-center justify-between shrink-0 z-10"
     >
       <div class="flex items-center gap-3">
         <!-- Hamburger button (mobile only) -->
         <button
           (click)="toggleSidebar()"
-          class="lg:hidden p-1.5 -ml-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+          class="lg:hidden p-1.5 -ml-1.5 rounded-lg hover:bg-brand-primary/10 transition-colors"
           aria-label="Toggle sidebar"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,9 +111,81 @@
         <h2 class="font-bold uppercase tracking-tight text-sm">Admin Panel</h2>
       </div>
       <div class="flex items-center gap-3 lg:gap-4">
+        <!-- Theme Dropdown -->
+        <div class="group relative">
+          <button
+            class="flex items-center justify-center p-2 rounded-lg text-brand-primary hover:bg-brand-primary/5 transition-colors"
+          >
+            @if (currentTheme() === 'dark') {
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
+              </svg>
+            } @else if (currentTheme() === 'light') {
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+              </svg>
+            } @else if (currentTheme() === 'creamy') {
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09l2.846.813-2.846.813a4.5 4.5 0 00-3.09 3.09zm8.446-7.189l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183 .394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423l-.394 1.183-.394-1.183a2.25 2.25 0 00-1.423-1.423l-1.183-.394z"
+                />
+              </svg>
+            } @else {
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+            }
+          </button>
+          <!-- Theme Dropdown Content -->
+          <div
+            class="absolute right-0 top-full mt-2 w-48 bg-brand-surface border border-brand-primary/10 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50"
+          >
+            <div class="p-3">
+              <p class="text-xs font-bold text-brand-primary/50 uppercase tracking-widest mb-3">
+                THEME
+              </p>
+              <div class="grid grid-cols-4 gap-2">
+                @for (theme of allThemes; track theme) {
+                  <button
+                    (click)="setTheme(theme)"
+                    [attr.aria-label]="'Switch to ' + themeMeta[theme].label + ' theme'"
+                    class="flex flex-col items-center gap-1.5 rounded-lg p-2 transition-all hover:bg-brand-primary/5"
+                    [class.ring-2]="currentTheme() === theme"
+                    [class.ring-brand-accent]="currentTheme() === theme"
+                    [class.ring-offset-1]="currentTheme() === theme"
+                  >
+                    <span
+                      class="w-5 h-5 rounded-full border border-black/10 block shrink-0"
+                      [style.background]="themeMeta[theme].bg"
+                    ></span>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
         <button
           (click)="logout()"
-          class="text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1.5 rounded-lg bg-black text-white hover:bg-gray-800 transition-colors"
+          class="text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1.5 rounded-lg bg-brand-primary text-brand-surface hover:bg-brand-primary/90 transition-colors"
         >
           Logout
         </button>

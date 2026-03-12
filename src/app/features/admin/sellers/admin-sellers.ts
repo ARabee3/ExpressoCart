@@ -36,6 +36,29 @@ export class AdminSellers implements OnInit {
   searchQuery = signal('');
   statusFilter = signal<SellerStatus>('all');
   sortField = signal<'status' | 'name' | 'newest'>('status');
+
+  isStatusDropdownOpen = signal(false);
+  isSortDropdownOpen = signal(false);
+
+  statusOptions = [
+    { value: 'all', label: 'All Status' },
+    { value: 'pending', label: 'Pending' },
+    { value: 'approved', label: 'Active' },
+    { value: 'suspended', label: 'Suspended' },
+  ] as const;
+  
+  sortOptions = [
+    { value: 'status', label: 'Pending First' },
+    { value: 'newest', label: 'Newest First' },
+    { value: 'name', label: 'Name A → Z' },
+  ] as const;
+
+  get currentStatusLabel() {
+    return this.statusOptions.find(o => o.value === this.statusFilter())?.label || 'All Status';
+  }
+  get currentSortLabel() {
+    return this.sortOptions.find(o => o.value === this.sortField())?.label || 'Pending First';
+  }
   confirmingAction = signal<{ seller: User; action: 'approve' | 'suspend' | 'reactivate' } | null>(
     null,
   );
