@@ -42,7 +42,7 @@
 
       <a
         [routerLink]="['/products']"
-        class="inline-flex items-center gap-2 rounded-xl bg-brand-primary px-8 py-4 text-sm font-medium text-white shadow-sm hover:bg-brand-primary/90 transition-colors w-fit"
+        class="inline-flex items-center gap-2 rounded-xl bg-brand-primary px-8 py-4 text-sm font-medium text-brand-surface shadow-sm hover:bg-brand-primary/90 transition-colors w-fit"
       >
         Shop Now
         <svg
@@ -66,10 +66,10 @@
   <!-- Mission & Vision -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mb-24">
     <div
-      class="bg-[#f2f9fa] rounded-3xl p-10 md:p-12 text-center md:text-left flex flex-col justify-center transition-all duration-300 hover:shadow-lg"
+      class="bg-brand-primary/5 rounded-3xl p-10 md:p-12 text-center md:text-left flex flex-col justify-center transition-all duration-300 hover:shadow-lg"
     >
       <div
-        class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm mx-auto md:mx-0"
+        class="w-16 h-16 bg-brand-surface rounded-2xl flex items-center justify-center mb-6 shadow-sm mx-auto md:mx-0"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +77,7 @@
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="w-8 h-8 text-[#0a332c]"
+          class="w-8 h-8 text-brand-primary"
         >
           <path
             stroke-linecap="round"
@@ -94,10 +94,10 @@
     </div>
 
     <div
-      class="bg-[#fff2e0] rounded-3xl p-10 md:p-12 text-center md:text-left flex flex-col justify-center transition-all duration-300 hover:shadow-lg"
+      class="bg-brand-primary/5 rounded-3xl p-10 md:p-12 text-center md:text-left flex flex-col justify-center transition-all duration-300 hover:shadow-lg"
     >
       <div
-        class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm mx-auto md:mx-0"
+        class="w-16 h-16 bg-brand-surface rounded-2xl flex items-center justify-center mb-6 shadow-sm mx-auto md:mx-0"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +105,7 @@
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="w-8 h-8 text-[#0a332c]"
+          class="w-8 h-8 text-brand-primary"
         >
           <path
             stroke-linecap="round"
@@ -128,13 +128,15 @@
   </div>
 
   <!-- Stats Grid -->
-  <div class="bg-brand-primary text-white rounded-3xl p-12 md:p-16 mb-8 overflow-hidden relative">
+  <div
+    class="bg-brand-primary text-brand-secondary rounded-3xl p-12 md:p-16 mb-8 overflow-hidden relative"
+  >
     <!-- Decorative background elements -->
     <div
-      class="absolute top-0 right-0 -m-16 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"
+      class="absolute top-0 right-0 -m-16 w-64 h-64 bg-brand-surface opacity-10 rounded-full blur-3xl"
     ></div>
     <div
-      class="absolute bottom-0 left-0 -m-16 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"
+      class="absolute bottom-0 left-0 -m-16 w-64 h-64 bg-brand-surface opacity-10 rounded-full blur-3xl"
     ></div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center relative z-10">
