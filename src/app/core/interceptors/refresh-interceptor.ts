@@ -24,7 +24,11 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error) => {
-      if (error.status === 401 && !req.url.includes('refresh') && !isAuthPath) {
+      // Only attempt token refresh if the user is actually logged in (has a token).
+      // Guests have no token so a 401 should pass through silently — no redirect.
+      const hasToken = !!authState.token();
+
+      if (error.status === 401 && !req.url.includes('refresh') && !isAuthPath && hasToken) {
         // ── If already refreshing, WAIT for new token then retry
         if (isRefreshing) {
           return refreshTokens.pipe(
