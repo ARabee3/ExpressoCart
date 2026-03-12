@@ -73,13 +73,18 @@ export class Checkout implements OnInit {
   }
 
   placeOrder() {
-    const cartId = this.cartService.cart()._id;
+    const cart = this.cartService.cart();
+    const cartId = cart._id;
     this.isPlacingOrder.set(true);
+
+    // If the order is fully free (100% coupon discount), force Cash so the backend
+    // marks it as Processing immediately — Stripe rejects zero-amount intents anyway.
+    const effectivePayment = cart.finalPrice === 0 ? 'Cash' : this.selectedPayment;
 
     const orderData = {
       cartId: cartId,
       shippingAddress: this.resolvedAddressObj,
-      paymentMethod: this.selectedPayment,
+      paymentMethod: effectivePayment,
     };
 
     this.orderService.createOrder(orderData).subscribe({
@@ -87,15 +92,10 @@ export class Checkout implements OnInit {
         const orderId = res.data._id;
         this.orderId = orderId;
 
-        if (this.selectedPayment === 'Cash') {
-          // For Cash flow, order is successfully placed and marked as Processing by backend
+        if (effectivePayment === 'Cash') {
+          // For Cash flow (including free orders), order is marked as Processing by backend
           this.handleSuccess(orderId);
-        } else if (this.selectedPayment === 'Card') {
-          // If the order is fully covered by a coupon, skip Stripe (amount = 0 is rejected)
-          if (res.data.finalPrice === 0) {
-            this.handleSuccess(orderId);
-            return;
-          }
+        } else if (effectivePayment === 'Card') {
           // For Card flow, need to generate a payment intent
           this.orderService.payCard(orderId).subscribe({
             next: (payRes) => {
