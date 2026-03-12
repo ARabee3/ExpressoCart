@@ -1,15 +1,15 @@
 @if (clientSecret) {
 <!-- Modal Backdrop -->
 <div
-    class="fixed inset-0 z-[100] flex items-center justify-center bg-[#1a1a2e]/60 backdrop-blur-sm animate-in fade-in duration-300 p-4">
+    class="fixed inset-0 z-[100] flex items-center justify-center bg-brand-primary/60 backdrop-blur-sm animate-in fade-in duration-300 p-4">
     <!-- Modal Content -->
     <div
-        class="bg-white rounded-2xl shadow-2xl w-full max-w-[500px] p-7 animate-in zoom-in-95 duration-300 relative flex flex-col max-h-[90vh]">
+        class="bg-brand-surface rounded-2xl shadow-2xl w-full max-w-[500px] p-7 animate-in zoom-in-95 duration-300 relative flex flex-col max-h-[90vh]">
 
         <!-- Header -->
-        <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
-            <h3 class="text-[1.2rem] font-bold text-[#1a1a2e] flex items-center gap-2 m-0 leading-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#e8a838]" fill="currentColor"
+        <div class="flex items-center justify-between mb-6 pb-4 border-b border-brand-primary/5">
+            <h3 class="text-[1.2rem] font-bold text-brand-primary flex items-center gap-2 m-0 leading-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-brand-primary" fill="currentColor"
                     viewBox="0 0 20 20">
                     <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
                     <path fill-rule="evenodd"
@@ -21,7 +21,7 @@
 
             <!-- Close Button -->
             <button type="button" (click)="close()"
-                class="text-[#1a1a2e]/40 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all duration-200">
+                class="text-brand-primary/40 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

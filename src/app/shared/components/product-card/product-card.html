@@ -1,5 +1,5 @@
 <div
-  class="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full"
+  class="group relative bg-brand-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full"
 >
   <!-- Image section connected to details route -->
   <a
@@ -28,11 +28,11 @@
     >
       <button
         (click)="onAddToWishlist($event)"
-        class="p-3 bg-white rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-xl"
+        class="p-3 bg-brand-surface rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-xl"
         [class]="
           isInWishlist()
-            ? 'text-red-500 hover:bg-red-50'
-            : 'text-brand-primary hover:bg-red-50 hover:text-red-500'
+            ? 'text-red-500 hover:bg-red-500/10'
+            : 'text-brand-primary hover:bg-red-500/10 hover:text-red-500'
         "
         aria-label="Toggle Wishlist"
       >
