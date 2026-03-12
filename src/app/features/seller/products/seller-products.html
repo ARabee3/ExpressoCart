@@ -2,7 +2,7 @@
 <div class="flex items-center justify-between mb-8">
   <div>
     <h1 class="text-2xl font-black tracking-tight">My Products</h1>
-    <p class="text-sm text-gray-500 mt-1">Manage your store's product catalogue.</p>
+    <p class="text-sm text-brand-primary/50 mt-1">Manage your store's product catalogue.</p>
   </div>
   <button
     (click)="openAddModal()"
@@ -23,22 +23,22 @@
 </div>
 
 <!-- Products Content -->
-<div class="bg-white rounded-2xl border shadow-sm">
+<div class="bg-brand-surface rounded-2xl border border-brand-primary/10 shadow-sm">
   @if (loading()) {
     <div class="p-6 space-y-4">
       @for (_ of [1, 2, 3, 4]; track $index) {
-        <div class="h-16 bg-gray-100 rounded-xl animate-pulse"></div>
+        <div class="h-16 bg-brand-primary/10 rounded-xl animate-pulse"></div>
       }
     </div>
   } @else if (products().length === 0) {
     <div class="flex flex-col items-center justify-center py-20 text-center">
       <div
-        class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4 text-3xl"
+        class="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 text-3xl"
       >
         📦
       </div>
-      <p class="text-base font-semibold text-gray-600">No products yet</p>
-      <p class="text-sm text-gray-400 mt-1 max-w-xs">
+      <p class="text-base font-semibold text-brand-primary/60">No products yet</p>
+      <p class="text-sm text-brand-primary/40 mt-1 max-w-xs">
         Click "Add Product" to list your first item on the marketplace.
       </p>
     </div>
@@ -47,7 +47,7 @@
       <table class="w-full text-sm">
         <thead>
           <tr
-            class="text-left text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100"
+            class="text-left text-xs font-bold text-brand-primary/40 uppercase tracking-wider border-b border-brand-primary/5"
           >
             <th class="px-6 py-4">Product</th>
             <th class="px-6 py-4">Price</th>
@@ -56,31 +56,31 @@
             <th class="px-6 py-4 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-50">
+        <tbody class="divide-y divide-brand-primary/5">
           @for (product of products(); track product._id) {
-            <tr class="hover:bg-gray-50/50 transition-colors">
+            <tr class="hover:bg-brand-primary/5/50 transition-colors">
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
                   @if (product.images?.[0]) {
                     <img
                       [src]="product.images[0]"
                       [alt]="product.name"
-                      class="w-11 h-11 rounded-xl object-cover bg-gray-100 border shrink-0"
+                      class="w-11 h-11 rounded-xl object-cover bg-brand-primary/10 border border-brand-primary/10 shrink-0"
                     />
                   } @else {
                     <div
-                      class="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-xl border shrink-0"
+                      class="w-11 h-11 rounded-xl bg-brand-primary/10 flex items-center justify-center text-xl border border-brand-primary/10 shrink-0"
                     >
                       📦
                     </div>
                   }
                   <div class="min-w-0">
-                    <p class="font-semibold text-gray-800 truncate max-w-50">{{ product.name }}</p>
-                    <p class="text-xs text-gray-400 truncate max-w-50">{{ product.description }}</p>
+                    <p class="font-semibold text-brand-primary/95 truncate max-w-50">{{ product.name }}</p>
+                    <p class="text-xs text-brand-primary/40 truncate max-w-50">{{ product.description }}</p>
                   </div>
                 </div>
               </td>
-              <td class="px-6 py-4 font-bold text-gray-700">${{ product.price }}</td>
+              <td class="px-6 py-4 font-bold text-brand-primary/80">${{ product.price }}</td>
               <td class="px-6 py-4">
                 <span
                   class="px-2.5 py-1 rounded-full text-xs font-semibold"
@@ -91,11 +91,11 @@
                   {{ product.stock > 0 ? product.stock + ' in stock' : 'Out of stock' }}
                 </span>
               </td>
-              <td class="px-6 py-4 text-gray-500">{{ product.category?.name ?? '—' }}</td>
+              <td class="px-6 py-4 text-brand-primary/50">{{ product.category?.name ?? '—' }}</td>
               <td class="px-6 py-4 text-right">
                 @if (deleteConfirmId() === product._id) {
                   <div class="flex items-center justify-end gap-2">
-                    <span class="text-xs text-gray-500 mr-1">Delete?</span>
+                    <span class="text-xs text-brand-primary/50 mr-1">Delete?</span>
                     <button
                       (click)="confirmDelete(product._id)"
                       [disabled]="deleting()"
@@ -105,7 +105,7 @@
                     </button>
                     <button
                       (click)="cancelDelete()"
-                      class="px-3 py-1.5 text-xs font-semibold bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition"
+                      class="px-3 py-1.5 text-xs font-semibold bg-brand-primary/10 text-brand-primary/60 rounded-lg hover:bg-brand-primary/20 transition"
                     >
                       No
                     </button>
@@ -163,8 +163,8 @@
 
     <!-- Pagination -->
     @if (totalPages() > 1) {
-      <div class="flex items-center justify-between px-6 py-4 border-t border-gray-100">
-        <p class="text-xs text-gray-500">
+      <div class="flex items-center justify-between px-6 py-4 border-t border-brand-primary/5">
+        <p class="text-xs text-brand-primary/50">
           Page {{ currentPage() }} of {{ totalPages() }} · {{ totalProducts() }} products
         </p>
         <div class="flex gap-1">
@@ -175,7 +175,7 @@
               [class]="
                 page === currentPage()
                   ? 'bg-brand-accent text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-brand-primary/10 text-brand-primary/60 hover:bg-brand-primary/20'
               "
             >
               {{ page }}
@@ -197,25 +197,25 @@
       (click)="closeAddModal()"
     ></div>
     <div
-      class="relative w-full max-w-2xl bg-white rounded-t-3xl shadow-2xl px-6 pt-6 pb-10 transition-transform duration-300 ease-out max-h-[90vh] overflow-y-auto"
+      class="relative w-full max-w-2xl bg-brand-surface rounded-t-3xl shadow-2xl px-6 pt-6 pb-10 transition-transform duration-300 ease-out max-h-[90vh] overflow-y-auto"
       [class.translate-y-full]="!addModalVisible()"
       [class.translate-y-0]="addModalVisible()"
     >
-      <div class="w-10 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
+      <div class="w-10 h-1.5 bg-brand-primary/20 rounded-full mx-auto mb-6"></div>
       <h2 class="text-xl font-bold text-brand-primary mb-5">Add New Product</h2>
 
       <form [formGroup]="addForm" (ngSubmit)="submitAdd()" class="space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- Name -->
           <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5"
               >Product Name <span class="text-red-500">*</span></label
             >
             <input
               type="text"
               formControlName="name"
               placeholder="e.g. Wireless Headphones"
-              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+              class="w-full px-4 py-2.5 text-sm border border-brand-primary/10 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
               [class.border-red-400]="
                 fieldError('add', 'name', 'required') || fieldError('add', 'name', 'minlength')
               "
@@ -230,14 +230,14 @@
 
           <!-- Description -->
           <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5"
               >Description <span class="text-red-500">*</span></label
             >
             <textarea
               formControlName="description"
               rows="3"
               placeholder="Describe your product..."
-              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition resize-none"
+              class="w-full px-4 py-2.5 text-sm border border-brand-primary/10 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition resize-none"
               [class.border-red-400]="fieldError('add', 'description', 'required')"
             ></textarea>
             @if (fieldError('add', 'description', 'required')) {
@@ -250,7 +250,7 @@
 
           <!-- Price -->
           <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5"
               >Price ($) <span class="text-red-500">*</span></label
             >
             <input
@@ -258,7 +258,7 @@
               formControlName="price"
               placeholder="0.00"
               min="0"
-              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+              class="w-full px-4 py-2.5 text-sm border border-brand-primary/10 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
               [class.border-red-400]="fieldError('add', 'price', 'required')"
             />
             @if (fieldError('add', 'price', 'required')) {
@@ -268,38 +268,38 @@
 
           <!-- Stock -->
           <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Stock</label>
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5">Stock</label>
             <input
               type="number"
               formControlName="stock"
               placeholder="0"
               min="0"
-              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+              class="w-full px-4 py-2.5 text-sm border border-brand-primary/10 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
             />
           </div>
 
           <!-- Category (Add) -->
           <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5"
               >Category <span class="text-red-500">*</span></label
             >
             <div class="relative">
               <button
                 type="button"
                 (click)="addCategoryOpen.set(!addCategoryOpen())"
-                class="w-full flex items-center justify-between px-4 py-2.5 text-sm border rounded-xl outline-none transition bg-white text-left"
+                class="w-full flex items-center justify-between px-4 py-2.5 text-sm border border-brand-primary/10 rounded-xl outline-none transition bg-brand-surface text-left"
                 [class]="
                   addForm.get('category')?.touched && addForm.get('category')?.errors?.['required']
                     ? 'border-red-400'
-                    : 'border-gray-200 focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent'
+                    : 'border-brand-primary/10 focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent'
                 "
               >
                 <span
-                  [class]="addForm.get('category')?.value ? 'text-gray-800' : 'text-gray-400'"
+                  [class]="addForm.get('category')?.value ? 'text-brand-primary/95' : 'text-brand-primary/40'"
                   >{{ getCategoryName('add') }}</span
                 >
                 <svg
-                  class="size-4 text-gray-400 transition-transform duration-200"
+                  class="size-4 text-brand-primary/40 transition-transform duration-200"
                   [class.rotate-180]="addCategoryOpen()"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -312,7 +312,7 @@
               </button>
               @if (addCategoryOpen()) {
                 <div
-                  class="absolute z-20 mt-1.5 w-full bg-white border border-gray-100 rounded-xl shadow-lg overflow-hidden"
+                  class="absolute z-20 mt-1.5 w-full bg-brand-surface border border-brand-primary/5 rounded-xl shadow-lg overflow-hidden"
                 >
                   <div class="max-h-48 overflow-y-auto py-1">
                     @for (cat of categories(); track cat._id) {
@@ -323,7 +323,7 @@
                         [class]="
                           addForm.get('category')?.value === cat._id
                             ? 'text-brand-accent font-semibold bg-brand-accent/5'
-                            : 'text-gray-700'
+                            : 'text-brand-primary/80'
                         "
                       >
                         <span class="size-4 shrink-0 flex items-center justify-center">
@@ -358,12 +358,12 @@
 
           <!-- Images -->
           <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5"
               >Images <span class="text-red-500">*</span>
-              <span class="text-gray-400 font-normal">(max 5)</span></label
+              <span class="text-brand-primary/40 font-normal">(max 5)</span></label
             >
             <label
-              class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-brand-accent/50 hover:bg-gray-50 transition-colors"
+              class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-brand-primary/10 rounded-xl cursor-pointer hover:border-brand-accent/50 hover:bg-brand-primary/5 transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -371,7 +371,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="size-7 text-gray-400 mb-1"
+                class="size-7 text-brand-primary/40 mb-1"
               >
                 <path
                   stroke-linecap="round"
@@ -379,7 +379,7 @@
                   d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
                 />
               </svg>
-              <span class="text-xs text-gray-500">Click to upload images</span>
+              <span class="text-xs text-brand-primary/50">Click to upload images</span>
               <input
                 type="file"
                 class="hidden"
@@ -391,7 +391,7 @@
             @if (addImagePreviews().length > 0) {
               <div class="flex gap-2 mt-3 flex-wrap">
                 @for (preview of addImagePreviews(); track $index) {
-                  <img [src]="preview" class="w-14 h-14 rounded-lg object-cover border" />
+                  <img [src]="preview" class="w-14 h-14 rounded-lg object-cover border border-brand-primary/10" />
                 }
               </div>
             }
@@ -402,7 +402,7 @@
           <button
             type="button"
             (click)="closeAddModal()"
-            class="flex-1 px-4 py-2.5 text-sm font-medium bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition"
+            class="flex-1 px-4 py-2.5 text-sm font-medium bg-brand-primary/10 text-brand-primary/80 rounded-xl hover:bg-brand-primary/20 transition"
           >
             Cancel
           </button>
@@ -453,23 +453,23 @@
       (click)="closeEditModal()"
     ></div>
     <div
-      class="relative w-full max-w-2xl bg-white rounded-t-3xl shadow-2xl px-6 pt-6 pb-10 transition-transform duration-300 ease-out max-h-[90vh] overflow-y-auto"
+      class="relative w-full max-w-2xl bg-brand-surface rounded-t-3xl shadow-2xl px-6 pt-6 pb-10 transition-transform duration-300 ease-out max-h-[90vh] overflow-y-auto"
       [class.translate-y-full]="!editModalVisible()"
       [class.translate-y-0]="editModalVisible()"
     >
-      <div class="w-10 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
+      <div class="w-10 h-1.5 bg-brand-primary/20 rounded-full mx-auto mb-6"></div>
       <h2 class="text-xl font-bold text-brand-primary mb-5">Edit Product</h2>
 
       <form [formGroup]="editForm" (ngSubmit)="submitEdit()" class="space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5"
               >Product Name <span class="text-red-500">*</span></label
             >
             <input
               type="text"
               formControlName="name"
-              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+              class="w-full px-4 py-2.5 text-sm border border-brand-primary/10 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
             />
             @if (fieldError('edit', 'name', 'required')) {
               <p class="text-xs text-red-500 mt-1">Name is required</p>
@@ -477,13 +477,13 @@
           </div>
 
           <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5"
               >Description <span class="text-red-500">*</span></label
             >
             <textarea
               formControlName="description"
               rows="3"
-              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition resize-none"
+              class="w-full px-4 py-2.5 text-sm border border-brand-primary/10 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition resize-none"
             ></textarea>
             @if (fieldError('edit', 'description', 'required')) {
               <p class="text-xs text-red-500 mt-1">Description is required</p>
@@ -491,14 +491,14 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5"
               >Price ($) <span class="text-red-500">*</span></label
             >
             <input
               type="number"
               formControlName="price"
               min="0"
-              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+              class="w-full px-4 py-2.5 text-sm border border-brand-primary/10 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
             />
             @if (fieldError('edit', 'price', 'required')) {
               <p class="text-xs text-red-500 mt-1">Price is required</p>
@@ -506,37 +506,37 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Stock</label>
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5">Stock</label>
             <input
               type="number"
               formControlName="stock"
               min="0"
-              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
+              class="w-full px-4 py-2.5 text-sm border border-brand-primary/10 rounded-xl outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition"
             />
           </div>
 
           <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5"
+            <label class="block text-xs font-semibold text-brand-primary/60 mb-1.5"
               >Category <span class="text-red-500">*</span></label
             >
             <div class="relative">
               <button
                 type="button"
                 (click)="editCategoryOpen.set(!editCategoryOpen())"
-                class="w-full flex items-center justify-between px-4 py-2.5 text-sm border rounded-xl outline-none transition bg-white text-left"
+                class="w-full flex items-center justify-between px-4 py-2.5 text-sm border border-brand-primary/10 rounded-xl outline-none transition bg-brand-surface text-left"
                 [class]="
                   editForm.get('category')?.touched &&
                   editForm.get('category')?.errors?.['required']
                     ? 'border-red-400'
-                    : 'border-gray-200 focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent'
+                    : 'border-brand-primary/10 focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent'
                 "
               >
                 <span
-                  [class]="editForm.get('category')?.value ? 'text-gray-800' : 'text-gray-400'"
+                  [class]="editForm.get('category')?.value ? 'text-brand-primary/95' : 'text-brand-primary/40'"
                   >{{ getCategoryName('edit') }}</span
                 >
                 <svg
-                  class="size-4 text-gray-400 transition-transform duration-200"
+                  class="size-4 text-brand-primary/40 transition-transform duration-200"
                   [class.rotate-180]="editCategoryOpen()"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -549,7 +549,7 @@
               </button>
               @if (editCategoryOpen()) {
                 <div
-                  class="absolute z-20 mt-1.5 w-full bg-white border border-gray-100 rounded-xl shadow-lg overflow-hidden"
+                  class="absolute z-20 mt-1.5 w-full bg-brand-surface border border-brand-primary/5 rounded-xl shadow-lg overflow-hidden"
                 >
                   <div class="max-h-48 overflow-y-auto py-1">
                     @for (cat of categories(); track cat._id) {
@@ -560,7 +560,7 @@
                         [class]="
                           editForm.get('category')?.value === cat._id
                             ? 'text-brand-accent font-semibold bg-brand-accent/5'
-                            : 'text-gray-700'
+                            : 'text-brand-primary/80'
                         "
                       >
                         <span class="size-4 shrink-0 flex items-center justify-center">
@@ -598,7 +598,7 @@
           <button
             type="button"
             (click)="closeEditModal()"
-            class="flex-1 px-4 py-2.5 text-sm font-medium bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition"
+            class="flex-1 px-4 py-2.5 text-sm font-medium bg-brand-primary/10 text-brand-primary/80 rounded-xl hover:bg-brand-primary/20 transition"
           >
             Cancel
           </button>

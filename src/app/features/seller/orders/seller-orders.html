@@ -2,40 +2,40 @@
 <div class="flex items-center justify-between mb-8">
   <div>
     <h1 class="text-2xl font-black tracking-tight">Store Orders</h1>
-    <p class="text-sm text-gray-500 mt-1">
+    <p class="text-sm text-brand-primary/50 mt-1">
       Track and manage orders containing your products.
       @if (!loading() && totalOrders() > 0) {
-        <span class="font-semibold text-gray-700">{{ totalOrders() }} total</span>
+        <span class="font-semibold text-brand-primary/80">{{ totalOrders() }} total</span>
       }
     </p>
   </div>
 </div>
 
 <!-- Orders Panel -->
-<div class="bg-white rounded-2xl border shadow-sm">
+<div class="bg-brand-surface rounded-2xl border border-brand-primary/10 shadow-sm">
   @if (loading()) {
     <div class="p-6 space-y-4">
       @for (_ of [1, 2, 3, 4, 5]; track $index) {
-        <div class="h-16 bg-gray-100 rounded-xl animate-pulse"></div>
+        <div class="h-16 bg-brand-primary/10 rounded-xl animate-pulse"></div>
       }
     </div>
   } @else if (orders().length === 0) {
     <div class="flex flex-col items-center justify-center py-20 text-center">
       <div
-        class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4 text-3xl"
+        class="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 text-3xl"
       >
         📋
       </div>
-      <p class="text-base font-semibold text-gray-600">No orders yet</p>
-      <p class="text-sm text-gray-400 mt-1 max-w-xs">
+      <p class="text-base font-semibold text-brand-primary/60">No orders yet</p>
+      <p class="text-sm text-brand-primary/40 mt-1 max-w-xs">
         Orders from customers who buy your products will appear here.
       </p>
     </div>
   } @else {
-    <div class="flex flex-col gap-4 p-4 sm:p-6 bg-gray-50/50 rounded-b-2xl">
+    <div class="flex flex-col gap-4 p-4 sm:p-6 bg-brand-primary/5/50 rounded-b-2xl">
       @for (order of orders(); track order._id) {
         <div
-          class="bg-white border border-gray-200 rounded-2xl shadow-sm transition-all hover:shadow-md hover:border-brand-accent/30 focus-within:border-brand-accent focus-within:ring-4 focus-within:ring-brand-accent/10"
+          class="bg-brand-surface border border-brand-primary/10 rounded-2xl shadow-sm transition-all hover:shadow-md hover:border-brand-accent/30 focus-within:border-brand-accent focus-within:ring-4 focus-within:ring-brand-accent/10"
         >
           <!-- Card Header (Always visible) -->
           <div class="flex flex-col lg:flex-row lg:items-center justify-between p-5 gap-5">
@@ -43,22 +43,22 @@
             <div class="flex flex-col sm:flex-row sm:items-center gap-4 lg:w-1/3">
               <div class="flex flex-col items-start gap-1.5">
                 <span
-                  class="inline-flex items-center justify-center px-2.5 py-1 bg-gray-50 text-gray-600 font-mono text-xs font-bold rounded-lg border border-gray-200 shadow-sm"
+                  class="inline-flex items-center justify-center px-2.5 py-1 bg-brand-primary/5 text-brand-primary/60 font-mono text-xs font-bold rounded-lg border border-brand-primary/10 shadow-sm"
                 >
                   #{{ order._id.slice(-8).toUpperCase() }}
                 </span>
-                <span class="text-xs font-medium text-gray-500">{{
+                <span class="text-xs font-medium text-brand-primary/50">{{
                   order.createdAt | date: 'MMM d, y'
                 }}</span>
               </div>
 
               <div
-                class="flex flex-col border-l-0 sm:border-l-2 border-gray-100 sm:pl-4 pt-2 sm:pt-0"
+                class="flex flex-col border-l-0 sm:border-l-2 border-brand-primary/5 sm:pl-4 pt-2 sm:pt-0"
               >
-                <p class="font-bold text-gray-800 text-sm truncate max-w-[200px]">
+                <p class="font-bold text-brand-primary/95 text-sm truncate max-w-50">
                   {{ order.userId?.name ?? '—' }}
                 </p>
-                <p class="text-xs text-gray-500 truncate max-w-[200px]">
+                <p class="text-xs text-brand-primary/50 truncate max-w-50">
                   {{ order.userId?.email ?? '' }}
                 </p>
               </div>
@@ -66,26 +66,32 @@
 
             <!-- Stats -->
             <div
-              class="flex items-center justify-between lg:justify-center gap-6 lg:gap-8 lg:w-1/3 bg-gray-50/50 lg:bg-transparent p-3 lg:p-0 rounded-xl"
+              class="flex items-center justify-between lg:justify-center gap-6 lg:gap-8 lg:w-1/3 bg-brand-primary/5/50 lg:bg-transparent p-3 lg:p-0 rounded-xl"
             >
               <div class="text-center">
-                <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">
+                <p
+                  class="text-[11px] font-bold uppercase tracking-wider text-brand-primary/40 mb-1"
+                >
                   Total
                 </p>
-                <p class="font-black text-gray-800">
+                <p class="font-black text-brand-primary/95">
                   ${{ (order.finalPrice ?? order.totalOrderPrice ?? 0).toFixed(2) }}
                 </p>
               </div>
-              <div class="w-px h-8 bg-gray-200"></div>
+              <div class="w-px h-8 bg-brand-primary/20"></div>
               <div class="text-center">
-                <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">
+                <p
+                  class="text-[11px] font-bold uppercase tracking-wider text-brand-primary/40 mb-1"
+                >
                   Items
                 </p>
-                <p class="font-bold text-gray-700">{{ order.orderItems?.length ?? 0 }}</p>
+                <p class="font-bold text-brand-primary/80">{{ order.orderItems?.length ?? 0 }}</p>
               </div>
-              <div class="w-px h-8 bg-gray-200"></div>
+              <div class="w-px h-8 bg-brand-primary/20"></div>
               <div class="text-center">
-                <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">
+                <p
+                  class="text-[11px] font-bold uppercase tracking-wider text-brand-primary/40 mb-1"
+                >
                   Status
                 </p>
                 <span
@@ -101,7 +107,7 @@
             <div class="flex flex-wrap items-center justify-between lg:justify-end gap-3 lg:w-1/3">
               @if (isCompleted(order.status)) {
                 <span
-                  class="text-sm font-medium text-gray-400 italic mr-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100"
+                  class="text-sm font-medium text-brand-primary/40 italic mr-2 bg-brand-primary/5 px-3 py-1.5 rounded-lg border border-brand-primary/5"
                   >Finalized</span
                 >
               } @else {
@@ -111,7 +117,7 @@
                     <button
                       type="button"
                       (click)="toggleStatusDropdown(order._id)"
-                      class="flex items-center justify-between min-w-[130px] gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all hover:border-brand-accent hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
+                      class="flex items-center justify-between min-w-32.5 gap-2 rounded-xl border border-brand-primary/10 bg-brand-surface px-3 py-2 text-sm font-medium text-brand-primary/80 shadow-sm transition-all hover:border-brand-accent hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
                       [class.border-brand-accent]="isStatusDropdownOpen() === order._id"
                       [class.ring-2]="isStatusDropdownOpen() === order._id"
                       [class.ring-brand-accent]="isStatusDropdownOpen() === order._id"
@@ -119,7 +125,7 @@
                       <span>{{ getSelectedStatus(order._id, order.status) }}</span>
                       <!-- Chevron -->
                       <svg
-                        class="size-4 text-gray-400 transition-transform duration-200"
+                        class="size-4 text-brand-primary/40 transition-transform duration-200"
                         [class.rotate-180]="isStatusDropdownOpen() === order._id"
                         fill="none"
                         stroke="currentColor"
@@ -146,7 +152,7 @@
                     ></div>
 
                     <div
-                      class="absolute right-0 lg:left-0 top-full mt-2 z-50 w-full min-w-[140px] origin-top rounded-xl border border-gray-100 bg-white p-1.5 shadow-xl ring-1 ring-black/5 transition-all duration-200 ease-out"
+                      class="absolute right-0 lg:left-0 top-full mt-2 z-50 w-full min-w-35 origin-top rounded-xl border border-brand-primary/5 bg-brand-surface p-1.5 shadow-xl ring-1 ring-black/5 transition-all duration-200 ease-out"
                       [class.opacity-0]="isStatusDropdownOpen() !== order._id"
                       [class.scale-95]="isStatusDropdownOpen() !== order._id"
                       [class.pointer-events-none]="isStatusDropdownOpen() !== order._id"
@@ -164,7 +170,7 @@
                           [class]="
                             getSelectedStatus(order._id, order.status) === s
                               ? 'bg-brand-accent text-white'
-                              : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                              : 'text-brand-primary/80 hover:bg-brand-primary/5 hover:text-brand-primary'
                           "
                         >
                           <span>{{ s }}</span>
@@ -203,7 +209,7 @@
               <!-- View Details Button -->
               <button
                 (click)="toggleExpand(order._id)"
-                class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-brand-accent hover:text-white transition-all focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
+                class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/60 hover:bg-brand-accent hover:text-white transition-all focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
                 title="View Details"
               >
                 <svg
@@ -230,12 +236,14 @@
             [class.grid-rows-[1fr]]="expandedOrderId() === order._id"
           >
             <div class="overflow-hidden">
-              <div class="px-5 pb-6 border-t border-gray-100 pt-5 bg-gray-50/50 rounded-b-2xl">
+              <div
+                class="px-5 pb-6 border-t border-brand-primary/5 pt-5 bg-brand-primary/5/50 rounded-b-2xl"
+              >
                 <div class="grid lg:grid-cols-2 gap-8">
                   <!-- Items list -->
                   <div>
                     <p
-                      class="text-xs font-black text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2"
+                      class="text-xs font-black text-brand-primary/40 uppercase tracking-wider mb-4 flex items-center gap-2"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -256,32 +264,32 @@
                     <div class="space-y-3">
                       @for (item of order.orderItems; track $index) {
                         <div
-                          class="flex items-center gap-4 bg-white p-3 rounded-xl border border-gray-100 shadow-sm"
+                          class="flex items-center gap-4 bg-brand-surface p-3 rounded-xl border border-brand-primary/5 shadow-sm"
                         >
                           @if (getProductImg(item)) {
                             <img
                               [src]="getProductImg(item)"
                               [alt]="getProductName(item)"
-                              class="w-12 h-12 rounded-lg object-cover bg-gray-50 border border-gray-100 shrink-0"
+                              class="w-12 h-12 rounded-lg object-cover bg-brand-primary/5 border border-brand-primary/5 shrink-0"
                             />
                           } @else {
                             <div
-                              class="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center text-lg border border-gray-100 shrink-0"
+                              class="w-12 h-12 rounded-lg bg-brand-primary/5 flex items-center justify-center text-lg border border-brand-primary/5 shrink-0"
                             >
                               📦
                             </div>
                           }
                           <div class="flex-1 min-w-0">
-                            <p class="text-sm font-bold text-gray-800 truncate">
+                            <p class="text-sm font-bold text-brand-primary/95 truncate">
                               {{ getProductName(item) }}
                             </p>
-                            <p class="text-xs font-medium text-gray-500 mt-0.5">
+                            <p class="text-xs font-medium text-brand-primary/50 mt-0.5">
                               Qty: {{ item.quantity }}
                               <span class="mx-1 text-gray-300">&times;</span> ${{ item.price }}
                             </p>
                           </div>
                           <span
-                            class="text-sm font-black text-gray-800 shrink-0 bg-gray-50 px-2.5 py-1 rounded-lg"
+                            class="text-sm font-black text-brand-primary/95 shrink-0 bg-brand-primary/5 px-2.5 py-1 rounded-lg"
                           >
                             ${{ (item.quantity * item.price).toFixed(2) }}
                           </span>
@@ -294,7 +302,7 @@
                   <div class="space-y-6">
                     <div>
                       <p
-                        class="text-xs font-black text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2"
+                        class="text-xs font-black text-brand-primary/40 uppercase tracking-wider mb-4 flex items-center gap-2"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -313,9 +321,9 @@
                         Shipping Details
                       </p>
                       <div
-                        class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-sm text-gray-700 font-medium space-y-1"
+                        class="bg-brand-surface p-4 rounded-xl border border-brand-primary/5 shadow-sm text-sm text-brand-primary/80 font-medium space-y-1"
                       >
-                        <p class="text-gray-900 font-bold mb-1">
+                        <p class="text-brand-primary font-bold mb-1">
                           {{ order.userId?.name ?? 'Customer' }}
                         </p>
                         <p>{{ order.shippingAddress?.street }}</p>
@@ -330,7 +338,7 @@
 
                     <div>
                       <p
-                        class="text-xs font-black text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2"
+                        class="text-xs font-black text-brand-primary/40 uppercase tracking-wider mb-4 flex items-center gap-2"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -349,9 +357,9 @@
                         Payment Method
                       </p>
                       <div
-                        class="bg-white px-4 py-3 flex items-center justify-between rounded-xl border border-gray-100 shadow-sm"
+                        class="bg-brand-surface px-4 py-3 flex items-center justify-between rounded-xl border border-brand-primary/5 shadow-sm"
                       >
-                        <span class="text-sm font-bold text-gray-800">{{
+                        <span class="text-sm font-bold text-brand-primary/95">{{
                           order.paymentMethod
                         }}</span>
                         <span
@@ -377,13 +385,13 @@
 
     <!-- Pagination -->
     @if (totalPages() > 1) {
-      <div class="flex items-center justify-between px-6 py-4 border-t border-gray-100">
-        <p class="text-sm text-gray-500">Page {{ currentPage() }} of {{ totalPages() }}</p>
+      <div class="flex items-center justify-between px-6 py-4 border-t border-brand-primary/5">
+        <p class="text-sm text-brand-primary/50">Page {{ currentPage() }} of {{ totalPages() }}</p>
         <div class="flex gap-2">
           <button
             (click)="loadOrders(currentPage() - 1)"
             [disabled]="currentPage() <= 1"
-            class="flex items-center gap-1 px-4 py-2 text-sm font-medium border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            class="flex items-center gap-1 px-4 py-2 text-sm font-medium border border-brand-primary/10 rounded-xl hover:bg-brand-primary/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -404,7 +412,7 @@
           <button
             (click)="loadOrders(currentPage() + 1)"
             [disabled]="currentPage() >= totalPages()"
-            class="flex items-center gap-1 px-4 py-2 text-sm font-medium border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            class="flex items-center gap-1 px-4 py-2 text-sm font-medium border border-brand-primary/10 rounded-xl hover:bg-brand-primary/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Next
             <svg

@@ -1,4 +1,4 @@
-<div class="flex h-screen bg-gray-100 overflow-hidden">
+<div class="flex h-screen w-full bg-brand-primary/5 overflow-hidden flex-col md:flex-row">
   <!-- Mobile Backdrop -->
   @if (sidebarOpen()) {
     <div class="fixed inset-0 bg-black/50 z-40 md:hidden" (click)="toggleSidebar()"></div>
@@ -6,18 +6,21 @@
 
   <!-- Sidebar -->
   <aside
-    class="fixed inset-y-0 left-0 z-50 w-64 bg-black text-white flex flex-col shrink-0 transition-transform duration-300 md:static md:translate-x-0"
+    class="fixed inset-y-0 left-0 z-50 w-64 bg-zinc-950 border-r border-white/5 flex flex-col shrink-0 transition-transform duration-300 md:static md:translate-x-0 shadow-2xl"
     [class.-translate-x-full]="!sidebarOpen()"
     [class.translate-x-0]="sidebarOpen()"
   >
     <!-- Brand -->
-    <div class="px-6 py-5 border-b border-white/10 flex items-center justify-between">
+    <div class="px-6 py-5 border-b border-white/5 flex items-center justify-between">
       <div>
-        <h1 class="text-xl font-black tracking-tighter italic">EXPRESSO.</h1>
-        <p class="text-xs text-gray-400 mt-0.5">Seller Panel</p>
+        <h1 class="text-xl font-black tracking-tighter italic text-white">EXPRESSO.</h1>
+        <p class="text-xs text-zinc-400 mt-0.5">Seller Panel</p>
       </div>
       <!-- Close button (mobile only) -->
-      <button (click)="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
+      <button
+        (click)="toggleSidebar()"
+        class="md:hidden text-zinc-400 hover:text-white transition-colors"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -32,67 +35,67 @@
     </div>
 
     <!-- Store Info -->
-    <div class="px-6 py-4 border-b border-white/10 bg-white/5">
+    <div class="px-6 py-4 border-b border-white/5 bg-white/5">
       <div class="flex items-center gap-3">
         <div
-          class="w-9 h-9 rounded-lg bg-brand-accent flex items-center justify-center text-white text-sm font-bold shrink-0"
+          class="w-9 h-9 rounded-lg bg-brand-accent flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-sm"
         >
           🏪
         </div>
         <div class="min-w-0">
           <p class="text-sm font-bold text-white truncate">{{ storeName() }}</p>
-          <p class="text-[11px] text-gray-400 truncate">{{ sellerName() }}</p>
+          <p class="text-[11px] text-zinc-400 truncate">{{ sellerName() }}</p>
         </div>
       </div>
     </div>
 
     <!-- Navigation -->
     <nav class="flex-1 px-4 py-6 flex flex-col gap-1">
-      <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-2">Main</p>
+      <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-2">Main</p>
 
       <a
         routerLink="dashboard"
-        routerLinkActive="bg-white/10 text-white"
+        routerLinkActive="bg-white/10 text-white font-medium shadow-sm"
         [routerLinkActiveOptions]="{ exact: true }"
         (click)="closeSidebarOnMobile()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
       >
         <span>📊</span> Dashboard
       </a>
 
       <a
         routerLink="products"
-        routerLinkActive="bg-white/10 text-white"
+        routerLinkActive="bg-white/10 text-white font-medium shadow-sm"
         (click)="closeSidebarOnMobile()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
       >
         <span>📦</span> My Products
       </a>
 
       <a
         routerLink="orders"
-        routerLinkActive="bg-white/10 text-white"
+        routerLinkActive="bg-white/10 text-white font-medium shadow-sm"
         (click)="closeSidebarOnMobile()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
       >
         <span>📋</span> Orders
       </a>
 
       <a
         routerLink="profile"
-        routerLinkActive="bg-white/10 text-white"
+        routerLinkActive="bg-white/10 text-white font-medium shadow-sm"
         (click)="closeSidebarOnMobile()"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
       >
         <span>👤</span> Profile
       </a>
 
       <div class="mt-4">
-        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-2">Store</p>
+        <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-2">Store</p>
         <a
           routerLink="/products"
           (click)="closeSidebarOnMobile()"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+          class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
         >
           <span>🛒</span> View Marketplace
         </a>
@@ -100,10 +103,10 @@
     </nav>
 
     <!-- Bottom: Logout -->
-    <div class="px-4 py-4 border-t border-white/10">
+    <div class="px-4 py-4 border-t border-white/5">
       <button
         (click)="logout()"
-        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-400 hover:bg-red-500/20 hover:text-red-400 transition-colors"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -125,14 +128,14 @@
   </aside>
 
   <!-- Main Content -->
-  <div class="flex-1 flex flex-col overflow-hidden">
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
     <!-- Top Header -->
     <header
-      class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 shrink-0"
+      class="h-14 lg:h-16 bg-brand-surface border-b border-brand-primary/5 shadow-sm flex items-center justify-between px-4 sm:px-6 shrink-0 z-10"
     >
       <div class="flex items-center gap-3">
         <!-- Hamburger (mobile only) -->
-        <button (click)="toggleSidebar()" class="md:hidden text-gray-600 hover:text-black">
+        <button (click)="toggleSidebar()" class="md:hidden text-brand-primary/60 hover:text-black">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -148,12 +151,88 @@
             />
           </svg>
         </button>
-        <div class="text-sm text-gray-500">
-          Welcome back, <span class="font-semibold text-gray-800">{{ sellerName() }}</span>
+        <div class="text-sm text-brand-primary/50">
+          Welcome back, <span class="font-semibold text-brand-primary/95">{{ sellerName() }}</span>
         </div>
       </div>
-      <div class="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-semibold">
-        ✓ Active Seller
+      <div class="flex items-center gap-3">
+        <!-- Theme Dropdown -->
+        <div class="group relative">
+          <button
+            class="flex items-center justify-center p-1.5 rounded-lg text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors border border-transparent hover:border-brand-primary/10"
+          >
+            @if (currentTheme() === 'dark') {
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
+              </svg>
+            } @else if (currentTheme() === 'light') {
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+              </svg>
+            } @else if (currentTheme() === 'creamy') {
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09l2.846.813-2.846.813a4.5 4.5 0 00-3.09 3.09zm8.446-7.189l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183 .394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423l-.394 1.183-.394-1.183a2.25 2.25 0 00-1.423-1.423l-1.183-.394z"
+                />
+              </svg>
+            } @else {
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+            }
+          </button>
+          <!-- Theme Dropdown Content -->
+          <div
+            class="absolute right-0 top-full mt-2 w-48 bg-brand-surface border border-brand-primary/10 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50"
+          >
+            <div class="p-3">
+              <p class="text-[10px] font-bold text-brand-primary/50 uppercase tracking-widest mb-2">
+                THEME
+              </p>
+              <div class="grid grid-cols-4 gap-2">
+                @for (theme of allThemes; track theme) {
+                  <button
+                    (click)="setTheme(theme)"
+                    [attr.aria-label]="'Switch to ' + themeMeta[theme].label + ' theme'"
+                    class="flex flex-col items-center gap-1.5 rounded-lg p-2 transition-all hover:bg-brand-primary/5"
+                    [class.ring-2]="currentTheme() === theme"
+                    [class.ring-brand-accent]="currentTheme() === theme"
+                    [class.ring-offset-1]="currentTheme() === theme"
+                  >
+                    <span
+                      class="w-4 h-4 rounded-full border border-black/10 block shrink-0"
+                      [style.background]="themeMeta[theme].bg"
+                    ></span>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="text-xs bg-emerald-500/10 text-emerald-600 px-3 py-1.5 rounded-full font-semibold border border-emerald-500/20"
+        >
+          ✓ Active Seller
+        </div>
       </div>
     </header>
 
