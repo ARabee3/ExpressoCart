@@ -68,6 +68,7 @@ export class Navbar {
     { label: 'Categories', route: '/categories' },
     { label: 'About', route: '/about' },
     { label: 'Contact Us', route: '/contact-us' },
+    { label: 'Wishlist', route: '/wishlist' },
   ];
 
   constructor() {

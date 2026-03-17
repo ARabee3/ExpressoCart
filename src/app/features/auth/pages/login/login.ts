@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, NgZone } from '@angular/core';
+import { Component, inject, signal, OnInit, NgZone, HostListener } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { AuthApi } from '../../../../core/services/auth-api';
@@ -31,10 +31,15 @@ export class Login implements OnInit {
   ngOnInit() {
     this.initGoogleSignIn();
   }
+
   initGoogleSignIn() {
     const interval = setInterval(() => {
       if (typeof google !== 'undefined' && google.accounts) {
         clearInterval(interval);
+
+        const container = document.getElementById('google-btn');
+        const width = container?.offsetWidth || 300;
+
         google.accounts.id.initialize({
           client_id: '963333033864-c2827dskcqla541vo4ldqeo74dtb7cs2.apps.googleusercontent.com',
           callback: (response: any) => {
@@ -43,16 +48,19 @@ export class Login implements OnInit {
             });
           },
         });
-        google.accounts.id.renderButton(document.getElementById('google-btn'), {
+        google.accounts.id.renderButton(container, {
           type: 'standard',
           size: 'large',
           text: 'signin_with',
-          width: 380,
+          width: container?.offsetWidth,
         });
       }
     }, 100);
   }
-
+  @HostListener('window:resize')
+  onResize() {
+    this.initGoogleSignIn(); // re-render button
+  }
   loginWithGoogle(idToken: string) {
     this.loading.set(true);
     const sessionId = localStorage.getItem('guest_session_id');
